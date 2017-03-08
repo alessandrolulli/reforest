@@ -39,7 +39,8 @@ sparkCoresMax 6
 ```
 
 Detailed description of available configuration variables:
-| variable | default value | description |
+
+| Variable | Default Value | Description |
 | --- | --- | --- |
 | dataset | <mandatory> | path to the dataset in SVM format |
 | numFeatures | <mandatory> | number of features in the dataset |
