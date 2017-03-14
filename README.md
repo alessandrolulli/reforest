@@ -38,12 +38,12 @@ sparkExecutorMemory 512m
 sparkCoresMax 6
 ```
 
-Detailed description of available configuration variables:
+Detailed description of available configuration variables (* : are mandatory variables):
 
 | Variable | Default Value | Description |
 | --- | --- | --- |
-| dataset | <mandatory> | path to the dataset in SVM format |
-| numFeatures | <mandatory> | number of features in the dataset |
+| dataset | * | path to the dataset in SVM format |
+| numFeatures | * | number of features in the dataset |
 | numTrees | 3 | number of trees in the forest  |
 | maxDepth | 3 | maximum depth of each tree |
 | numClasses | 2 | number of classes in the dataset (it is required the first class being "0", the second "1", and so on) |
@@ -52,14 +52,17 @@ Detailed description of available configuration variables:
 | instrumented | false | if you want to run the Garbage Collector to get memory statistics (available in RFAllInLocalData) |
 | skipAccuracy | false | if you want only to train the classifier (available in RFAllInLocalData) |
 | typeDataInput | Double | type of data to use to load the input values (available in RFAllInLocalData) (Double, Float, Float16, Short) |
-| sparkMaster | <mandatory> | IP address of the Apache Spark Master |
-| sparkExecutorInstances | <mandatory> | number of worker machines |
-| sparkExecutorMemory | <mandatory> | amount of memory of each worker machine |
-| sparkCoresMax | <mandatory> | total number of cores to use |
+| sparkMaster | * | IP address of the Apache Spark Master |
+| sparkExecutorInstances | * | number of worker machines |
+| sparkExecutorMemory | * | amount of memory of each worker machine |
+| sparkCoresMax | * | total number of cores to use |
 
 
 ### How to run
 
-```
+The main class is: randomForest.test.reforest.ReForeStMain
+Otherwise, it is possible to use the following script:
 
+```
+./run.sh CONFIG_FILE
 ```
