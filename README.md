@@ -1,4 +1,4 @@
-<img src="https://github.com/alessandrolulli/reforest/blob/master/_includes/logo.png">
+<img src="https://raw.githubusercontent.com/alessandrolulli/reforest/master/_includes/logo.png">
 
 # ReForeSt
 
