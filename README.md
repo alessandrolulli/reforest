@@ -1,3 +1,5 @@
+<img src="_includes/logo.png">
+
 # ReForeSt
 
 <p style="text-align: justify;">
