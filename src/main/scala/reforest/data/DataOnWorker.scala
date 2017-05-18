@@ -25,14 +25,23 @@ import reforest.util.BiMap
 
 import scala.collection.Map
 
+/**
+  * It is a singleton. It maintains in each machine the Matrix to collect the information to compute the best cuts.
+  * In each iteration:
+  *   - the first thread accessing the singleton initializes the Matrix
+  *   - all the partitions concurrently update the matrix during the "Local Information Collection" step
+  *   - during the "Distributed Information Aggregation" step the fist thread entering is the one in charge of sending
+  *     the data to the shuffling phase
+  *   - the Matrix is freed
+  */
 object DataOnWorker extends Serializable {
 
-  var iterationInit = (-1, -1)
   var initBy = -1
   var array: Array[Array[Int]] = Array.empty
   var arrayLength : Int = 0
-  var sizePerFeature: Option[RFFeatureSizer] = Option.empty
-  var nodeToArrayOffset: Array[Array[Int]] = Array.empty
+  private var iterationInit = (-1, -1)
+  private var sizePerFeature: Option[RFFeatureSizer] = Option.empty
+  private var nodeToArrayOffset: Array[Array[Int]] = Array.empty
 
   def sendWorkingData = {
     var toReturn : Option[Array[Array[Int]]] = Option.empty
@@ -48,12 +57,6 @@ object DataOnWorker extends Serializable {
   def releaseMatrix = {
     this.synchronized({
       array = Array.empty
-    })
-  }
-
-  def releaseOffset = {
-    this.synchronized({
-      nodeToArrayOffset = Array.empty
     })
   }
 
@@ -73,10 +76,6 @@ object DataOnWorker extends Serializable {
     offset + bin * numClasses + label
   }
 
-  def getPosition(idx: Int, featurePosition: Int, label: Int, bin: Int, numClasses: Int): Int = {
-    nodeToArrayOffset(idx)(featurePosition) + bin * numClasses + label
-  }
-
   def init[T, U](depth: Int, iteration: Int, iterationNumber: Int, nRows: Int,
                  numClasses: Int,
                  splitter: Broadcast[RFSplitterManager[T, U]],
@@ -89,7 +88,9 @@ object DataOnWorker extends Serializable {
 
         if (sizePerFeature.isEmpty || (depth == 1 && iteration == 0)) sizePerFeature = Some(splitter.value.generateRFSizer(numClasses))
 
-        val tmpMapOffset = featureMap.value.map{ case (treeNodeId, featureIdArray) => (idTOid.value(treeNodeId), {
+        nodeToArrayOffset = new Array(nRows)
+
+        featureMap.value.foreach{ case (treeNodeId, featureIdArray) =>
           val arrayFeatureBinSize = featureIdArray.map(u => sizePerFeature.get.getSize(u))
           val toReturn = new Array[Int](arrayFeatureBinSize.length + 1)
           var c = 0
@@ -102,20 +103,18 @@ object DataOnWorker extends Serializable {
             c += 1
           }
 
-          toReturn
-        })}
+          nodeToArrayOffset(idTOid.value(treeNodeId)) = toReturn
+        }
 
+
+        array = new Array[Array[Int]](nRows)
         var c = 0
-        nodeToArrayOffset = new Array(nRows)
         while (c < nRows) {
-          nodeToArrayOffset(c) = tmpMapOffset(c)
+          array(c) = new Array[Int](nodeToArrayOffset(c).last)
           c += 1
         }
 
-        array = Array.tabulate(nRows)(t => new Array[Int]({
-          nodeToArrayOffset(t).last
-        }))
-        arrayLength = array.length
+        arrayLength = nRows
       })
   }
 }

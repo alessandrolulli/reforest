@@ -30,7 +30,7 @@ trait ScalingVariable[T, U] extends Serializable {
 
 }
 
-class ScalingBasic[T : ClassTag, U : ClassTag](@transient sc: SparkContext,
+class ScalingBasic[T : ClassTag, U : ClassTag](@transient private val sc: SparkContext,
                          typeInfo: Broadcast[TypeInfo[T]],
                          featureNumber: Int,
                          input: RDD[RawDataLabeled[T, U]]) extends ScalingVariable[T, U] {

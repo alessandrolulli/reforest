@@ -18,16 +18,14 @@
 package reforest.data
 
 import Jama.QRDecomposition
-import org.apache.commons.math.random.MersenneTwister
+import org.apache.commons.math3.random.MersenneTwister
 import reforest.TypeInfo
-import reforest.util.mersenneTwister.{TinyMT32, TinyMT64}
 
 import scala.reflect.ClassTag
-import scala.util.Random
 
 class RotationMatrix(n: Int, seed : Int, input: Option[Array[Array[Double]]] = Option.empty) extends Serializable {
 
-  val matrix = generateRotationMatrix(input, seed)
+  private val matrix = generateRotationMatrix(input, seed)
 
   def rotate[T: ClassTag](array: Array[T], typeInfo: TypeInfo[T]): Array[T] = {
     val toReturn: Array[T] = new Array[T](array.length)
@@ -61,9 +59,7 @@ class RotationMatrix(n: Int, seed : Int, input: Option[Array[Array[Double]]] = O
   }
 
   private def generateRotationMatrix(input: Option[Array[Array[Double]]] = Option.empty, seed : Int = 0) = {
-    val randomGenerator = TinyMT32.getDefault(seed)
-//    val randomGenerator = new MersenneTwister(seed)
-//    val randomGenerator = new Random(seed)
+    val randomGenerator = new MersenneTwister(seed)
 
     val m: Array[Array[Double]] = if (input.isDefined) input.get else Array.tabulate(n)(_ => Array.fill(n)(randomGenerator.nextDouble()))
     val qr = new QRDecomposition(new Jama.Matrix(m))
@@ -84,17 +80,12 @@ class RotationMatrix(n: Int, seed : Int, input: Option[Array[Array[Double]]] = O
       }
 
     }
-    val t0 = System.currentTimeMillis()
     val m2 = q.times(r)
-//    multInPlaceWithDiagonal(q.getArray, r.getArray)// q.times(r)
-    val t1 = System.currentTimeMillis()
-//    println((t1-t0)+"\n"+q.getArray.map(t => t.mkString(",")).mkString("\n"))
 
     //      if(m2.det() < 0) {
     //        for(i <- 0 to n - 1) m2.set(i, 0, -m2.get(i,0))
     //      }
 
     m2.getArray()
-    //    Jama.Matrix.identity(n, n).getArray
   }
 }

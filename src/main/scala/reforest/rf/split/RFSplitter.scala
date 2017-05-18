@@ -21,6 +21,7 @@ import reforest.TypeInfo
 import reforest.rf.{RFCategoryInfo, RFFeatureSizer, RFFeatureSizerSimple, RFFeatureSizerSpecialized}
 
 import scala.collection.Map
+import scala.util.Random
 
 trait RFSplitter[T, U] extends Serializable {
 
@@ -42,7 +43,7 @@ class RFSplitterSpecialized[T, U](split: Map[Int, Array[T]],
     if (categoricalFeatureInfo.isCategorical(idFeature))
       typeInfoWorking.fromInt(categoricalFeatureInfo.getArity(idFeature))
     else
-      typeInfoWorking.fromInt(split(idFeature).length)
+      typeInfoWorking.fromInt(split(idFeature).length + 2)
   }
 
   override def getBin(index: Int, value: T): U = {
@@ -56,7 +57,7 @@ class RFSplitterSpecialized[T, U](split: Map[Int, Array[T]],
 
         val idx = typeInfo.getIndex(split2, value)
         val idx2 = -idx - 1
-        typeInfoWorking.fromInt((Math.min(Math.max(idx, idx2), split2.length - 1) + 1))
+        typeInfoWorking.fromInt((Math.min(Math.max(idx, idx2), split2.length) + 1))
       }
     }
   }
@@ -97,6 +98,46 @@ class RFSplitterSimple[T, U](min: T,
 
   override def getRealCut(index: Int, cut: U): T = {
     simpleSplitterInverted(cut)
+  }
+
+  override def generateRFSizer(numClasses: Int): RFFeatureSizer = {
+    new RFFeatureSizerSimple(numberBin, numClasses, categoricalFeatureInfo)
+  }
+}
+
+class RFSplitterSimpleRandom[T, U](minT: T,
+                             maxT: T,
+                             typeInfo: TypeInfo[T],
+                             typeInfoWorking: TypeInfo[U],
+                             numberBin: Int,
+                             categoricalFeatureInfo: RFCategoryInfo) extends RFSplitter[T, U] {
+
+  val min = typeInfo.toDouble(minT)
+  val max = typeInfo.toDouble(maxT)
+  val range = max - min
+
+  val randomSplit = Array.fill(numberBin-1)(Random.nextDouble()).toList.sorted.toArray
+  val splitValue = randomSplit.map(t => (range * t)+min)
+
+  override def getBinNumber(idFeature: Int): U = {
+      typeInfoWorking.fromInt(numberBin + 1)
+  }
+
+  override def getBin(index: Int, value: T): U = {
+        val idx = java.util.Arrays.binarySearch(splitValue, typeInfo.toDouble(value))
+        val idx2 = -idx - 1
+        typeInfoWorking.fromInt((Math.min(Math.max(idx, idx2), splitValue.length) + 1))
+  }
+
+  override def getRealCut(index: Int, cut: U): T = {
+    val cutDouble = typeInfoWorking.toInt(cut)
+    if (cutDouble < 0)
+      typeInfo.fromDouble(0d)
+    else if ((cutDouble - 1) >= splitValue.size)
+      typeInfo.maxValue
+    else {
+      typeInfo.fromDouble(splitValue(cutDouble - 1))
+    }
   }
 
   override def generateRFSizer(numClasses: Int): RFFeatureSizer = {

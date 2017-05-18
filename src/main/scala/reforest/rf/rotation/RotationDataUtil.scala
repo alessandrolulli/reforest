@@ -21,13 +21,13 @@ import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import reforest.TypeInfo
+import reforest.data.load.{ARFFUtil, DataLoad}
 import reforest.data.{RawDataLabeled, ScalingBasic}
 import reforest.rf.RFProperty
-import reforest.util.SVMUtil
 
 import scala.reflect.ClassTag
 
-class RotationDataUtil[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
+class RotationDataUtil[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext,
                                                  property : RFProperty,
                                                  typeInfo: Broadcast[TypeInfo[T]],
                                                  minPartitions: Int) extends Serializable {
@@ -46,14 +46,14 @@ class RotationDataUtil[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
     val rotationMatrix = matrices(count)
     count += 1
 
-    (training.map(t => rotationMatrix.rotateRawDataLabeled(t)), rotationMatrix)
+    (training.map(t => rotationMatrix.rotate(t)), rotationMatrix)
   }
 
-  def getScaledData(splitSize: Double, svmUtil: SVMUtil[T, U]): (RDD[RawDataLabeled[T, U]], RDD[RawDataLabeled[T, U]]) = {
+  def getScaledData(splitSize: Double, svmUtil: DataLoad[T, U]): (RDD[RawDataLabeled[T, U]], RDD[RawDataLabeled[T, U]]) = {
     if (scaledDataTesting.isDefined) {
       (scaledDataTraining.get, scaledDataTesting.get)
     } else {
-      val rawData = svmUtil.loadLibSVMFile(sc, property.property.dataset, property.featureNumber, minPartitions)
+      val rawData = svmUtil.loadFile(sc, property.property.dataset, property.featureNumber, minPartitions)
 
       val scaling = new ScalingBasic[T, U](sc, typeInfo, property.featureNumber, rawData)
 

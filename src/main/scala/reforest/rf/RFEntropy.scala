@@ -19,7 +19,7 @@ package reforest.rf
 
 import org.apache.spark.broadcast.Broadcast
 import reforest.TypeInfo
-import reforest.dataTree.{Cut, CutCategorical}
+import reforest.dataTree.{CutCategorical, CutDetailed}
 import reforest.rf.split.RFSplitter
 
 class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
@@ -173,7 +173,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
                    splitter: RFSplitter[T, U],
                    depth: Int,
                    maxDepth: Int,
-                   numClasses: Int): Cut[T, U] = {
+                   numClasses: Int): CutDetailed[T, U] = {
     val elNumber = sum(data)
     val elNumberValid = elNumber - sum(data(0))
     val elNumberNOTValid = elNumber - elNumberValid
@@ -182,7 +182,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     val eTot = entropy(data, elNumber, numClasses, 0, data.length - 1)
     var elSum = 0
     if (elNumberValid > 0) {
-      val until = Math.min(data.length - 1, typeInfoWorking.value.toInt(splitter.getBinNumber(featureId)))
+      val until = data.length - 1
       var i = 1
       while (i <= until) {
         val sumData = sum(data(i))
@@ -200,7 +200,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
       val leftTOT = sum(left)
       val right = data.slice(cut + 1, data.length)
       val rightTOT = sum(right)
-      val calculateLabel = depth >= maxDepth || leftTOT <= 1 || rightTOT <= 1 || elNumberNOTValid > 0
+      val calculateLabel = true //depth >= maxDepth || leftTOT <= 1 || rightTOT <= 1 || elNumberNOTValid > 0
       val leftLabel = if (calculateLabel) getLabel(left, numClasses) else Option.empty
       val rightLabel = if (calculateLabel) getLabel(right, numClasses) else Option.empty
       val notValidLabel = if (elNumberNOTValid > 0) getLabel(data(0)) else Option.empty
@@ -215,7 +215,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
       val rightOK = getLabelOK(right, rightLabel)
       val notvalidOK = if (notValidLabel.isDefined) data(0)(notValidLabel.get) else 0
 
-      new Cut[T, U](featureId,
+      new CutDetailed[T, U](featureId,
         splitter.getRealCut(featureId, typeInfoWorking.value.fromInt(cut)),
         typeInfoWorking.value.fromInt(cut),
         eEnd,
@@ -230,7 +230,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
         leftOK,
         rightOK)
     } else {
-      new Cut(featureId, typeInfo.value.NaN, typeInfoWorking.value.NaN)
+      new CutDetailed(featureId, typeInfo.value.NaN, typeInfoWorking.value.NaN)
     }
   }
 
@@ -239,7 +239,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
                               splitter: RFSplitter[T, U],
                               depth: Int,
                               maxDepth: Int,
-                              numClasses: Int): Cut[T, U] = {
+                              numClasses: Int): CutDetailed[T, U] = {
     val elNumber = sum(data)
     val elNumberValid = elNumber - sum(data(0))
     val elNumberNOTValid = elNumber - elNumberValid
@@ -247,7 +247,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     var cut = Int.MinValue
     val eTot = entropy(data, elNumber, numClasses, 0, data.length - 1)
     if (elNumberValid > 0) {
-      val until = Math.min(data.length - 1, typeInfoWorking.value.toInt(splitter.getBinNumber(featureId)))
+      val until = data.length - 1
       var i = 1
       while (i <= until) {
         val elNumberCategory = sum(data(i))
@@ -265,7 +265,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
       val leftTOT = sum(left)
       val right = data.take(cut) ++ data.drop(cut + 1)
       val rightTOT = sum(right)
-      val calculateLabel = depth >= maxDepth || leftTOT <= 1 || rightTOT <= 1 || elNumberNOTValid > 0
+      val calculateLabel = true //depth >= maxDepth || leftTOT <= 1 || rightTOT <= 1 || elNumberNOTValid > 0
       val leftLabel = if (calculateLabel) getLabel(left) else Option.empty
       val rightLabel = if (calculateLabel) getLabel(right, numClasses) else Option.empty
       val notValidLabel = if (elNumberNOTValid > 0) getLabel(data(0)) else Option.empty
@@ -295,7 +295,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
         leftOK,
         rightOK)
     } else {
-      new Cut(featureId, typeInfo.value.NaN, typeInfoWorking.value.NaN)
+      new CutDetailed(featureId, typeInfo.value.NaN, typeInfoWorking.value.NaN)
     }
   }
 }

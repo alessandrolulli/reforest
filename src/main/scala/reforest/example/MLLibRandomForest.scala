@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package reforest
+package reforest.example
 
 import org.apache.spark.mllib.tree.RandomForest
 import org.apache.spark.mllib.tree.configuration.{Algo, QuantileStrategy, Strategy}
@@ -26,8 +26,7 @@ import reforest.util.{CCProperties, CCUtil, CCUtilIO}
 
 import scala.util.Random
 
-object RandomForestExample
-{
+object MLLibRandomForest {
   def main(args: Array[String]): Unit = {
 
     val property = new RFProperty(new CCProperties("RANDOM-FOREST-MLLIB", args(0)).load().getImmutable)
@@ -42,7 +41,7 @@ object RandomForestExample
     utilIO.logTIME(property.appName, "START-PREPARE")
 
     val timeStart = System.currentTimeMillis()
-    val data = MLUtils.loadLibSVMFile(sc, property.property.dataset, property.loader.getInt("numFeatures",0), property.property.sparkCoresMax * 2)
+    val data = MLUtils.loadLibSVMFile(sc, property.property.dataset, property.loader.getInt("numFeatures", 0), property.property.sparkCoresMax * 2)
     val t0 = System.currentTimeMillis()
 
     val splits = data.randomSplit(Array(0.7, 0.3), 0)
@@ -50,7 +49,7 @@ object RandomForestExample
 
     // Train a RandomForest model.
     val numClasses = property.property.loader.getInt("numClasses", 3)
-//    val categoricalFeaturesInfo = Array.tabulate(200)(i => (i, 5)).toMap
+    //    val categoricalFeaturesInfo = Array.tabulate(200)(i => (i, 5)).toMap
     val categoricalFeaturesInfo = Map[Int, Int]()
     val featureSubsetStrategy = "sqrt"
     val impurity = "entropy"
@@ -69,36 +68,17 @@ object RandomForestExample
     val timeEnd = System.currentTimeMillis()
     utilIO.logTIME(property.appName, "START-ACCURACY")
 
-    var testErr = -1d
-    if(!skipAccuracy) {
-      val labelAndPreds = testData.map { point =>
-        val prediction = model.predict(point.features)
-        (point.label, prediction)
-      }
-
-      testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / testData.count()
-      println("Test Error = " + testErr)
-      if(property.loader.getBoolean("outputTree", false)) {
-        println("Learned classification forest model:\n" + model.toDebugString)
-      }
+    val labelAndPreds = testData.map { point =>
+      val prediction = model.predict(point.features)
+      (point.label, prediction)
     }
 
-    utilIO.printToFile("stats.txt", "RANDOM-FOREST-MLLIB", property.property.dataset,
-      "numTrees", numTrees.toString,
-      "maxDepth", maxDepth.toString,
-      "binNumber", binNumber.toString,
-      "timeALL", (timeEnd - timeStart).toString,
-      "timePREPARATION", (t0 - timeStart).toString,
-      "testError", testErr.toString,
-      "sparkCoresMax", property.property.sparkCoresMax.toString,
-      "sparkExecutorInstances", property.property.sparkExecutorInstances.toString)
-    utilIO.logTIME(property.appName, "STOP")
-//    "Learned classification forest model", model.toDebugString)
+    val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / testData.count()
+    println("Test Error = " + testErr)
+    if (property.loader.getBoolean("outputTree", false)) {
+      println("Learned classification forest model:\n" + model.toDebugString)
+    }
 
-    // Save and load model
-    //model.save(sc, property.outputFile)
-//    val sameModel = RandomForestModel.load(sc, "target/tmp/myRandomForestClassificationModel")
-    // $example off$
   }
 
 }

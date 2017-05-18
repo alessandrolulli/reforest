@@ -27,29 +27,46 @@ import reforest.util.GCInstrumented
 import scala.collection.{Map, mutable}
 import scala.reflect.ClassTag
 
-/**
-  * Forked from Apache Spark MLlib
-  */
-class RFSplit[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
-                                        typeInfoWorking: Broadcast[TypeInfo[U]],
-                                        instrumented: Broadcast[GCInstrumented],
-                                        categoricalFeatureInfo : Broadcast[RFCategoryInfo]) extends Serializable {
-
-  def findSplitsSimple(input: RDD[RawDataLabeled[T, U]],
+trait RFStrategySplit extends Serializable{
+  def getDescription : String
+  def findSplitsSimple[T : ClassTag, U : ClassTag](input: RDD[RawDataLabeled[T, U]],
                        binNumber: Int,
                        featureNumber: Int,
-                       featurePerIteration: Int): RFSplitter[T, U] = {
+                       featurePerIteration: Int,
+                       typeInfo: Broadcast[TypeInfo[T]],
+                       typeInfoWorking: Broadcast[TypeInfo[U]],
+                       instrumented: Broadcast[GCInstrumented],
+                       categoricalFeatureInfo : Broadcast[RFCategoryInfo]): RFSplitter[T, U]
+}
+
+class RFStrategySplitRandom extends RFStrategySplit {
+  def getDescription : String = "RANDOM"
+  def findSplitsSimple[T : ClassTag, U : ClassTag](input: RDD[RawDataLabeled[T, U]],
+                       binNumber: Int,
+                       featureNumber: Int,
+                       featurePerIteration: Int,
+                       typeInfo: Broadcast[TypeInfo[T]],
+                       typeInfoWorking: Broadcast[TypeInfo[U]],
+                       instrumented: Broadcast[GCInstrumented],
+                       categoricalFeatureInfo : Broadcast[RFCategoryInfo]): RFSplitter[T, U] = {
 
     val (min, max) = input.map(t => (typeInfo.value.getMin(t.features), typeInfo.value.getMax(t.features)))
       .reduce((a, b) => (typeInfo.value.min(a._1, b._1), typeInfo.value.max(a._2, b._2)))
 
-    new RFSplitterSimple[T, U](min, max, typeInfo.value, typeInfoWorking.value, binNumber, categoricalFeatureInfo.value)
+    new RFSplitterSimpleRandom[T, U](min, max, typeInfo.value, typeInfoWorking.value, binNumber, categoricalFeatureInfo.value)
   }
+}
 
-  def findSplitsBySorting(input: RDD[RawDataLabeled[T, U]],
-                          binNumber: Int,
-                          featureNumber: Int,
-                          featurePerIteration: Int): Map[Int, Array[T]] = {
+class RFStrategySplitDistribution extends RFStrategySplit {
+  def getDescription : String = "DISTRIBUTION"
+  def findSplitsSimple[T : ClassTag, U : ClassTag](input: RDD[RawDataLabeled[T, U]],
+                       binNumber: Int,
+                       featureNumber: Int,
+                       featurePerIteration: Int,
+                       typeInfo: Broadcast[TypeInfo[T]],
+                       typeInfoWorking: Broadcast[TypeInfo[U]],
+                       instrumented: Broadcast[GCInstrumented],
+                       categoricalFeatureInfo : Broadcast[RFCategoryInfo]): RFSplitter[T, U] = {
 
     val iterationNumber = Math.ceil(featureNumber.toDouble / featurePerIteration).toInt
     var iteration = 0
@@ -75,21 +92,21 @@ class RFSplit[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
         })
         .groupByKey()
         .map { case (idx, samples) =>
-          val thresholds = findSplitsForContinuousFeature(samples, binNumber)
+          val thresholds = findSplitsForContinuousFeature[T, U](samples, binNumber, typeInfo)
           instrumented.value.gc()
           (idx, thresholds)
         }.collectAsMap()
       iteration += 1
     }
 
-    continuousSplits
+    new RFSplitterSpecialized(continuousSplits, typeInfo.value, typeInfoWorking.value, categoricalFeatureInfo.value)
   }
 
-  def findSplitsForContinuousFeature(featureSamples: Iterable[T], binNumber: Int): Array[T] = {
+  def findSplitsForContinuousFeature[T : ClassTag, U : ClassTag](featureSamples: Iterable[T], binNumber: Int, typeInfo: Broadcast[TypeInfo[T]]): Array[T] = {
     val splits: Array[T] = if (featureSamples.isEmpty) {
       Array.empty
     } else {
-      val numSplits = binNumber
+      val numSplits = binNumber - 1
 
       // get count for each distinct value
       val (valueCountMap, numSamples) = featureSamples.filter(t => typeInfo.value.isValidForBIN(t)).foldLeft((Map.empty[T, Int], 0)) {

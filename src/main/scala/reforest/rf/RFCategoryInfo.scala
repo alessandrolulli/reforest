@@ -19,9 +19,7 @@ package reforest.rf
 
 trait RFCategoryInfo extends Serializable {
   def rawRemapping(featureValue: Int): Int
-
   def getArity(featureId: Int): Int
-
   def isCategorical(featureId: Int): Boolean
 }
 

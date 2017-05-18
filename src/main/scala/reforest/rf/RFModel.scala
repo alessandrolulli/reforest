@@ -20,7 +20,7 @@ package reforest.rf
 import org.apache.spark.broadcast.Broadcast
 import reforest.TypeInfo
 import reforest.data.{RawData, RawDataLabeled}
-import reforest.dataTree.TreeNode
+import reforest.dataTree.Forest
 import reforest.rf.rotation.RFRotationMatrix
 
 import scala.collection.mutable.ListBuffer
@@ -37,20 +37,36 @@ trait RFModel[T, U] extends Serializable {
   def predictDetails(point : RawData[T, U]) : Array[(Int, Int)] // (class, #vote)
 }
 
-class RFModelStandard[T, U](val forest : Broadcast[Array[TreeNode[T, U]]], val typeInfo : Broadcast[TypeInfo[T]]) extends RFModel[T, U] {
+class RFModelStandard[T, U](val forest : Broadcast[Forest[T, U]],
+                            val typeInfo : Broadcast[TypeInfo[T]],
+                            numClasses : Int) extends RFModel[T, U] {
 
   override def predictDetails(point : RawData[T, U]) : Array[(Int, Int)] = {
-    forest.value.map(t => t.predict(point, typeInfo.value)).groupBy(identity).mapValues(_.size).toArray
+    val toReturn : Array[Int] = new Array(numClasses)
+    var count = 0
+    while(count < forest.value.numTrees) {
+      toReturn(forest.value.predict(count, point, typeInfo.value)) += 1
+      count += 1
+    }
+    toReturn.zipWithIndex.map(_.swap)
   }
 }
 
-class RFModelRotate[T, U](val forest : Broadcast[Array[TreeNode[T, U]]],
+class RFModelRotate[T, U](val forest : Broadcast[Forest[T, U]],
                           val typeInfo : Broadcast[TypeInfo[T]],
-                          val rotationMatrix : Broadcast[RFRotationMatrix[T, U]]) extends RFModel[T, U] {
+                          val rotationMatrix : Broadcast[RFRotationMatrix[T, U]],
+                          numClasses : Int) extends RFModel[T, U] {
 
   override def predictDetails(point : RawData[T, U]) : Array[(Int, Int)] = {
     val rotatedData = rotationMatrix.value.rotateRawData(point)
-    forest.value.map(t => t.predict(rotatedData, typeInfo.value)).groupBy(identity).mapValues(_.size).toArray
+    val toReturn : Array[Int] = new Array(numClasses)
+    var count = 0
+    while(count < forest.value.numTrees) {
+      val index = forest.value.predict(count, rotatedData, typeInfo.value)
+      toReturn(index) += 1
+      count += 1
+    }
+    toReturn.zipWithIndex.map(_.swap)
   }
 }
 

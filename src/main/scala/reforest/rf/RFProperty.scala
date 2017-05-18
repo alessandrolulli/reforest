@@ -18,7 +18,8 @@
 package reforest.rf
 
 import org.apache.spark.storage.StorageLevel
-import reforest.util.CCPropertiesImmutable
+import reforest.rf.split.{RFStrategySplitDistribution, RFStrategySplitRandom}
+import reforest.util.{CCPropertiesImmutable, CCUtil}
 
 class RFProperty(val property : CCPropertiesImmutable) extends Serializable {
   val storageLevel = StorageLevel.MEMORY_AND_DISK
@@ -30,16 +31,45 @@ class RFProperty(val property : CCPropertiesImmutable) extends Serializable {
   val featureNumber = property.loader.getInt("numFeatures", 0)
   val poissonMean = property.loader.getDouble("poissonMean", 1.0)
   val fast = property.loader.getBoolean("fast", false)
-  val fcsActive = property.loader.getBoolean("fcsActive", false)
-  val fcsActiveSize = property.loader.getInt("fcsActiveSize", 1000)
-  val fcsMinDepth = property.loader.getInt("fcsMinDepth", 2)
+  val skipAccuracy = property.loader.getBoolean("skipAccuracy", false)
   val permitSparseWorkingData = property.loader.getBoolean("permitSparseWorkingData", false)
   val outputTree = property.loader.getBoolean("outputTree", false)
-  val maxNodesConcurrent = property.loader.getInt("maxNodesConcurrent", -1)
+  var maxNodesConcurrent = property.loader.getInt("maxNodesConcurrent", -1)
 
-  val util = property.util
+  // strategy type: reforest / rotation / rotationsqrt
+  val strategy = property.loader.get("strategy", "reforest").toLowerCase
+  val strategyFeature = property.loader.get("strategyFeature", "sqrt").toLowerCase match {
+    case "all" => new RFStrategyFeatureALL(featureNumber)
+    case "sqrt" => new RFStrategyFeatureSQRT(featureNumber)
+    case "sqrtsqrt" => new RFStrategyFeatureSQRTSQRT(featureNumber)
+    case "log2" => new RFStrategyFeatureLOG2(featureNumber)
+    case "onethird" => new RFStrategyFeatureONETHIRD(featureNumber)
+    case _ => new RFStrategyFeatureSQRT(featureNumber)
+  }
+  val strategySplit = property.loader.get("strategySplit", "distribution").toLowerCase match {
+    case "distribution" => new RFStrategySplitDistribution
+    case "random" => new RFStrategySplitRandom
+    case _ => new RFStrategySplitDistribution
+  }
+  val uuid = java.util.UUID.randomUUID.toString
+  var appName = property.appName
+
+  val util = new CCUtil(this)
+  val loader = property.loader
+
+  // FCS
+  val fcsActive = property.loader.getBoolean("fcsActive", false)
+  val fcsActiveForce = property.loader.getBoolean("fcsActiveForce", false)
+  val fcsDepth = property.loader.getInt("fcsDepth", -1)
+  val fcsSafeMemoryMultiplier = Math.max(1, property.loader.getDouble("fcsSafeMemoryMultiplier", 1.4))
+  val fcsNodesPerCore = Math.max(1, property.loader.getInt("fcsNodesPerCore", 1))
+  var fcsCycleActivation = -1
 
   // ROTATION
   val numRotation = property.loader.getInt("numRotation", numTrees)
-  val numMacroIteration = property.loader.getInt("numMacroIteration", 1)
+  val rotationRandomSeed = property.loader.getInt("rotationRandomSeed", 0)
+
+  def setAppName(name : String) = {
+    appName = name
+  }
 }

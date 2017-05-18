@@ -30,21 +30,13 @@ import scala.reflect.ClassTag
 sealed trait RawData[T, U] extends Serializable {
 
   def size: Int
-
   def toArray: Array[T]
-
   def apply(i: Int): T
-
   def foreachActive(f: (Int, T) => Unit): Unit
-
   def numActives: Int
-
   def numNonzeros: Int
-
   def toSparse: RawDataSparse[T, U]
-
   def toDense: RawDataDense[T, U]
-
   def compressed: RawData[T, U] = {
     val nnz = numNonzeros
     if (1.5 * (nnz + 1.0) < size) {
@@ -55,11 +47,13 @@ sealed trait RawData[T, U] extends Serializable {
   }
 
   def toWorkingDataDense(splitter: RFSplitter[T, U]): WorkingDataDense[U]
-
   def toWorkingDataSparse(splitter: RFSplitter[T, U]): WorkingDataSparse[U]
 }
 
 object RawData {
+
+  def dense[T: ClassTag, U: ClassTag](values: Array[T], nan: T): RawData[T, U] =
+    new RawDataDense[T, U](values, nan)
 
   def sparse[T: ClassTag, U: ClassTag](size: Int, indices: Array[Int], values: Array[T], nan: T): RawData[T, U] =
     new RawDataSparse[T, U](size, indices, values, nan)

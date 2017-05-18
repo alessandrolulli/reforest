@@ -37,7 +37,4 @@ class CCPropertiesImmutable(val loader: CCProperties,
                             val separator: String,
                             val instrumented: Boolean) extends Serializable {
 
-  val util = new CCUtil(this)
-  val uuid = java.util.UUID.randomUUID.toString
-
 }

@@ -20,7 +20,6 @@ package reforest.rf
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import reforest.TypeInfo
-
 import reforest.data.{RawDataLabeled, StaticData}
 import reforest.rf.split.RFSplitterManager
 import reforest.util.{GCInstrumented, MemoryUtil}

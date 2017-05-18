@@ -20,20 +20,16 @@ package reforest.dataTree
 import reforest.TypeInfo
 import reforest.data.{RawData, RawDataLabeled, WorkingData}
 
+trait TCut[T, U] extends Serializable {
+  def shouldGoLeft(data: RawDataLabeled[T, U], typeInfo: TypeInfo[T]): Boolean
+  def shouldGoLeft(data: RawData[T, U], typeInfo: TypeInfo[T]): Boolean
+  def shouldGoLeftBin(data: WorkingData[U], typeInfo: TypeInfo[U]): Boolean
+  def compress() : TCut[T, U]
+}
+
 class Cut[T, U](val idFeature: Int,
                 val value: T,
-                val bin: U,
-                val stats: Double = Double.MinValue,
-                val label: Option[Int] = Option.empty,
-                val notValid: Int = 0,
-                val left: Int = 0,
-                val right: Int = 0,
-                val labelNotValid: Option[Int] = Option.empty,
-                val labelLeft: Option[Int] = Option.empty,
-                val labelRight: Option[Int] = Option.empty,
-                val labelNotValidOk: Int = 0,
-                val labelLeftOk: Int = 0,
-                val labelRightOk: Int = 0) extends Serializable {
+                val bin: U) extends TCut[T,U] {
 
   def shouldGoLeft(data: RawDataLabeled[T, U], typeInfo: TypeInfo[T]): Boolean = {
     shouldGoLeft(data.features, typeInfo)
@@ -47,32 +43,41 @@ class Cut[T, U](val idFeature: Int,
     typeInfo.isMinOrEqual(data(idFeature), bin)
   }
 
-  def isValidPresent(): Boolean = {
-    if (left > 0 || right > 0) true else false
-  }
+  override def toString = "("+idFeature+","+value+","+bin+")"
 
-  def isNotValidPresent(): Boolean = {
-    if (notValid > 0) true else false
-  }
+  def compress() : TCut[T, U] = this
+}
 
-  def isNotValidPerfect = labelNotValidOk == notValid
-
-  def isLeftPerfect = labelLeftOk == left
-
-  def isRightPerfect = labelRightOk == right
-
-  override def toString: String = {
-    val toPrint = Array(idFeature.toString, value.toString, bin.toString, stats.toString, label.toString, notValid.toString, left.toString, right.toString, labelNotValid.toString, labelLeft.toString, labelRight.toString, labelNotValidOk.toString, labelLeftOk.toString, labelRightOk.toString)
-    "(" + toPrint.mkString(",") + ")"
+class CutDetailed[T, U](idFeature: Int,
+                        value: T,
+                        bin: U,
+                        val stats: Double = Double.MinValue,
+                        val label: Option[Int] = Option.empty,
+                        val notValid: Int = 0,
+                        val left: Int = 0,
+                        val right: Int = 0,
+                        val labelNotValid: Option[Int] = Option.empty,
+                        val labelLeft: Option[Int] = Option.empty,
+                        val labelRight: Option[Int] = Option.empty,
+                        val labelNotValidOk: Int = 0,
+                        val labelLeftOk: Int = 0,
+                        val labelRightOk: Int = 0) extends Cut[T,U](idFeature, value, bin) {
+  override def compress() = {
+    new Cut[T, U](idFeature, value, bin)
   }
 
   def getNotValid(typeInfo: TypeInfo[T], typeInfoWorking: TypeInfo[U]) = {
     new CutNotValid[T, U](idFeature, typeInfo.NaN, stats, typeInfoWorking.NaN, label, notValid, left, right, labelNotValid, labelLeft, labelRight, labelNotValidOk, labelLeftOk, labelRightOk)
   }
+
+  override def toString: String = {
+    val toPrint = Array(idFeature.toString, value.toString, bin.toString, stats.toString, label.toString, notValid.toString, left.toString, right.toString, labelNotValid.toString, labelLeft.toString, labelRight.toString, labelNotValidOk.toString, labelLeftOk.toString, labelRightOk.toString)
+    "(" + toPrint.mkString(",") + ")"
+  }
 }
 
-object Cut {
-  val empty = new Cut(-1, -1, -1, Double.MinValue)
+object CutDetailed {
+  val empty = new CutDetailed(-1, -1, -1, Double.MinValue)
 }
 
 class CutNotValid[T, U](override val idFeature: Int,
@@ -88,7 +93,17 @@ class CutNotValid[T, U](override val idFeature: Int,
                         override val labelRight: Option[Int] = Option.empty,
                         override val labelNotValidOk: Int = 0,
                         override val labelLeftOk: Int = 0,
-                        override val labelRightOk: Int = 0) extends Cut[T, U](idFeature, value, not, stats) {
+                        override val labelRightOk: Int = 0) extends CutDetailed[T, U](idFeature, value, not, stats) {
+  override def shouldGoLeft(data: RawDataLabeled[T, U], typeInfo: TypeInfo[T]): Boolean = {
+    if (data.features(idFeature) == 0) return true else false
+  }
+
+  override def compress() = {
+    new CutNotValidCompressed[T, U](idFeature, value, bin)
+  }
+}
+
+class CutNotValidCompressed[T, U](idFeature: Int, value: T, not : U) extends Cut[T, U](idFeature, value, not) {
   override def shouldGoLeft(data: RawDataLabeled[T, U], typeInfo: TypeInfo[T]): Boolean = {
     if (data.features(idFeature) == 0) return true else false
   }
@@ -107,10 +122,20 @@ class CutCategorical[T, U](override val idFeature: Int,
                         override val labelRight: Option[Int] = Option.empty,
                         override val labelNotValidOk: Int = 0,
                         override val labelLeftOk: Int = 0,
-                        override val labelRightOk: Int = 0) extends Cut[T, U](idFeature, value, not, stats) {
+                        override val labelRightOk: Int = 0) extends CutDetailed[T, U](idFeature, value, not, stats) {
   override def shouldGoLeft(data: RawDataLabeled[T, U], typeInfo: TypeInfo[T]): Boolean = {
     if (data.features(idFeature) == value) return true else false
   }
 
+  override def compress() = {
+    new CutCategoricalCompressed[T, U](idFeature, value, bin)
+  }
+
   override def toString: String = "CATEGORY: "+super.toString
+}
+
+class CutCategoricalCompressed[T, U](idFeature: Int, value: T, not : U) extends Cut[T, U](idFeature, value, not) {
+  override def shouldGoLeft(data: RawDataLabeled[T, U], typeInfo: TypeInfo[T]): Boolean = {
+    if (data.features(idFeature) == value) return true else false
+  }
 }

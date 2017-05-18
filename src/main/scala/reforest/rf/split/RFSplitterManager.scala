@@ -40,9 +40,9 @@ class RFSplitterManagerCollection[T, U](splitter : Array[RFSplitter[T, U]],
                                         numTrees : Int,
                                         numMacroIteration : Int,
                                         categoryInfo : RFCategoryInfo) extends RFSplitterManager[T, U] {
-  def getBinNumber(idFeature: Int, idTree : Int = 0): U = splitter(idTree).getBinNumber(idFeature)
-  def getBin(idFeature: Int, value: T, idTree : Int = 0): U = splitter(idTree).getBin(idFeature, value)
-  def getRealCut(idFeature: Int, cut: U, idTree : Int = 0): T = splitter(idTree).getRealCut(idFeature, cut)
-  def getSplitter(macroIteration : Int, idTree : Int = 0) : RFSplitter[T, U] = splitter(((numTrees/numMacroIteration)*macroIteration)+idTree)
+  def getBinNumber(idFeature: Int, idTree : Int = 0): U = splitter(idTree/numMacroIteration).getBinNumber(idFeature)
+  def getBin(idFeature: Int, value: T, idTree : Int = 0): U = splitter(idTree/numMacroIteration).getBin(idFeature, value)
+  def getRealCut(idFeature: Int, cut: U, idTree : Int = 0): T = splitter(idTree/numMacroIteration).getRealCut(idFeature, cut)
+  def getSplitter(macroIteration : Int, idTree : Int = 0) : RFSplitter[T, U] = splitter(macroIteration)
   def generateRFSizer(numClasses: Int): RFFeatureSizer = new RFFeatureSizerSimple(binNumber, numClasses, categoryInfo)
 }

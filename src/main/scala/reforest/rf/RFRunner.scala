@@ -21,16 +21,17 @@ import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import randomForest.test.reforest.rf.RFTreeGenerationFCS
-import reforest.{TypeInfo, TypeInfoByte, TypeInfoDouble}
+import reforest.data.load.{ARFFUtil, LibSVMUtil}
 import reforest.data.{RawDataLabeled, StaticData}
-import reforest.dataTree.{Cut, TreeNode}
-import reforest.rf.split.{RFSplit, RFSplitterManager}
+import reforest.dataTree._
+import reforest.rf.split.RFSplitterManager
 import reforest.util._
+import reforest.{TypeInfo, TypeInfoByte, TypeInfoDouble}
 
 import scala.collection.mutable.ListBuffer
 import scala.reflect.ClassTag
 
-class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
+class RFAllInRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext,
                                               val property: RFProperty,
                                               val instrumented: Broadcast[GCInstrumented],
                                               val strategy: RFStrategy[T, U],
@@ -43,18 +44,25 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
   var testData: Option[RDD[RawDataLabeled[T, U]]] = Option.empty
   var workingData: Option[RDD[StaticData[U]]] = Option.empty
 
-  var rootArray: Array[TreeNode[T, U]] = Array()
+  var forest: Forest[T, U] = new ForestIncremental[T, U](property.numTrees, property.maxDepth)
   var featureInfo: Option[Broadcast[RFSplitterManager[T, U]]] = Option.empty
-  var memoryUtil : Option[MemoryUtil] = Option.empty
+  var memoryUtil: Option[MemoryUtil] = Option.empty
   val categoricalFeaturesInfoBC = sc.broadcast(categoricalFeaturesInfo)
 
   val typeInfoBC = sc.broadcast(typeInfo)
   val typeInfoWorkingBC = sc.broadcast(typeInfoWorking)
   val strategyBC = sc.broadcast(strategy)
 
-  val svm = new SVMUtilImpl[T, U](typeInfoBC, instrumented, categoricalFeaturesInfoBC)
+  val svm = property.util.getDataLoader[T, U](typeInfoBC, instrumented, categoricalFeaturesInfoBC)
   val dataPrepare = new RFDataPrepare[T, U](typeInfoBC, instrumented, strategyBC, property.permitSparseWorkingData, property.poissonMean)
-  val rfSplit = new RFSplit[T, U](typeInfoBC, typeInfoWorkingBC, instrumented, categoricalFeaturesInfoBC)
+
+  var trainingTime = 0l
+
+  def getTrainingTime = {
+    trainingTime
+  }
+
+  def sparkStop() = sc.stop()
 
   def executeGCinstrumented(): Unit = {
     instrumented.value.gcALL()
@@ -64,11 +72,11 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
     if (workingData.isDefined) workingData.get.unpersist()
   }
 
-  def getTrainingData(rawData: RDD[RawDataLabeled[T, U]], featureSQRT: collection.mutable.Map[(Int, Int), Array[Int]], numTrees: Int = property.numTrees, macroIteration : Int = 0) = {
-    property.util.io.logTIME(property.property.appName, "START-PREPARE")
+  def getTrainingData(rawData: RDD[RawDataLabeled[T, U]], featureSQRT: collection.mutable.Map[(Int, Int), Array[Int]], numTrees: Int = property.numTrees, macroIteration: Int = 0) = {
+    property.util.io.logTIME(property.appName, "START-PREPARE")
     instrumented.value.gcALL()
 
-    if(featureInfo.isEmpty) {
+    if (featureInfo.isEmpty) {
       val zzz = strategyBC.value.findSplits(rawData, typeInfoBC, typeInfoWorkingBC, instrumented, categoricalFeaturesInfoBC)
       featureInfo = Some(sc.broadcast(zzz._1))
       memoryUtil = Some(zzz._2)
@@ -77,7 +85,7 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
     val toReturn = dataPrepare.prepareData(rawData, featureInfo.get, property.featureNumber, memoryUtil.get, numTrees, macroIteration)
     instrumented.value.gcALL()
 
-    for (i <- 0 to (numTrees - 1)) featureSQRT((i, 1)) = strategyBC.value.getSQRTFeatures()
+    for (i <- 0 to (numTrees - 1)) featureSQRT((i, 0)) = strategyBC.value.getStrategyFeature().getFeaturePerNode
 
     (toReturn, memoryUtil)
   }
@@ -86,34 +94,14 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
     testData.get
   }
 
-  def printTree(oracle: Array[TreeNode[T, U]] = rootArray) = {
+  def printTree(oracle: Forest[T, U] = forest) = {
     if (property.outputTree) {
-      for (r <- oracle.zipWithIndex) {
-        property.util.io.log(r._2.toString)
-        property.util.io.log(r._1.toString)
-        println(r._2.toString)
-        println(r._1.toString)
-      }
+      println(oracle.toString())
     }
-  }
-
-  def getTestError(skipAccuracy: Boolean, oracle: Array[TreeNode[T, U]] = rootArray) = {
-    var testErr = -1d
-    if (!skipAccuracy) {
-      val rootArrayBC = sc.broadcast(oracle)
-      val dataToTest = getTestData()
-      val labelAndPreds = dataToTest.map { point =>
-        val prediction = rootArrayBC.value.map(t => t.predict(point, typeInfo)).groupBy(identity).mapValues(_.size).maxBy(_._2)
-        (point.label, prediction._1)
-      }
-
-      testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / dataToTest.count()
-    }
-    testErr
   }
 
   def loadData(splitSize: Double) = {
-    val data = svm.loadLibSVMFile(sc, property.property.dataset, property.featureNumber, property.property.sparkCoresMax * 2)
+    val data = svm.loadFile(sc, property.property.dataset, property.featureNumber, property.property.sparkCoresMax * 2)
     instrumented.value.gcALL
     val splits = data.randomSplit(Array(splitSize, (1 - splitSize)), 0)
     val (trainingData, testDataToSet) = (splits(0), splits(1))
@@ -128,32 +116,28 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
     val t1 = System.currentTimeMillis()
     println("Time: " + (t1 - t0))
 
-    property.util.io.printToFile("stats.txt", property.property.appName, property.property.dataset,
-      "numTrees", property.numTrees.toString,
-      "maxDepth", property.maxDepth.toString,
-      "binNumber", property.binNumber.toString,
+    trainingTime = (t1 - t0)
+
+    property.util.io.printToFile("stats.txt", property.appName, property.property.dataset,
       "timeALL", (t1 - t0).toString,
       "notConcurrentTime", notConcurrentTime.toString,
       "preparationTime", (timePreparationEND - timePreparationSTART).toString,
       "cycleTime", cycleTimeList.mkString("|"),
       "maxNodesConcurrent", maxNodesConcurrent.toString,
-      "maxFeaturePerIteration", featurePerIteration.toString,
-      "sparkCoresMax", property.property.sparkCoresMax.toString,
-      "sparkExecutorInstances", property.property.sparkExecutorInstances.toString
+      "maxFeaturePerIteration", featurePerIteration.toString
     )
 
-    new RFModelStandard[T, U](sc.broadcast(rootArray), typeInfoBC)
+    new RFModelStandard[T, U](sc.broadcast(forest), typeInfoBC, property.numClasses)
   }
 
-  def updateForest(tree: RFTreeGeneration[T, U], treeId: Int, nodeId: Int, cut: Cut[T, U], rootArray: Array[TreeNode[T, U]], featureSQRT: collection.mutable.Map[(Int, Int), Array[Int]]) = {
-    tree.updateForest(cut, treeId, TreeNode.getNode(nodeId, rootArray(treeId)), featureSQRT)
+  def updateForest(tree: RFTreeGeneration[T, U], treeId: Int, nodeId: Int, cut: CutDetailed[T, U], forest: Forest[T, U], featureSQRT: collection.mutable.Map[(Int, Int), Array[Int]]) = {
+    tree.updateForest(cut, treeId, nodeId, forest, Some(featureSQRT))
   }
 
   // TODO the following code is really ugly... but for now it works
-  def run(trainingDataRaw: RDD[RawDataLabeled[T, U]], numTrees: Int = property.numTrees, macroIteration : Int = 0) = {
+  def run(trainingDataRaw: RDD[RawDataLabeled[T, U]], numTrees: Int = property.numTrees, macroIteration: Int = 0) = {
     println("numTrees " + numTrees)
-    rootArray = Array()
-    for (i <- 1 to numTrees) rootArray = rootArray :+ TreeNode.emptyNode[T, U](1)
+    forest = new ForestFull[T, U](numTrees, property.maxDepth)
 
     instrumented.value.gcALL
 
@@ -182,6 +166,7 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
 
     val maxNodesConcurrentConfig = property.maxNodesConcurrent
     val maxNodesConcurrent = if (maxNodesConcurrentConfig > 0) maxNodesConcurrentConfig else memoryUtil.get.maximumConcurrentNodes
+    property.maxNodesConcurrent = maxNodesConcurrent
     val tree = new RFTreeGeneration[T, U](sc,
       propertyBC,
       typeInfoBC,
@@ -192,21 +177,26 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
       numTrees,
       macroIteration)
 
-    property.util.io.logTIME(property.property.appName, "START-TREE")
+    property.util.io.logTIME(property.appName, "START-TREE")
 
-    def averageSampleSizeValid = {
-      //      println("AVERAGE NODE SIZE: " + incrementalMean.getMean)
-      !property.fcsActive || incrementalMean.getMean > property.fcsActiveSize || !incrementalMean.isStarted || (property.maxDepth - depth) <= property.fcsMinDepth
+    def switchToFCS(nodeNumber: Int) = {
+//      memoryUtil.get.switchToFCS(depth, featureSQRT.size)
+
+      if (property.fcsActive && property.fcsDepth != -1) {
+        property.fcsDepth == depth
+      } else {
+        property.fcsActive && memoryUtil.get.switchToFCS(depth, featureSQRT.size)
+      }
     }
 
-    while (depth < property.maxDepth && averageSampleSizeValid) {
+    while (depth < property.maxDepth && !switchToFCS(featureSQRT.size)) {
       val timeCycleStartALL = System.currentTimeMillis()
       depth = depth + 1
       println("DEPTH: " + depth)
       incrementalMean.reset()
 
       ////////////////////////////////
-      val bestCutArray = tree.findBestCut(sc, workingData.get, featureSQRT, rootArray, depth, instrumented)
+      val bestCutArray = tree.findBestCut(sc, workingData.get, featureSQRT, forest, depth, instrumented)
       ////////////////////////////////
       val timeCycleStart = System.currentTimeMillis()
 
@@ -218,7 +208,7 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
           val nodeId = cutInfo._1._2
           val cut = cutInfo._2
 
-          incrementalMean.updateMean(updateForest(tree, treeId, nodeId, cut, rootArray, featureSQRT))
+          incrementalMean.updateMean(updateForest(tree, treeId, nodeId, cut, forest, featureSQRT))
         })
       }
       val timeCycleEnd = System.currentTimeMillis()
@@ -226,30 +216,46 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
       cycleTimeList += (timeCycleStart - timeCycleStartALL).toString
     }
     if (depth < property.maxDepth && property.fcsActive) {
-      val treeFCS = new RFTreeGenerationFCS[T, U](sc, property.binNumber, maxNodesConcurrent, typeInfoBC, sc.broadcast(typeInfoWorking), strategyBC, property.featureNumber, tree)
+      val treeFCS = new RFTreeGenerationFCS[T, U](sc, maxNodesConcurrent, propertyBC, typeInfoBC, sc.broadcast(typeInfoWorking), strategyBC, tree, strategy.getSampleSize)
       println("SWITCHING TO FCS")
       val t0 = System.currentTimeMillis()
-      rootArray = treeFCS.findBestCutFCS(sc, workingData.get, property.util, featureInfo.get, featureSQRT, rootArray, depth, property.maxDepth, property.numClasses, property.property.appName, instrumented, memoryUtil.get)
+      forest = treeFCS.findBestCutFCS(sc, workingData.get, property.util, featureInfo.get, featureSQRT, forest, depth, instrumented, memoryUtil.get)
       val t1 = System.currentTimeMillis()
       cycleTimeList += (t1 - t0).toString
     }
 
-    workingDataUnpersist
+//    workingDataUnpersist
     (notConcurrentTime, timePreparationEND, timePreparationSTART, cycleTimeList, maxNodesConcurrent, memoryUtil.get.maximumConcurrentNumberOfFeature)
   }
 }
 
 object RFAllInRunner {
+  def apply(property: RFProperty) = {
+    val sc = property.util.getSparkContext()
+    sc.setLogLevel(property.property.loader.get("logLevel", "error"))
+    val strategyFeature = property.strategyFeature
+    new RFAllInRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), new TypeInfoByte())
+  }
+
+  def apply[T: ClassTag, U: ClassTag](property: RFProperty, typeInfoRawData: TypeInfo[T], typeInfoWorkingData: TypeInfo[U]) = {
+    val sc = property.util.getSparkContext()
+    val strategyFeature = property.strategyFeature
+    new RFAllInRunner[T, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), typeInfoRawData, typeInfoWorkingData)
+  }
+
   def apply(sc: SparkContext,
-            property: RFProperty) = new RFAllInRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property), new TypeInfoDouble(), new TypeInfoByte())
+            property: RFProperty,
+            strategyFeature: RFStrategyFeature) = new RFAllInRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), new TypeInfoByte())
 
   def apply[U: ClassTag](sc: SparkContext,
                          property: RFProperty,
-                         typeInfoWorking: TypeInfo[U]) = new RFAllInRunner[Double, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property), new TypeInfoDouble(), typeInfoWorking)
+                         strategyFeature: RFStrategyFeature,
+                         typeInfoWorking: TypeInfo[U]) = new RFAllInRunner[Double, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), typeInfoWorking)
 
   def apply[T: ClassTag,
   U: ClassTag](sc: SparkContext,
                property: RFProperty,
+               strategyFeature: RFStrategyFeature,
                typeInfo: TypeInfo[T],
-               typeInfoWorking: TypeInfo[U]) = new RFAllInRunner[T, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property), typeInfo, typeInfoWorking)
+               typeInfoWorking: TypeInfo[U]) = new RFAllInRunner[T, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), typeInfo, typeInfoWorking)
 }

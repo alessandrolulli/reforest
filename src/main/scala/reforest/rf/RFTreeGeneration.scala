@@ -22,14 +22,14 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkContext, TaskContext}
 import reforest.TypeInfo
 import reforest.data.{DataOnWorker, StaticData}
-import reforest.dataTree.{Cut, TreeNode}
+import reforest.dataTree.{CutDetailed, Forest}
 import reforest.rf.split.RFSplitterManager
 import reforest.util.{BiMap, GCInstrumented, IncrementalMean}
 
 import scala.collection.Map
 import scala.reflect.ClassTag
 
-class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
+class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext,
                                                  property: Broadcast[RFProperty],
                                                  typeInfo: Broadcast[TypeInfo[T]],
                                                  typeInfoWorking: Broadcast[TypeInfo[U]],
@@ -37,7 +37,7 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
                                                  splitter: Broadcast[RFSplitterManager[T, U]],
                                                  strategy: Broadcast[RFStrategy[T, U]],
                                                  numTrees: Int,
-                                                 macroIteration : Int) extends Serializable {
+                                                 macroIteration: Int) extends Serializable {
 
   val entropy = sc.broadcast(new RFEntropy[T, U](typeInfo, typeInfoWorking))
 
@@ -45,8 +45,8 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
                          matrixRow: Array[Int],
                          idTOid: BiMap[(Int, Int), Int],
                          featureIdMap: Map[(Int, Int), Array[Int]],
-                         depth: Int): ((Int, Int), Cut[T, U]) = {
-    var bestSplit: Option[Cut[T, U]] = Option.empty
+                         depth: Int): ((Int, Int), CutDetailed[T, U]) = {
+    var bestSplit: Option[CutDetailed[T, U]] = Option.empty
     val (treeId, nodeId) = idTOid(nodeIdTree)
     val featurePerNode = featureIdMap((treeId, nodeId))
 
@@ -55,7 +55,7 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
       val featureId = featurePerNode(featurePosition)
       val offset = DataOnWorker.getOffset(nodeIdTree, featurePosition)
       val rowSubset = rowSubsetPrepare(matrixRow, offset._1, offset._2, property.value.numClasses)
-      val g = if (categoricalFeatures.value.isCategorical(featureId)) entropy.value.getBestSplitCategorical(rowSubset, featureId, splitter.value.getSplitter(macroIteration , treeId), depth, property.value.maxDepth, property.value.numClasses)
+      val g = if (categoricalFeatures.value.isCategorical(featureId)) entropy.value.getBestSplitCategorical(rowSubset, featureId, splitter.value.getSplitter(macroIteration, treeId), depth, property.value.maxDepth, property.value.numClasses)
       else entropy.value.getBestSplit(rowSubset, featureId, splitter.value.getSplitter(macroIteration, treeId), depth, property.value.maxDepth, property.value.numClasses)
       if (bestSplit.isEmpty || g.stats > bestSplit.get.stats) bestSplit = Some(g)
       featurePosition += 1
@@ -67,7 +67,7 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
   def findBestCutEntropy(args: (Int, Array[Int]),
                          idTOid: BiMap[(Int, Int), Int],
                          featureIdMap: Map[(Int, Int), Array[Int]],
-                         depth: Int): ((Int, Int), Cut[T, U]) = {
+                         depth: Int): ((Int, Int), CutDetailed[T, U]) = {
     findBestCutEntropy(args._1, args._2, idTOid, featureIdMap, depth)
   }
 
@@ -83,11 +83,21 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
     toReturn
   }
 
+  def rowSubsetPrepareWithData(toReturn: Array[Array[Int]], row: Array[Int], start: Int, end: Int, numClasses: Int): Array[Array[Int]] = {
+    var count = 0
+    while (count < (end - start)) {
+      toReturn(count / numClasses)(count % numClasses) = row(start + count)
+      count += 1
+    }
+
+    toReturn
+  }
+
   def mapPartitionsPointToMatrix(it: Iterator[StaticData[U]],
                                  featureMap: Broadcast[Map[(Int, Int), Array[Int]]],
                                  iteration: Int,
                                  iterationNum: Int,
-                                 rootArray: Broadcast[Array[TreeNode[T, U]]],
+                                 forest: Broadcast[Forest[T, U]],
                                  idTOid: Broadcast[BiMap[(Int, Int), Int]]): Unit = {
 
     it.foreach { case data =>
@@ -96,7 +106,7 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
         val weight = data.getBagging(treeId)
         if (weight > 0 && treeId % iterationNum == iteration) {
           val point = data.getWorkingData(treeId)
-          val nodeIdOption = rootArray.value(treeId).getCurrentNodeId(point, typeInfoWorking.value)
+          val nodeIdOption = forest.value.getCurrentNodeId(treeId, point, typeInfoWorking.value)
           if (nodeIdOption.isDefined) {
             val nodeId = nodeIdOption.get
             val idx = idTOid.value((treeId, nodeId))
@@ -132,19 +142,19 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
   def findBestCut(sc: SparkContext,
                   dataIndex: RDD[StaticData[U]],
                   featureSelected: Map[(Int, Int), Array[Int]],
-                  rootArrayArg: Array[TreeNode[T, U]],
+                  forestArg: Forest[T, U],
                   depth: Int,
                   instrumented: Broadcast[GCInstrumented]) = {
 
     if (featureSelected.isEmpty) {
-      Array[((Int, Int), Cut[T, U])]()
+      Array[((Int, Int), CutDetailed[T, U])]()
     } else {
       val iterationNumber = Math.ceil(featureSelected.size.toDouble / property.value.maxNodesConcurrent).toInt
       var iteration = 0
 
-      val rootArray = sc.broadcast(rootArrayArg)
+      val forestBC = sc.broadcast(forestArg)
 
-      var toReturn: Array[((Int, Int), Cut[T, U])] = Array.empty
+      var toReturn: Array[((Int, Int), CutDetailed[T, U])] = Array.empty
 
       instrumented.value.start()
 
@@ -153,14 +163,11 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
         val featureIdMap = sc.broadcast(fMapTmp)
         val idTOid = sc.broadcast(new BiMap(featureSelected.filter(t => t._1._1 % iterationNumber == iteration).toArray.map(t => t._1).sortBy(_._1).zipWithIndex.toMap))
 
-        /* Matrix initialization */
         dataIndex.foreachPartition(t => {
+          /* Matrix initialization */
           instrumented.value.gc(DataOnWorker.init(depth, iteration, iterationNumber, fMapTmp.size, property.value.numClasses, splitter, featureIdMap, idTOid))
-        })
-
-        /* Local information collection */
-        dataIndex.foreachPartition(t => {
-          instrumented.value.gc(mapPartitionsPointToMatrix(t, featureIdMap, iteration, iterationNumber, rootArray, idTOid))
+          /* Local information collection */
+          instrumented.value.gc(mapPartitionsPointToMatrix(t, featureIdMap, iteration, iterationNumber, forestBC, idTOid))
         })
 
         /* Distributed Information Aggregation + Best Cut Finding */
@@ -190,100 +197,130 @@ class RFTreeGeneration[T: ClassTag, U: ClassTag](@transient sc: SparkContext,
 
       instrumented.value.stop()
 
-      rootArray.unpersist()
+      forestBC.unpersist()
 
       toReturn
     }
   }
 
-  def updateForest(cut: Cut[T, U],
+  def updateForest(cut: CutDetailed[T, U],
                    treeId: Int,
-                   node: TreeNode[T, U],
-                   featureSQRT: collection.mutable.Map[(Int, Int), Array[Int]]) = {
+                   nodeId: Int,
+                   forest: Forest[T, U],
+                   featureSQRT: Option[collection.mutable.Map[(Int, Int), Array[Int]]] = Option.empty) = {
     val mean = new IncrementalMean
 
     if ((cut.left + cut.right) == 0) {
-      node.label = cut.label
-      node.isLeaf = true
+      if(cut.label.isDefined) {
+        forest.setLabel(treeId, nodeId, cut.label.get)
+      }
+      forest.setLeaf(treeId, nodeId)
     } else if (cut.notValid > 0) {
       val cutNotValid = cut.getNotValid(typeInfo.value, typeInfoWorking.value)
+      if(cut.label.isDefined) forest.setLabel(treeId, nodeId, cut.label.get)
 
       if (cut.left > 0 && cut.right > 0) {
-        node.split = Some(cutNotValid)
+        forest.setSplit(treeId, nodeId, cutNotValid)
 
-        val leftChild = node.getLeftChild()
+        val leftChild = forest.getLeftChild(treeId, nodeId)
+        val rightChild = forest.getRightChild(treeId, nodeId)
+        forest.setSplit(treeId, rightChild, cut)
 
-        val rightChild = node.getRightChild()
-        rightChild.split = Some(cut)
+        val rightleftChild = forest.getLeftChild(treeId, rightChild)
+        val rightrightChild = forest.getRightChild(treeId, rightChild)
 
-        val rightleftChild = rightChild.getLeftChild()
-        val rightrightChild = rightChild.getRightChild()
-
-        leftChild.label = Some(cut.labelNotValid.get)
-        if (cut.labelNotValidOk == cut.notValid || TreeNode.indexToLevelCheck(leftChild.id) > property.value.maxDepth) {
-          leftChild.isLeaf = true
+        if(cut.labelNotValid.isDefined) {
+          forest.setLabel(treeId, leftChild, cut.labelNotValid.get)
+        }
+        if (cut.labelNotValidOk == cut.notValid || forest.getLevel(treeId, leftChild) + 1 > property.value.maxDepth) {
+          forest.setLeaf(treeId, leftChild)
         } else {
-          featureSQRT((treeId, leftChild.id)) = strategy.value.getSQRTFeatures()
+          if (featureSQRT.isDefined) {
+            featureSQRT.get((treeId, leftChild)) = strategy.value.getStrategyFeature().getFeaturePerNode
+          }
           mean.updateMean(cut.left)
         }
 
-        if (cut.labelLeftOk == cut.left || TreeNode.indexToLevelCheck(rightleftChild.id) > property.value.maxDepth) {
-          rightleftChild.isLeaf = true
-          rightleftChild.label = Some(cut.labelLeft.get)
+        if (cut.labelLeftOk == cut.left || forest.getLevel(treeId, rightleftChild) + 1 > property.value.maxDepth) {
+          forest.setLeaf(treeId, rightleftChild)
+          forest.setLabel(treeId, rightleftChild, cut.labelLeft.get)
         } else {
-          featureSQRT((treeId, rightleftChild.id)) = strategy.value.getSQRTFeatures()
+          if (featureSQRT.isDefined) {
+            featureSQRT.get((treeId, rightleftChild)) = strategy.value.getStrategyFeature().getFeaturePerNode
+          }
           mean.updateMean(cut.right)
         }
 
-        if (cut.labelRightOk == cut.right || TreeNode.indexToLevelCheck(rightrightChild.id) > property.value.maxDepth) {
-          rightrightChild.isLeaf = true
-          rightrightChild.label = Some(cut.labelRight.get)
+        if (cut.labelRightOk == cut.right || forest.getLevel(treeId, rightrightChild) + 1 > property.value.maxDepth) {
+          forest.setLeaf(treeId, rightrightChild)
+          forest.setLabel(treeId, rightrightChild, cut.labelRight.get)
         } else {
-          featureSQRT((treeId, rightrightChild.id)) = strategy.value.getSQRTFeatures()
+          if (featureSQRT.isDefined) {
+            featureSQRT.get((treeId, rightrightChild)) = strategy.value.getStrategyFeature().getFeaturePerNode
+          }
         }
       } else {
-        node.split = Some(cutNotValid)
+        forest.setSplit(treeId, nodeId, cutNotValid)
+        if(cut.label.isDefined) forest.setLabel(treeId, nodeId, cut.label.get)
 
-        val leftChild = node.getLeftChild()
-        val rightChild = node.getRightChild()
-        if (cut.labelLeftOk > cut.labelRightOk)
-          rightChild.label = Some(cut.labelLeft.get)
-        else rightChild.label = Some(cut.labelRight.get)
-        rightChild.isLeaf = true
+        val leftChild = forest.getLeftChild(treeId, nodeId)
+        val rightChild = forest.getRightChild(treeId, nodeId)
+        if (cut.labelLeftOk > cut.labelRightOk) {
+          forest.setLabel(treeId, rightChild, cut.labelLeft.get)
+        }
+        else {
+          forest.setLabel(treeId, rightChild, cut.labelRight.get)
+        }
+        forest.setLeaf(treeId, rightChild)
 
-        leftChild.label = Some(cut.labelNotValid.get)
-        if (cut.labelNotValidOk == cut.notValid || TreeNode.indexToLevelCheck(leftChild.id) > property.value.maxDepth) {
-          leftChild.isLeaf = true
+        if(cut.labelNotValid.isDefined) {
+          forest.setLabel(treeId, leftChild, cut.labelNotValid.get)
+        }
+        if (cut.labelNotValidOk == cut.notValid || forest.getLevel(treeId, leftChild) + 1 > property.value.maxDepth) {
+          forest.setLeaf(treeId, leftChild)
         } else {
-          featureSQRT((treeId, leftChild.id)) = strategy.value.getSQRTFeatures()
+          if (featureSQRT.isDefined) {
+            featureSQRT.get((treeId, leftChild)) = strategy.value.getStrategyFeature().getFeaturePerNode
+          }
           mean.updateMean(cut.left)
         }
       }
     } else {
       if (cut.left > 0 && cut.right > 0) {
-        node.split = Some(cut)
+        forest.setSplit(treeId, nodeId, cut)
+        if(cut.label.isDefined) forest.setLabel(treeId, nodeId, cut.label.get)
 
-        val leftChild = node.getLeftChild()
-        val rightChild = node.getRightChild()
+        val leftChild = forest.getLeftChild(treeId, nodeId)
+        val rightChild = forest.getRightChild(treeId, nodeId)
 
-        leftChild.label = cut.labelLeft
-        rightChild.label = cut.labelRight
+//        println(treeId+" "+nodeId+" "+cut.left+" "+cut.right+" "+leftChild+" "+rightChild)
 
-        if (cut.labelLeftOk == cut.left || TreeNode.indexToLevelCheck(leftChild.id) > property.value.maxDepth) {
-          leftChild.isLeaf = true
+        if (cut.labelLeft.isDefined) {
+          forest.setLabel(treeId, leftChild, cut.labelLeft.get)
+        }
+        if (cut.labelRight.isDefined) {
+          forest.setLabel(treeId, rightChild, cut.labelRight.get)
+        }
+
+        if (cut.labelLeftOk == cut.left || forest.getLevel(treeId, leftChild) + 1 > property.value.maxDepth) {
+          forest.setLeaf(treeId, leftChild)
         } else {
-          featureSQRT((treeId, leftChild.id)) = strategy.value.getSQRTFeatures()
+          if (featureSQRT.isDefined) {
+            featureSQRT.get((treeId, leftChild)) = strategy.value.getStrategyFeature().getFeaturePerNode
+          }
           mean.updateMean(cut.left)
         }
-        if (cut.labelRightOk == cut.right || TreeNode.indexToLevelCheck(rightChild.id) > property.value.maxDepth) {
-          rightChild.isLeaf = true
+        if (cut.labelRightOk == cut.right || forest.getLevel(treeId, rightChild) + 1 > property.value.maxDepth) {
+          forest.setLeaf(treeId, rightChild)
         } else {
-          featureSQRT((treeId, rightChild.id)) = strategy.value.getSQRTFeatures()
+          if (featureSQRT.isDefined) {
+            featureSQRT.get((treeId, rightChild)) = strategy.value.getStrategyFeature().getFeaturePerNode
+          }
           mean.updateMean(cut.right)
         }
       } else {
-        node.label = cut.label
-        node.isLeaf = true
+        forest.setLabel(treeId, nodeId, cut.label.get)
+        forest.setLeaf(treeId, nodeId)
       }
     }
 

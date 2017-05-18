@@ -29,10 +29,17 @@ import reforest.util.{GCInstrumented, MemoryUtil}
 import scala.reflect.ClassTag
 import scala.util.Random
 
-trait RFStrategy[T, U] extends Serializable {
+abstract class RFStrategy[T, U](strategyFeature: RFStrategyFeature) extends Serializable {
+  var sampleSize: Option[Long] = Option.empty
+
+  def getSampleSize: Long = {
+    assert(sampleSize.isDefined)
+    sampleSize.get
+  }
+
   def generateBagging(size: Int, distribution: PoissonDistribution): Array[Byte]
 
-  def getSQRTFeatures(): Array[Int]
+  def getStrategyFeature(): RFStrategyFeature = strategyFeature
 
   def findSplits(input: RDD[RawDataLabeled[T, U]],
                  typeInfo: Broadcast[TypeInfo[T]],
@@ -51,14 +58,14 @@ trait RFStrategy[T, U] extends Serializable {
   def findSplitSampleInput(property: RFProperty,
                            input: RDD[RawDataLabeled[T, U]],
                            instrumented: Broadcast[GCInstrumented]) = {
-    val inputSize = input.count
-    println(inputSize)
+    sampleSize = Some(input.count)
+    println("SAMPLE SIZE: " + sampleSize.get)
 
-    val memoryUtil = new MemoryUtil(inputSize, property)
+    val memoryUtil = new MemoryUtil(getSampleSize, property)
 
     instrumented.value.gcALL
-    val requiredSamples = math.min(math.max(property.binNumber * property.binNumber, 10000), inputSize)
-    val fraction = requiredSamples.toDouble / inputSize
+    val requiredSamples = math.min(math.max(property.binNumber * property.binNumber, 10000), getSampleSize)
+    val fraction = requiredSamples.toDouble / getSampleSize
     val sampledInput = input.sample(withReplacement = false, fraction)
     instrumented.value.gcALL
 
@@ -66,24 +73,15 @@ trait RFStrategy[T, U] extends Serializable {
   }
 }
 
-class RFStrategyStandard[T: ClassTag, U: ClassTag](property: RFProperty) extends RFStrategy[T, U] {
+class RFStrategyStandard[T: ClassTag, U: ClassTag](property: RFProperty, strategyFeature: RFStrategyFeature) extends RFStrategy[T, U](strategyFeature) {
   def generateBagging(size: Int, distribution: PoissonDistribution) = {
     val toReturn = new Array[Byte](size)
     var i = 0
-    while(i < toReturn.length) {
+    while (i < toReturn.length) {
       toReturn(i) = distribution.sample().toByte
       i += 1
     }
     toReturn
-  }
-
-  def getSQRTFeatures(): Array[Int] = {
-    var i = 0
-    var toReturn = Set[Int]()
-    while (toReturn.size < Math.sqrt(property.featureNumber).toInt) {
-      toReturn = toReturn + Random.nextInt(property.featureNumber)
-    }
-    toReturn.toArray
   }
 
   def findSplits(input: RDD[RawDataLabeled[T, U]],
@@ -93,14 +91,7 @@ class RFStrategyStandard[T: ClassTag, U: ClassTag](property: RFProperty) extends
                  categoricalFeatureInfo: Broadcast[RFCategoryInfo]): (RFSplitterManager[T, U], MemoryUtil) = {
     val (memoryUtil, sampledInput) = findSplitSampleInput(property, input, instrumented)
 
-    val splitter = new RFSplit[T, U](typeInfo, typeInfoWorking, instrumented, categoricalFeatureInfo)
-    if ((memoryUtil.maximumConcurrentNumberOfFeature * 10) > property.featureNumber) {
-      val toReturn = splitter.findSplitsBySorting(sampledInput, property.binNumber, property.featureNumber, memoryUtil.maximumConcurrentNumberOfFeature)
-      instrumented.value.gcALL
-      (new RFSplitterManagerSingle[T, U](new RFSplitterSpecialized(toReturn, typeInfo.value, typeInfoWorking.value, categoricalFeatureInfo.value)), memoryUtil)
-    } else {
-      (new RFSplitterManagerSingle[T, U](splitter.findSplitsSimple(sampledInput, property.binNumber, property.featureNumber, memoryUtil.maximumConcurrentNumberOfFeature)), memoryUtil)
-    }
+    (new RFSplitterManagerSingle[T, U](property.strategySplit.findSplitsSimple(sampledInput, property.binNumber, property.featureNumber, memoryUtil.maximumConcurrentNumberOfFeature, typeInfo, typeInfoWorking, instrumented, categoricalFeatureInfo)), memoryUtil)
   }
 
   def prepareData(numTrees: Int,
@@ -113,7 +104,7 @@ class RFStrategyStandard[T: ClassTag, U: ClassTag](property: RFProperty) extends
     val poisson = new PoissonDistribution(property.poissonMean)
     poisson.reseedRandomGenerator(0 + partitionIndex + 1)
 
-    val toReturn = instances.map { instance =>
+    instances.map { instance =>
       val sampleArray = generateBagging(numTrees, poisson)
       instance.features match {
         case v: RawDataSparse[T, U] => {
@@ -129,21 +120,13 @@ class RFStrategyStandard[T: ClassTag, U: ClassTag](property: RFProperty) extends
         case _ => throw new ClassCastException
       }
     }
-
-    instrumented.gc()
-    toReturn
   }
 }
 
-class RFStrategyRotation[T: ClassTag, U: ClassTag](property: RFProperty, rotationMatrix: Broadcast[Array[RFRotationMatrix[T, U]]]) extends RFStrategy[T, U] {
-  val sqrtFeature = Array.tabulate(property.featureNumber)(i => i)
+class RFStrategyRotation[T: ClassTag, U: ClassTag](property: RFProperty, strategyFeature: RFStrategyFeature, rotationMatrix: Broadcast[Array[RFRotationMatrix[T, U]]]) extends RFStrategy[T, U](strategyFeature) {
 
   def generateBagging(size: Int, distribution: PoissonDistribution) = {
     Array.tabulate(size)(i => 1.toByte)
-  }
-
-  def getSQRTFeatures(): Array[Int] = {
-    sqrtFeature
   }
 
   def findSplits(input: RDD[RawDataLabeled[T, U]],
@@ -153,16 +136,15 @@ class RFStrategyRotation[T: ClassTag, U: ClassTag](property: RFProperty, rotatio
                  categoricalFeatureInfo: Broadcast[RFCategoryInfo]): (RFSplitterManager[T, U], MemoryUtil) = {
     val (memoryUtil, sampledInput) = findSplitSampleInput(property, input, instrumented)
 
-    val splitter = new RFSplit[T, U](typeInfo, typeInfoWorking, instrumented, categoricalFeatureInfo)
     val splitterArray = new Array[RFSplitter[T, U]](rotationMatrix.value.length)
     var count = 0
 
     while (count < splitterArray.length) {
-      splitterArray(count) = new RFSplitterSpecialized(splitter.findSplitsBySorting(sampledInput.map(t => rotationMatrix.value(count).rotateRawDataLabeled(t)), property.binNumber, property.featureNumber, memoryUtil.maximumConcurrentNumberOfFeature), typeInfo.value, typeInfoWorking.value, categoricalFeatureInfo.value)
+      splitterArray(count) = property.strategySplit.findSplitsSimple(sampledInput.map(t => rotationMatrix.value(count).rotate(t)), property.binNumber, property.featureNumber, memoryUtil.maximumConcurrentNumberOfFeature, typeInfo, typeInfoWorking, instrumented, categoricalFeatureInfo)
       count += 1
     }
 
-    (new RFSplitterManagerCollection[T, U](splitterArray, property.binNumber, property.numTrees, property.numMacroIteration, categoricalFeatureInfo.value), memoryUtil)
+    (new RFSplitterManagerCollection[T, U](splitterArray, property.binNumber, property.numTrees, splitterArray.length, categoricalFeatureInfo.value), memoryUtil)
   }
 
   def prepareData(numTrees: Int,
@@ -175,15 +157,7 @@ class RFStrategyRotation[T: ClassTag, U: ClassTag](property: RFProperty, rotatio
     instances.map { instance =>
       instance.features match {
         case v: RawData[T, U] => {
-
-          val workingData = new Array[WorkingData[U]](numTrees)
-          var count = 0
-          while (count < workingData.length) {
-            workingData(count) = rotationMatrix.value((macroIteration * numTrees) + count).rotateRawData(v).toWorkingDataDense(splitterManager.getSplitter(macroIteration, count))
-            count += 1
-          }
-
-          new StaticDataRotation[U](instance.label.toByte, workingData)
+          new StaticDataRotationSingle[U](instance.label.toByte, rotationMatrix.value(macroIteration).rotateRawData(v).toWorkingDataDense(splitterManager.getSplitter(macroIteration)))
         }
         case _ => throw new ClassCastException
       }

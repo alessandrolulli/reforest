@@ -15,25 +15,16 @@
  * limitations under the License.
  */
 
-package reforest.util
+package reforest.data.load
 
-class IncrementalMean {
-  private var mean : Double = 0
-  private var min : Double = Double.MaxValue
-  private var counter : Int = 1
+import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
+import reforest.data.RawDataLabeled
 
-  def getMean = mean
-  def getMin = min
-  def isStarted = counter > 1
+trait DataLoad[T, U] extends Serializable {
 
-  def updateMean(newValue: Double) = {
-    if(newValue < min) min = newValue
-    mean += ((newValue - mean) / counter)
-    counter += 1
-  }
-
-  def reset() = {
-    mean = 0
-    counter = 1
-  }
+  def loadFile(sc: SparkContext,
+               path: String,
+               numFeatures: Int,
+               minPartitions: Int): RDD[RawDataLabeled[T, U]]
 }

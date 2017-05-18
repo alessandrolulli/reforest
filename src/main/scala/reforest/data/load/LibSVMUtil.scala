@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package reforest.util
+package reforest.data.load
 
 import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast
@@ -23,31 +23,21 @@ import org.apache.spark.rdd.RDD
 import reforest.TypeInfo
 import reforest.data.{RawData, RawDataLabeled}
 import reforest.rf.RFCategoryInfo
+import reforest.util.GCInstrumented
 
 import scala.reflect.ClassTag
 
 /**
   * Forked from Apache Spark MLlib
   */
-trait SVMUtil[T, U] extends Serializable {
+class LibSVMUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
+                                           instrumented: Broadcast[GCInstrumented],
+                                           categoryInfo: Broadcast[RFCategoryInfo]) extends DataLoad[T, U] {
 
-  def getTypeInfo : Broadcast[TypeInfo[T]]
-
-  def loadLibSVMFile(sc: SparkContext,
-                     path: String,
-                     numFeatures: Int,
-                     minPartitions: Int): RDD[RawDataLabeled[T, U]]
-}
-
-class SVMUtilImpl[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
-                                            instrumented: Broadcast[GCInstrumented],
-                                            categoryInfo: Broadcast[RFCategoryInfo]) extends SVMUtil[T, U] {
-  override def getTypeInfo : Broadcast[TypeInfo[T]] = typeInfo
-
-  override def loadLibSVMFile(sc: SparkContext,
-                              path: String,
-                              numFeatures: Int,
-                              minPartitions: Int): RDD[RawDataLabeled[T, U]] = {
+  override def loadFile(sc: SparkContext,
+                        path: String,
+                        numFeatures: Int,
+                        minPartitions: Int): RDD[RawDataLabeled[T, U]] = {
     val parsed = parseLibSVMFile(sc, path, minPartitions)
     instrumented.value.gcALL
 

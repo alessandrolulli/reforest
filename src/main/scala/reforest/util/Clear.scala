@@ -17,23 +17,12 @@
 
 package reforest.util
 
-class IncrementalMean {
-  private var mean : Double = 0
-  private var min : Double = Double.MaxValue
-  private var counter : Int = 1
-
-  def getMean = mean
-  def getMin = min
-  def isStarted = counter > 1
-
-  def updateMean(newValue: Double) = {
-    if(newValue < min) min = newValue
-    mean += ((newValue - mean) / counter)
-    counter += 1
-  }
-
-  def reset() = {
-    mean = 0
-    counter = 1
+object Clear {
+  def clear(data : Array[Int]) = {
+    var i = 0
+    while (i < data.length) {
+      data(i) = 0
+      i += 1
+    }
   }
 }

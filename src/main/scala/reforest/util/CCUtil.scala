@@ -17,40 +17,60 @@
 
 package reforest.util
 
+import org.apache.commons.io.FilenameUtils
+import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.{SparkConf, SparkContext}
+import reforest.TypeInfo
+import reforest.data.load.{ARFFUtil, DataLoad, LibSVMUtil}
+import reforest.rf.{RFCategoryInfo, RFProperty}
 
-class CCUtil(val property: CCPropertiesImmutable) extends Serializable {
+import scala.reflect.ClassTag
+
+class CCUtil(val property: RFProperty) extends Serializable {
   val io = new CCUtilIO(property)
   var vertexNumber = 0L
 
   def getSparkContext(): SparkContext = {
     val conf = new SparkConf()
-      .setMaster(property.sparkMaster)
+      .setMaster(property.property.sparkMaster)
       .setAppName(property.appName)
-      .set("spark.executor.memory", property.sparkExecutorMemory)
-      .set("spark.storage.blockManagerSlaveTimeoutMs", property.sparkBlockManagerSlaveTimeoutMs)
-      .set("spark.shuffle.manager", property.sparkShuffleManager)
-      .set("spark.shuffle.consolidateFiles", property.sparkShuffleConsolidateFiles)
-      .set("spark.io.compression.codec", property.sparkCompressionCodec)
-      .set("spark.akka.frameSize", property.sparkAkkaFrameSize)
+      .set("spark.executor.memory", property.property.sparkExecutorMemory)
+      .set("spark.storage.blockManagerSlaveTimeoutMs", property.property.sparkBlockManagerSlaveTimeoutMs)
+      .set("spark.shuffle.manager", property.property.sparkShuffleManager)
+      .set("spark.shuffle.consolidateFiles", property.property.sparkShuffleConsolidateFiles)
+      .set("spark.io.compression.codec", property.property.sparkCompressionCodec)
+      .set("spark.akka.frameSize", property.property.sparkAkkaFrameSize)
       //.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-      .set("spark.driver.maxResultSize", property.sparkDriverMaxResultSize)
+      .set("spark.driver.maxResultSize", property.property.sparkDriverMaxResultSize)
       .set("spark.core.connection.ack.wait.timeout", 600.toString)
+      .set("spark.driver.maxResultSize", 0.toString)
     //				.set("spark.task.cpus", "8")
     //	.setJars(Array(property.jarPath)
     //)
 
-    if (property.sparkCoresMax > 0) {
-      conf.set("spark.cores.max", property.sparkCoresMax.toString)
-      val executorCore = property.sparkCoresMax / property.sparkExecutorInstances
+    if (property.property.sparkCoresMax > 0) {
+      conf.set("spark.cores.max", property.property.sparkCoresMax.toString)
+      val executorCore = property.property.sparkCoresMax / property.property.sparkExecutorInstances
       conf.set("spark.executor.cores", executorCore.toString)
     }
-    if (property.sparkExecutorInstances > 0)
-      conf.set("spark.executor.instances", property.sparkExecutorInstances.toString)
+    if (property.property.sparkExecutorInstances > 0)
+      conf.set("spark.executor.instances", property.property.sparkExecutorInstances.toString)
 
     //conf.registerKryoClasses(Array(classOf[scala.collection.mutable.HashMap[_, _]]))
     val spark = new SparkContext(conf)
 
     spark
+  }
+
+  def getDataLoader[T:ClassTag, U:ClassTag](typeInfo: Broadcast[TypeInfo[T]],
+                                   instrumented: Broadcast[GCInstrumented],
+                                   categoryInfo: Broadcast[RFCategoryInfo]): DataLoad[T, U] = {
+    val extension = FilenameUtils.getExtension(property.property.dataset).toUpperCase()
+
+    property.loader.get("fileType", extension) match {
+      case "SVM" => new LibSVMUtil(typeInfo, instrumented, categoryInfo)
+      case "ARFF" => new ARFFUtil(typeInfo, instrumented, categoryInfo)
+      case _ => new LibSVMUtil(typeInfo, instrumented, categoryInfo)
+    }
   }
 }

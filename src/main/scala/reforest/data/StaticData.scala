@@ -21,19 +21,22 @@ trait StaticData[U] extends Serializable {
   def getLabel : Byte
   def getWorkingData(treeId : Int) : WorkingData[U]
   def getBagging(treeId : Int) : Int
-  def getBagging() : Array[Byte]
 }
 
 class StaticDataClassic[U](label : Byte, workingData : WorkingData[U], bagging : Array[Byte]) extends StaticData[U] {
   def getLabel : Byte = label
   def getWorkingData(treeId : Int) : WorkingData[U] = workingData
   def getBagging(treeId : Int) = bagging(treeId)
-  def getBagging() : Array[Byte] = bagging
 }
 
 class StaticDataRotation[U](label : Byte, workingData : Array[WorkingData[U]]) extends StaticData[U] {
   def getLabel : Byte = label
   def getWorkingData(treeId : Int) : WorkingData[U] = workingData(treeId)
   def getBagging(treeId : Int) = 1
-  def getBagging() : Array[Byte] = Array.fill(workingData.length)(1)
+}
+
+class StaticDataRotationSingle[U](label : Byte, workingData : WorkingData[U]) extends StaticData[U] {
+  def getLabel : Byte = label
+  def getWorkingData(treeId : Int) : WorkingData[U] = workingData
+  def getBagging(treeId : Int) = 1
 }

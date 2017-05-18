@@ -17,8 +17,6 @@
 
 package reforest.rf
 
-import scala.collection.Map
-
 trait RFFeatureSizer extends Serializable {
   def getSize(featureId: Int): Int
 }
@@ -31,7 +29,7 @@ class RFFeatureSizerSpecialized(binNumberMap: scala.collection.Map[Int, Int],
     if (categoricalFeatureInfo.isCategorical(featureId))
       (categoricalFeatureInfo.getArity(featureId) + 1) * numClasses
     else
-      (binNumberMap(featureId) + 1) * numClasses
+      (binNumberMap(featureId) + 2) * numClasses
   }
 }
 

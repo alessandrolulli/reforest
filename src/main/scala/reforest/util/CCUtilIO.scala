@@ -21,13 +21,26 @@ import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-class CCUtilIO(property: CCPropertiesImmutable) extends Serializable {
+import reforest.rf.RFProperty
+
+class CCUtilIO(property: RFProperty) extends Serializable {
 
   val hourFormat = new SimpleDateFormat("hh:mm:ss")
 
   def printToFile(file: String, data: String*): Int = {
     val printFile = new FileWriter(file, true)
-    printFile.write(data.mkString(",")+",uuid,"+property.uuid + "\n")
+    printFile.write(data.mkString(",")+
+      ",strategy,"+property.strategy+
+      ",strategyFeature,"+property.strategyFeature.getDescription+
+      ",strategySplit,"+property.strategySplit.getDescription+
+      ",fcsCycleActivation,"+property.fcsCycleActivation+
+      ",numTrees,"+property.numTrees.toString+
+      ",maxDepth,"+property.maxDepth.toString+
+      ",binNumber,"+property.binNumber.toString+
+      ",sparkCoresMax,"+property.property.sparkCoresMax.toString+
+      ",sparkExecutorInstances,"+property.property.sparkExecutorInstances.toString+
+      ",numRotation,"+property.numRotation.toString+
+      ",uuid,"+property.uuid + "\n")
     printFile.close
 
     0

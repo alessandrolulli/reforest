@@ -113,7 +113,7 @@ class TypeInfoDouble(override val isNOTvalidDefined : Boolean = false, override 
   override def getRealCut(cut: Int, info: Array[Double]) = {
     if (cut < 0)
       0d
-    else if (cut >= info.size)
+    else if ((cut-1) >= info.size)
       Double.MaxValue
     else {
       info(cut - 1)
@@ -170,7 +170,7 @@ class TypeInfoFloat(override val isNOTvalidDefined : Boolean = false, override v
   override def getRealCut(cut: Int, info: Array[Float]) = {
     if (cut < 0)
       0f
-    else if (cut >= info.size)
+    else if ((cut-1) >= info.size)
       Float.MaxValue
     else {
       info(cut - 1)
@@ -285,7 +285,7 @@ class TypeInfoByte(override val isNOTvalidDefined : Boolean =false, override val
   override def getRealCut(cut: Int, info: Array[Byte]) = {
     if (cut < 0)
       0.toByte
-    else if (cut >= info.size)
+    else if ((cut-1) >= info.size)
       Byte.MaxValue
     else {
       info(cut - 1)
@@ -341,7 +341,7 @@ class TypeInfoShort(override val isNOTvalidDefined : Boolean = false, override v
   override def getRealCut(cut: Int, info: Array[Short]) = {
     if (cut < 0)
       0.toShort
-    else if (cut >= info.size)
+    else if ((cut-1) >= info.size)
       Short.MaxValue
     else {
       info(cut - 1)
@@ -397,7 +397,7 @@ class TypeInfoInt(override val isNOTvalidDefined : Boolean = false, override val
   override def getRealCut(cut: Int, info: Array[Int]) = {
     if (cut < 0)
       0.toShort
-    else if (cut >= info.size)
+    else if ((cut-1) >= info.size)
       Short.MaxValue
     else {
       info(cut - 1)

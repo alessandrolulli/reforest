@@ -15,24 +15,20 @@
  * limitations under the License.
  */
 
-package reforest
+package reforest.example
 
-import reforest.rf.RFProperty
+import reforest.TypeInfoByte
 import reforest.rf.rotation.{RFAllInRunnerRotation, RotationDataUtil}
+import reforest.rf.{RFAllInRunner, RFProperty}
 import reforest.util.CCProperties
 
-object ReForeStRotationMain {
+object ReForeSt {
   def main(args: Array[String]): Unit = {
 
-    val property = new RFProperty(new CCProperties("ReForeStRotation", args(0)).load().getImmutable)
+    val property = new RFProperty(new CCProperties("ReForeSt", args(0)).load().getImmutable)
 
-    val sc = property.util.getSparkContext()
-    sc.setLogLevel(property.property.loader.get("logLevel", "error"))
+    val rfRunner = RFAllInRunner.apply(property)
 
-    val typeInfo = new TypeInfoShort
-    val dataUtil = new RotationDataUtil[Double, Short](sc, property, sc.broadcast(new TypeInfoDouble), property.property.sparkCoresMax * 2)
-
-    val rfRunner = RFAllInRunnerRotation.apply(sc, property, dataUtil, typeInfo)
     val trainingData = rfRunner.loadData(0.7)
 
     val model = rfRunner.trainClassifier(trainingData)
@@ -43,11 +39,9 @@ object ReForeStRotationMain {
     }
 
     val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / rfRunner.getTestData().count()
-    println("Test Error = " + testErr)
     rfRunner.printTree()
+    rfRunner.sparkStop()
 
-    property.util.io.printToFile("stats.txt", property.property.appName, property.property.dataset,
-      "accuracy", testErr.toString
-    )
+    println("Test Error = " + testErr)
   }
 }

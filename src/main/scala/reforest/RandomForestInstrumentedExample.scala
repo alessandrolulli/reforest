@@ -21,7 +21,8 @@ import org.apache.spark.mllib.tree.RandomForestInstrumented
 import org.apache.spark.mllib.tree.configuration.{Algo, QuantileStrategy, Strategy}
 import org.apache.spark.mllib.tree.impurity.Entropy
 import org.apache.spark.mllib.util.MLUtilsInstrumented
-import util._
+import reforest.rf.RFProperty
+import reforest.util._
 
 import scala.util.Random
 
@@ -29,17 +30,16 @@ object RandomForestInstrumentedExample
 {
   def main(args: Array[String]): Unit = {
 
-    val propertyLoad = new CCProperties("RANDOM-FOREST-MLLIB", args(0)).load()
-    val property = propertyLoad.getImmutable
+    val property = new RFProperty(new CCProperties("RANDOM-FOREST-MLLIB", args(0)).load().getImmutable)
 
     val util = new CCUtil(property)
     val utilIO = new CCUtilIO(property)
     utilIO.logTIME(property.appName, "START")
 
     val sc = util.getSparkContext()
-    sc.setLogLevel(propertyLoad.get("logLevel", "error"))
+    sc.setLogLevel(property.loader.get("logLevel", "error"))
 
-    val instrumented = sc.broadcast(property.instrumented match {
+    val instrumented = sc.broadcast(property.property.instrumented match {
       case true => new GCInstrumentedFull(sc)
       case false => new GCInstrumentedEmpty
     })
@@ -49,7 +49,7 @@ object RandomForestInstrumentedExample
     val timeStart = System.currentTimeMillis()
     // $example on$
     // Load and parse the data file.
-    val data = MLUtilsInstrumented.loadLibSVMFile(sc, property.dataset, propertyLoad.getInt("numFeatures",0))
+    val data = MLUtilsInstrumented.loadLibSVMFile(sc, property.property.dataset, property.loader.getInt("numFeatures",0))
     val t0 = System.currentTimeMillis()
     // Split the data into training and test sets (30% held out for testing)
     val splits = data.randomSplit(Array(0.7, 0.3), 0)
@@ -57,14 +57,14 @@ object RandomForestInstrumentedExample
 
     // Train a RandomForest model.
     // Empty categoricalFeaturesInfo indicates all features are continuous.
-    val numClasses = propertyLoad.getInt("numClasses", 3)
+    val numClasses = property.loader.getInt("numClasses", 3)
     val categoricalFeaturesInfo = Map[Int, Int]()
     val featureSubsetStrategy = "auto" // Let the algorithm choose.
     val impurity = "entropy"
-    val skipAccuracy = propertyLoad.getBoolean("skipAccuracy", true)
-    val numTrees = propertyLoad.getInt("numTrees", 3)
-    val maxDepth = propertyLoad.getInt("maxDepth", 3)
-    val maxMemoryInMB = propertyLoad.getInt("maxMemoryInMB", 256)
+    val skipAccuracy = property.loader.getBoolean("skipAccuracy", true)
+    val numTrees = property.loader.getInt("numTrees", 3)
+    val maxDepth = property.loader.getInt("maxDepth", 3)
+    val maxMemoryInMB = property.loader.getInt("maxMemoryInMB", 256)
     val maxBins = 32
 
     val s = new
@@ -95,14 +95,14 @@ object RandomForestInstrumentedExample
     }
 
 
-    utilIO.printToFile("stats.txt", "RANDOM-FOREST-MLLIB", property.dataset,
+    utilIO.printToFile("stats.txt", "RANDOM-FOREST-MLLIB", property.property.dataset,
       "numTrees", numTrees.toString,
       "maxDepth", maxDepth.toString,
       "timeALL", (timeEnd - timeStart).toString,
       "timePREPARATION", (t0 - timeStart).toString,
       "testError", testErr.toString,
-      "sparkCoresMax", property.sparkCoresMax.toString,
-      "sparkExecutorInstances", property.sparkExecutorInstances.toString)
+      "sparkCoresMax", property.property.sparkCoresMax.toString,
+      "sparkExecutorInstances", property.property.sparkExecutorInstances.toString)
     utilIO.logTIME(property.appName, "STOP")
 //    "Learned classification forest model", model.toDebugString)
 
