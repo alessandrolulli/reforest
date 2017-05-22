@@ -23,10 +23,24 @@ import reforest.TypeInfo
 
 import scala.reflect.ClassTag
 
+/**
+  * A rotation matrix constructed according to Blaser et al. "Random rotation ensembles"
+  * @param n the size of the nxn matrix (n should be equals to the number of features in the dataset)
+  * @param seed a random generator seed
+  * @param input an optional matrix with random sampled values. If it is defined this is used instead of generating the number
+  *              according to the Mersenne Twister (it should be used only for testing if the rotation matrix is correctly generated)
+  */
 class RotationMatrix(n: Int, seed : Int, input: Option[Array[Array[Double]]] = Option.empty) extends Serializable {
 
   private val matrix = generateRotationMatrix(input, seed)
 
+  /**
+    * It rotates an array of values using the rotation matrix
+    * @param array the array that must be rotated
+    * @param typeInfo the type information of the raw data
+    * @tparam T raw data type
+    * @return the rotated array
+    */
   def rotate[T: ClassTag](array: Array[T], typeInfo: TypeInfo[T]): Array[T] = {
     val toReturn: Array[T] = new Array[T](array.length)
 

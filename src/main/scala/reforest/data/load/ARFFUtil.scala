@@ -27,6 +27,15 @@ import reforest.util.GCInstrumented
 
 import scala.reflect.ClassTag
 
+/**
+  * Load data in ARFF format
+  *
+  * @param typeInfo     the type information of the raw data
+  * @param instrumented the instrumentation of the GC
+  * @param categoryInfo the information for the categorical features
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 class ARFFUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
                                          instrumented: Broadcast[GCInstrumented],
                                          categoryInfo: Broadcast[RFCategoryInfo]) extends DataLoad[T, U] {
@@ -43,9 +52,9 @@ class ARFFUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
     }
   }
 
-  def parseARFFFile(sc: SparkContext,
-                    path: String,
-                    minPartitions: Int): RDD[(Double, Array[T])] = {
+  private def parseARFFFile(sc: SparkContext,
+                            path: String,
+                            minPartitions: Int): RDD[(Double, Array[T])] = {
     sc.textFile(path, minPartitions)
       .map(_.trim)
       .filter(line => !(line.isEmpty || line.startsWith("#") || line.startsWith("%") || line.startsWith("@")))
@@ -56,7 +65,7 @@ class ARFFUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
       })
   }
 
-  def parseARFFRecord(line: String): (Double, Array[T]) = {
+  private def parseARFFRecord(line: String): (Double, Array[T]) = {
     val items = line.split(',')
     val label = Math.max(items.last.toDouble, 0)
     val values = items.dropRight(1).filter(_.nonEmpty).map(typeInfo.value.fromString)

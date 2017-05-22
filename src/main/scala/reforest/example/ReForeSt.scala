@@ -17,22 +17,25 @@
 
 package reforest.example
 
-import reforest.TypeInfoByte
-import reforest.rf.rotation.{RFAllInRunnerRotation, RotationDataUtil}
-import reforest.rf.{RFAllInRunner, RFProperty}
+import reforest.rf.{RFProperty, RFRunner}
 import reforest.util.CCProperties
 
 object ReForeSt {
   def main(args: Array[String]): Unit = {
 
+    // Load and parse the configuration file.
     val property = new RFProperty(new CCProperties("ReForeSt", args(0)).load().getImmutable)
 
-    val rfRunner = RFAllInRunner.apply(property)
+    // Create the Random Forest classifier.
+    val rfRunner = RFRunner.apply(property)
 
+    // Load and parse the data file and return the training data.
     val trainingData = rfRunner.loadData(0.7)
 
+    // Train a RandomForest model.
     val model = rfRunner.trainClassifier(trainingData)
 
+    // Evaluate model on test instances and compute test error
     val labelAndPreds = rfRunner.getTestData().map { point =>
       val prediction = model.predict(point.features)
       (point.label, prediction)

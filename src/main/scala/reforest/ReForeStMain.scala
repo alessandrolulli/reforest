@@ -17,8 +17,8 @@
 
 package reforest
 
-import reforest.rf.rotation.{RFAllInRunnerRotation, RotationDataUtil}
-import reforest.rf.{RFAllInRunner, RFProperty, RFStrategyFeatureSQRT}
+import reforest.rf.rotation.{RFRunnerRotation, RotationDataUtil}
+import reforest.rf.{RFCategoryInfoEmpty, RFCategoryInfoSpecialized, RFProperty, RFRunner}
 import reforest.util.CCProperties
 
 object ReForeStMain {
@@ -31,15 +31,22 @@ object ReForeStMain {
 
     val typeInfo = new TypeInfoByte
 
+    val category = property.property.loader.get("category", "") match
+    {
+      case "" => new RFCategoryInfoEmpty
+      case categoryValue => new RFCategoryInfoSpecialized(property.property.loader.get("categoryReMap", ""), categoryValue)
+      case _ => new RFCategoryInfoEmpty
+    }
+
     val rfRunner = property.strategy match {
       case "reforest" => {
         property.setAppName("reforest")
-        RFAllInRunner.apply(sc, property, property.strategyFeature, typeInfo)
+        RFRunner.apply(sc, property, property.strategyFeature, typeInfo, category)
       }
       case "rotation" => {
         property.setAppName("reforest-rotation")
         val dataUtil = new RotationDataUtil[Double, Byte](sc, property, sc.broadcast(new TypeInfoDouble), property.property.sparkCoresMax * 2)
-        RFAllInRunnerRotation.apply(sc, property, property.strategyFeature, dataUtil, typeInfo)
+        RFRunnerRotation.apply(sc, property, property.strategyFeature, dataUtil, typeInfo)
       }
     }
 

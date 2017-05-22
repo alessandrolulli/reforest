@@ -21,8 +21,21 @@ import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import reforest.data.RawDataLabeled
 
+/**
+  * An utility to load data from different file formats in raw data labeled
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 trait DataLoad[T, U] extends Serializable {
 
+  /**
+    * Load the data from a file
+    * @param sc the Spark Context
+    * @param path the file path
+    * @param numFeatures the number of features in the dataset
+    * @param minPartitions the minimum number of partition of the RDD
+    * @return the loaded dataset in RawDataLabeled format
+    */
   def loadFile(sc: SparkContext,
                path: String,
                numFeatures: Int,

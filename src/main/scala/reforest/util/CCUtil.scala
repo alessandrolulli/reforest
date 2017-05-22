@@ -68,6 +68,7 @@ class CCUtil(val property: RFProperty) extends Serializable {
     val extension = FilenameUtils.getExtension(property.property.dataset).toUpperCase()
 
     property.loader.get("fileType", extension) match {
+      case "LIBSVM" => new LibSVMUtil(typeInfo, instrumented, categoryInfo)
       case "SVM" => new LibSVMUtil(typeInfo, instrumented, categoryInfo)
       case "ARFF" => new ARFFUtil(typeInfo, instrumented, categoryInfo)
       case _ => new LibSVMUtil(typeInfo, instrumented, categoryInfo)

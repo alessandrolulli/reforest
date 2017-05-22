@@ -25,15 +25,35 @@ import reforest.rf.rotation.RFRotationMatrix
 
 import scala.collection.mutable.ListBuffer
 
+/**
+  * It predicts the class for the raw data in the testing set
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 trait RFModel[T, U] extends Serializable {
+  /**
+    * It predicts the label for the given data
+    * @param point the data to predict
+    * @return the predicted label
+    */
   def predict(point : RawDataLabeled[T, U]) : Int = {
     predict(point.features)
   }
 
+  /**
+    * It predicts the label for the given data
+    * @param point the data to predict
+    * @return the predicted label
+    */
   def predict(point : RawData[T, U]) : Int = {
     predictDetails(point).maxBy(_._2)._1
   }
 
+  /**
+    * It collects the amount of trees voting for each class
+    * @param point the data to predict
+    * @return an array with the amount of votes for each class
+    */
   def predictDetails(point : RawData[T, U]) : Array[(Int, Int)] // (class, #vote)
 }
 
@@ -52,6 +72,15 @@ class RFModelStandard[T, U](val forest : Broadcast[Forest[T, U]],
   }
 }
 
+/**
+  * The model when using the rotation of ReForeSt.
+  * @param forest the forest
+  * @param typeInfo
+  * @param rotationMatrix the rotation matrix for the given forest
+  * @param numClasses number of classes in the dataset
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 class RFModelRotate[T, U](val forest : Broadcast[Forest[T, U]],
                           val typeInfo : Broadcast[TypeInfo[T]],
                           val rotationMatrix : Broadcast[RFRotationMatrix[T, U]],
@@ -70,6 +99,13 @@ class RFModelRotate[T, U](val forest : Broadcast[Forest[T, U]],
   }
 }
 
+/**
+  * It aggregates multiple RFModel.
+  * It is possible to add models incrementally.
+  * @param numClasses number of classes in the dataset
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 class RFModelAggregator[T, U](val numClasses : Int) extends RFModel[T, U] {
 
   var modelList : ListBuffer[RFModel[T, U]] = new ListBuffer[RFModel[T, U]]()

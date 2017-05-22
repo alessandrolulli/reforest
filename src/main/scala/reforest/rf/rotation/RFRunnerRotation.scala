@@ -27,17 +27,30 @@ import reforest.{TypeInfo, TypeInfoByte, TypeInfoDouble}
 
 import scala.reflect.ClassTag
 
-class RFAllInRunnerRotation[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
-                                                      override val property: RFProperty,
-                                                      val dataUtil: RotationDataUtil[T, U],
-                                                      override val instrumented: Broadcast[GCInstrumented],
-                                                      override val typeInfo: TypeInfo[T],
-                                                      override val typeInfoWorking: TypeInfo[U],
-                                                      strategy: RFStrategy[T, U],
-                                                      override val categoricalFeaturesInfo: RFCategoryInfo = new RFCategoryInfoEmpty)
-  extends RFAllInRunner[T, U](sc, property, instrumented, strategy, typeInfo, typeInfoWorking, categoricalFeaturesInfo) {
+/**
+  * The ReForeSt executor for computing random rotations
+  * @param sc the Spark Context
+  * @param property the ReForeSt property
+  * @param dataUtil the utility for random rotations
+  * @param instrumented the instrumentation for the GC
+  * @param typeInfo the type information for the raw data
+  * @param typeInfoWorking the type information for the working data
+  * @param strategy the startegy to compute the random forest
+  * @param categoricalFeaturesInfo the information for the categorical features
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
+class RFRunnerRotation[T: ClassTag, U: ClassTag](@transient val sc: SparkContext,
+                                                 override val property: RFProperty,
+                                                 val dataUtil: RotationDataUtil[T, U],
+                                                 override val instrumented: Broadcast[GCInstrumented],
+                                                 override val typeInfo: TypeInfo[T],
+                                                 override val typeInfoWorking: TypeInfo[U],
+                                                 strategy: RFStrategy[T, U],
+                                                 override val categoricalFeaturesInfo: RFCategoryInfo = new RFCategoryInfoEmpty)
+  extends RFRunner[T, U](sc, property, instrumented, strategy, typeInfo, typeInfoWorking, categoricalFeaturesInfo) {
 
-  val numRotation = property.numRotation
+  private val numRotation = property.numRotation
 
   override def loadData(splitSize: Double) = {
 
@@ -83,31 +96,34 @@ class RFAllInRunnerRotation[T: ClassTag, U: ClassTag](@transient val sc: SparkCo
   }
 }
 
-object RFAllInRunnerRotation {
+/**
+  * It constructs an executor of ReForeSt random rotations
+  */
+object RFRunnerRotation {
   def apply(property: RFProperty) = {
     val sc = property.util.getSparkContext()
     sc.setLogLevel(property.property.loader.get("logLevel", "error"))
     val dataUtil = new RotationDataUtil[Double, Byte](sc, property, sc.broadcast(new TypeInfoDouble), property.property.sparkCoresMax * 2)
-    new RFAllInRunnerRotation[Double, Byte](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), new TypeInfoDouble(), new TypeInfoByte(), new RFStrategyRotation(property, property.strategyFeature, sc.broadcast(dataUtil.matrices)))
+    new RFRunnerRotation[Double, Byte](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), new TypeInfoDouble(), new TypeInfoByte(), new RFStrategyRotation(property, property.strategyFeature, sc.broadcast(dataUtil.matrices)))
   }
 
   def apply[T: ClassTag, U: ClassTag](property: RFProperty, typeInfoRawData: TypeInfo[T], typeInfoWorkingData: TypeInfo[U]) = {
     val sc = property.util.getSparkContext()
     val strategyFeature = property.strategyFeature
     val dataUtil = new RotationDataUtil[T, U](sc, property, sc.broadcast(typeInfoRawData), property.property.sparkCoresMax * 2)
-    new RFAllInRunnerRotation[T, U](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), typeInfoRawData, typeInfoWorkingData, new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
+    new RFRunnerRotation[T, U](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), typeInfoRawData, typeInfoWorkingData, new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
   }
 
   def apply(sc: SparkContext,
             property: RFProperty,
             strategyFeature: RFStrategyFeature,
-            dataUtil: RotationDataUtil[Double, Byte]) = new RFAllInRunnerRotation[Double, Byte](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), new TypeInfoDouble(), new TypeInfoByte(), new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
+            dataUtil: RotationDataUtil[Double, Byte]) = new RFRunnerRotation[Double, Byte](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), new TypeInfoDouble(), new TypeInfoByte(), new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
 
   def apply[U: ClassTag](sc: SparkContext,
                          property: RFProperty,
                          strategyFeature: RFStrategyFeature,
                          dataUtil: RotationDataUtil[Double, U],
-                         typeInfoWorking: TypeInfo[U]) = new RFAllInRunnerRotation[Double, U](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), new TypeInfoDouble(), typeInfoWorking, new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
+                         typeInfoWorking: TypeInfo[U]) = new RFRunnerRotation[Double, U](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), new TypeInfoDouble(), typeInfoWorking, new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
 
   def apply[T: ClassTag,
   U: ClassTag](sc: SparkContext,
@@ -115,5 +131,5 @@ object RFAllInRunnerRotation {
                strategyFeature: RFStrategyFeature,
                dataUtil: RotationDataUtil[T, U],
                typeInfo: TypeInfo[T],
-               typeInfoWorking: TypeInfo[U]) = new RFAllInRunnerRotation[T, U](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), typeInfo, typeInfoWorking, new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
+               typeInfoWorking: TypeInfo[U]) = new RFRunnerRotation[T, U](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), typeInfo, typeInfoWorking, new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
 }

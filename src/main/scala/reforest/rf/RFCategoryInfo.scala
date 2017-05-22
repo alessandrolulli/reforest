@@ -17,16 +17,41 @@
 
 package reforest.rf
 
+/**
+  * It contains the information for the categorical features
+  */
 trait RFCategoryInfo extends Serializable {
+  /**
+    * How to re-map the value of a categorical feature
+    * @param featureValue the value of the feature
+    * @return the new value for the feature
+    */
   def rawRemapping(featureValue: Int): Int
+
+  /**
+    * It returns the arity of a categorical feature
+    * @param featureId the index of a feature
+    * @return the arity of the feature
+    */
   def getArity(featureId: Int): Int
+
+  /**
+    * To check if a feature is categorical
+    * @param featureId a feature index
+    * @return true if the given feature index corresponds to a categorical feature
+    */
   def isCategorical(featureId: Int): Boolean
 }
 
+/**
+  * The base class to collect information about categorical features. To be used if the dataset contains categorical feature
+  * @param remappingValue the remapping map readed from file
+  * @param arity the arity configuration value readed from configuration file
+  */
 class RFCategoryInfoSpecialized(remappingValue: String, arity: String) extends RFCategoryInfo {
-  val arityMap = if(!arity.isEmpty) arity.split(",").map(t => t.split(":")).map(t => t(0).toInt -> t(1).toInt).toMap else Map[Int, Int]()
-  val allValue: Option[Int] = arityMap.get(-1)
-  val remappingMap = if(!remappingValue.isEmpty) remappingValue.split(",").map(t => t.split(":")).map(t => t(0).toInt -> t(1).toInt).toMap else Map[Int, Int]()
+  private val arityMap = if(!arity.isEmpty) arity.split(",").map(t => t.split(":")).map(t => t(0).toInt -> t(1).toInt).toMap else Map[Int, Int]()
+  private val allValue: Option[Int] = arityMap.get(-1)
+  private val remappingMap = if(!remappingValue.isEmpty) remappingValue.split(",").map(t => t.split(":")).map(t => t(0).toInt -> t(1).toInt).toMap else Map[Int, Int]()
 
   override def rawRemapping(featureValue: Int): Int = {
     if(remappingMap.contains(featureValue))
@@ -49,6 +74,9 @@ class RFCategoryInfoSpecialized(remappingValue: String, arity: String) extends R
   }
 }
 
+/**
+  * The base class to use if the dataset does NOT contains categorical feature
+  */
 class RFCategoryInfoEmpty() extends RFCategoryInfo {
   override def rawRemapping(featureValue: Int): Int = featureValue
   override def getArity(featureId: Int): Int = -1

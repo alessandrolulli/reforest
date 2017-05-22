@@ -23,25 +23,51 @@ import reforest.data.{RawData, WorkingData}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-abstract class Forest[T, U](val numTrees : Int, maxDepth : Int) extends Serializable {
-  def getTree : Array[Tree[T, U]]
-  def isActive(treeId : Int) : Boolean
+/**
+  * A base class to construct a forest
+  *
+  * @param numTrees the total number of trees in the forest
+  * @param maxDepth the maximum allowed depth (from configuration)
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
+abstract class Forest[T, U](val numTrees: Int, maxDepth: Int) extends Serializable {
+
+  /**
+    * Get all the trees of the forest
+    *
+    * @return all the trees
+    */
+  def getTree: Array[Tree[T, U]]
+
+  /**
+    * Check if a tree is active (initialized)
+    *
+    * @param treeId
+    * @return
+    */
+  def isActive(treeId: Int): Boolean
 
   override def toString() = {
     var toReturn = ""
     var treeId = 0
-    while(treeId < numTrees) {
-      toReturn += "TREE ID: "+treeId+"\n"+getTree(treeId).toString+"\n\n"
+    while (treeId < numTrees) {
+      toReturn += "TREE ID: " + treeId + "\n" + getTree(treeId).toString + "\n\n"
       treeId += 1
     }
     toReturn
   }
 
-  def merge(other : Forest[T, U]) = {
+  /**
+    * Merge with another forest
+    *
+    * @param other an another forest
+    */
+  def merge(other: Forest[T, U]) = {
     var count = 0
-    while(count < numTrees) {
-      if(other.isActive(count)) {
-        if(isActive(count)) {
+    while (count < numTrees) {
+      if (other.isActive(count)) {
+        if (isActive(count)) {
           getTree(count).merge(other.getTree(count))
         } else {
           getTree(count) = other.getTree(count)
@@ -51,58 +77,150 @@ abstract class Forest[T, U](val numTrees : Int, maxDepth : Int) extends Serializ
     }
   }
 
-  def predict(treeId : Int, data: RawData[T, U], typeInfo: TypeInfo[T]) = {
+  /**
+    * It predicts the class label of the given element
+    *
+    * @param treeId   the index of the tree to use for prediction
+    * @param data     the data to predict
+    * @param typeInfo the type information of the war data
+    * @return the predicted class label
+    */
+  def predict(treeId: Int, data: RawData[T, U], typeInfo: TypeInfo[T]) = {
     getTree(treeId).predict(data, typeInfo)
   }
 
-  def getLevel(treeId : Int, nodeId : Int) = {
+  /**
+    * It returns the level of the given node id the the given tree
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index to check
+    * @return the level in the tree treeId of the node nodeId
+    */
+  def getLevel(treeId: Int, nodeId: Int) = {
     getTree(treeId).getLevel(nodeId)
   }
 
-  def getLeftChild(treeId : Int, nodeId : Int) : Int = {
+  /**
+    * To get the left child of a given node
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index
+    * @return the left child of the node nodeId
+    */
+  def getLeftChild(treeId: Int, nodeId: Int): Int = {
     getTree(treeId).getLeftChild(nodeId)
   }
 
-  def getRightChild(treeId : Int, nodeId : Int) : Int = {
+  /**
+    * To get the right child of a given node
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index
+    * @return the right child of the node nodeId
+    */
+  def getRightChild(treeId: Int, nodeId: Int): Int = {
     getTree(treeId).getRightChild(nodeId)
   }
 
-  def getParent(treeId : Int, nodeId : Int) : Int = {
+  /**
+    * To get the parent of a given node. For the root it return the same nodeId
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index
+    * @return the parent of the node nodeId
+    */
+  def getParent(treeId: Int, nodeId: Int): Int = {
     getTree(treeId).getParent(nodeId)
   }
 
-  def setLabel(treeId : Int, nodeId : Int, label : Int) = {
+  /**
+    * Set the class label of the given node
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index for which setting the class label
+    * @param label  the label to set in the node nodeId
+    */
+  def setLabel(treeId: Int, nodeId: Int, label: Int) = {
     getTree(treeId).setLabel(nodeId, label)
   }
 
-  def setSplit(treeId : Int, nodeId : Int, cut : CutDetailed[T, U]) = {
+  /**
+    * Set the split on the given node
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index for which setting the split
+    * @param cut    the split to set in the node nodeId
+    */
+  def setSplit(treeId: Int, nodeId: Int, cut: CutDetailed[T, U]) = {
     getTree(treeId).setSplit(nodeId, cut)
   }
 
-  def setLeaf(treeId : Int, nodeId : Int) = {
+  /**
+    * Set the given node as a leaf
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index to set as a leaf
+    */
+  def setLeaf(treeId: Int, nodeId: Int): Unit = {
     getTree(treeId).setLeaf(nodeId)
   }
 
-  def isLeaf(treeId : Int, nodeId : Int) : Boolean = {
+  /**
+    * Check if the given node is a leaf
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index to check
+    * @return true if the given node is a leaf
+    */
+  def isLeaf(treeId: Int, nodeId: Int): Boolean = {
     getTree(treeId).isLeaf(nodeId)
   }
 
-  def isDefined(treeId : Int, nodeId : Int) : Boolean = {
+  /**
+    * Check if the given node is defined
+    *
+    * @param treeId the tree index
+    * @param nodeId the node index to check
+    * @return true if the given node is defined
+    */
+  def isDefined(treeId: Int, nodeId: Int): Boolean = {
     getTree(treeId).isDefined(nodeId)
   }
 
-  def getCurrentNodeId(treeId : Int, data: WorkingData[U], typeInfo: TypeInfo[U]): Option[Int] = {
+  /**
+    * It returns the current node index of the element passed as argument
+    *
+    * @param treeId   the tree index
+    * @param data     the data to navigate in the tree
+    * @param typeInfo the type information of the working data
+    * @return the deepest node index where the data contributes
+    */
+  def getCurrentNodeId(treeId: Int, data: WorkingData[U], typeInfo: TypeInfo[U]): Option[Int] = {
     getTree(treeId).getCurrentNodeId(data, typeInfo)
   }
 
-  def getCurrentNodeId(treeId : Int, nodeId : Int, data: WorkingData[U], typeInfo: TypeInfo[U]): Option[Int] = {
+  /**
+    * It returns the current node index of the element passed as argument starting from the node index nodeId
+    *
+    * @param treeId   the tree index
+    * @param nodeId   the node index for starting the navigation in the tree treeId
+    * @param data     the data to navigate in the tree
+    * @param typeInfo the type information of the working data
+    * @return the deepest node index where the data contributes
+    */
+  def getCurrentNodeId(treeId: Int, nodeId: Int, data: WorkingData[U], typeInfo: TypeInfo[U]): Option[Int] = {
     getTree(treeId).getCurrentNodeId(nodeId, data, typeInfo)
   }
 
-  def getNodeToBeComputed() : ListBuffer[(Int, Int)] = {
+  /**
+    * It returns a list of nodes that still require to be processed
+    *
+    * @return a list of node that require computation
+    */
+  def getNodeToBeComputed(): ListBuffer[(Int, Int)] = {
     val toReturn = new ListBuffer[(Int, Int)]()
     var treeId = 0
-    while(treeId < numTrees) {
+    while (treeId < numTrees) {
       toReturn ++= getTree(treeId).getNodeToBeComputed().map(nodeId => (treeId, nodeId))
       treeId += 1
     }
@@ -110,21 +228,45 @@ abstract class Forest[T, U](val numTrees : Int, maxDepth : Int) extends Serializ
   }
 }
 
-class ForestFull[T, U](numTrees : Int, maxDepth : Int) extends Forest[T, U](numTrees, maxDepth) {
-  val tree = Array.tabulate(numTrees)(_ => new Tree[T, U](maxDepth))
+/**
+  * A forest where all the trees are initialized
+  *
+  * @param numTrees the total number of trees in the forest
+  * @param maxDepth the maximum allowed depth (from configuration)
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
+class ForestFull[T, U](numTrees: Int, maxDepth: Int) extends Forest[T, U](numTrees, maxDepth) {
+  private val tree = Array.tabulate(numTrees)(_ => new Tree[T, U](maxDepth))
 
   override def getTree = tree
-  override def isActive(treeId : Int) : Boolean = true
+
+  override def isActive(treeId: Int): Boolean = true
 }
 
-class ForestIncremental[T, U](numTrees : Int, maxDepth : Int) extends Forest[T, U](numTrees, maxDepth) {
-  val tree : Array[Tree[T, U]] = new Array(numTrees)
-  val activeTree : mutable.BitSet = mutable.BitSet.empty
+/**
+  * A forest where at the beginning no trees are initialized. It supports incremental addition of trees
+  *
+  * @param numTrees the total number of trees in the forest
+  * @param maxDepth the maximum allowed depth (from configuration)
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
+class ForestIncremental[T, U](numTrees: Int, maxDepth: Int) extends Forest[T, U](numTrees, maxDepth) {
+  private val tree: Array[Tree[T, U]] = new Array(numTrees)
+  private val activeTree: mutable.BitSet = mutable.BitSet.empty
 
   override def getTree = tree
-  override def isActive(treeId : Int) : Boolean = activeTree.contains(treeId)
 
-  def add(treeId : Int, tree_ : Tree[T, U]) = {
+  override def isActive(treeId: Int): Boolean = activeTree.contains(treeId)
+
+  /**
+    * Add a tree to the forest
+    *
+    * @param treeId the tree index to add in the forest
+    * @param tree_  the tree to add
+    */
+  def add(treeId: Int, tree_ : Tree[T, U]): Unit = {
     tree(treeId) = tree_
     activeTree += treeId
   }

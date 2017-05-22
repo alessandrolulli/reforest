@@ -19,8 +19,21 @@ package reforest.rf.split
 
 import reforest.rf.{RFCategoryInfo, RFFeatureSizer, RFFeatureSizerSimple}
 
+/**
+  * The manager to collect the information about how the data are discretized
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 trait RFSplitterManager[T, U] extends Serializable {
+  /**
+    * The number of bin used for the feature passed as argument. It is always <= number of configured bin
+    * @param idFeature the feature index
+    * @param idTree
+    * @return
+    */
   def getBinNumber(idFeature: Int, idTree : Int = 0): U
+
+
   def getBin(idFeature: Int, value: T, idTree : Int = 0): U
   def getRealCut(idFeature: Int, cut: U, idTree : Int = 0): T
   def getSplitter(macroIteration : Int, idTree : Int = 0) : RFSplitter[T, U]

@@ -25,8 +25,9 @@ import scala.reflect.ClassTag
 /**
   * Forked from Apache Spark MLlib
   * https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/Vectors.scala
+  *
+  * It contains the working data stored in an optimized manner
   */
-
 sealed trait RawData[T, U] extends Serializable {
 
   def size: Int

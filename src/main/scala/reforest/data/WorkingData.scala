@@ -17,12 +17,31 @@
 
 package reforest.data
 
+/**
+  * It contains the discretized data of the raw data
+  * @tparam U working data type
+  */
 trait WorkingData[U] extends Serializable {
 
+  /**
+    * It returns the size of the data (i.e. the number of features)
+    * @return The size if the data
+    */
   def size: Int
+
+  /**
+    * It return the value at the given index
+    * @param index The index for the return value
+    * @return The value at the give index
+    */
   def apply(index: Int): U
 }
 
+/**
+  * Data saved in densed format. Each feature value is saved.
+  * @param values The array for all the values of the element
+  * @tparam U working data type
+  */
 class WorkingDataDense[U](val values: Array[U]) extends WorkingData[U] {
 
   override def size = values.length
@@ -34,6 +53,16 @@ object WorkingDataDense {
 
 }
 
+/**
+  * Data saved in sparse format. Only the known values are saved with a parallel structure where are saved the indices of the
+  * known values.
+  * @param size The size of the data (i.e. the number of features)
+  * @param indices The known indicies of the element
+  * @param values The values for the known indicies. Values in position i is relative to the feature having index equals to
+  *               the value at position i in the indices structure
+  * @param binIfNotFound the value to set if a feature value is not known
+  * @tparam U working data type
+  */
 class WorkingDataSparse[U](override val size: Int,
                            val indices: Array[Int],
                            val values: Array[U],

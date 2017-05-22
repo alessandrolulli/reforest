@@ -17,8 +17,8 @@
 
 package reforest.example
 
-import reforest.rf.rotation.RFAllInRunnerRotation
-import reforest.rf.{RFAllInRunner, RFProperty}
+import reforest.rf.rotation.RFRunnerRotation
+import reforest.rf.RFProperty
 import reforest.util.CCProperties
 
 object ReForeStRotation {
@@ -26,7 +26,7 @@ object ReForeStRotation {
 
     val property = new RFProperty(new CCProperties("ReForeSt", args(0)).load().getImmutable)
 
-    val rfRunner = RFAllInRunnerRotation.apply(property)
+    val rfRunner = RFRunnerRotation.apply(property)
 
     val trainingData = rfRunner.loadData(0.7)
 

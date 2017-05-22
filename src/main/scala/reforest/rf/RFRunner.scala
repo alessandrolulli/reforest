@@ -31,13 +31,13 @@ import reforest.{TypeInfo, TypeInfoByte, TypeInfoDouble}
 import scala.collection.mutable.ListBuffer
 import scala.reflect.ClassTag
 
-class RFAllInRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext,
-                                              val property: RFProperty,
-                                              val instrumented: Broadcast[GCInstrumented],
-                                              val strategy: RFStrategy[T, U],
-                                              val typeInfo: TypeInfo[T],
-                                              val typeInfoWorking: TypeInfo[U],
-                                              val categoricalFeaturesInfo: RFCategoryInfo = new RFCategoryInfoEmpty) extends Serializable {
+class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext,
+                                         val property: RFProperty,
+                                         val instrumented: Broadcast[GCInstrumented],
+                                         val strategy: RFStrategy[T, U],
+                                         val typeInfo: TypeInfo[T],
+                                         val typeInfoWorking: TypeInfo[U],
+                                         val categoricalFeaturesInfo: RFCategoryInfo = new RFCategoryInfoEmpty) extends Serializable {
 
 
   val propertyBC = sc.broadcast(property)
@@ -180,7 +180,7 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkCo
     property.util.io.logTIME(property.appName, "START-TREE")
 
     def switchToFCS(nodeNumber: Int) = {
-//      memoryUtil.get.switchToFCS(depth, featureSQRT.size)
+      //      memoryUtil.get.switchToFCS(depth, featureSQRT.size)
 
       if (property.fcsActive && property.fcsDepth != -1) {
         property.fcsDepth == depth
@@ -224,38 +224,39 @@ class RFAllInRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkCo
       cycleTimeList += (t1 - t0).toString
     }
 
-//    workingDataUnpersist
+    //    workingDataUnpersist
     (notConcurrentTime, timePreparationEND, timePreparationSTART, cycleTimeList, maxNodesConcurrent, memoryUtil.get.maximumConcurrentNumberOfFeature)
   }
 }
 
-object RFAllInRunner {
+object RFRunner {
   def apply(property: RFProperty) = {
     val sc = property.util.getSparkContext()
     sc.setLogLevel(property.property.loader.get("logLevel", "error"))
     val strategyFeature = property.strategyFeature
-    new RFAllInRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), new TypeInfoByte())
+    new RFRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), new TypeInfoByte())
   }
 
   def apply[T: ClassTag, U: ClassTag](property: RFProperty, typeInfoRawData: TypeInfo[T], typeInfoWorkingData: TypeInfo[U]) = {
     val sc = property.util.getSparkContext()
     val strategyFeature = property.strategyFeature
-    new RFAllInRunner[T, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), typeInfoRawData, typeInfoWorkingData)
+    new RFRunner[T, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), typeInfoRawData, typeInfoWorkingData)
   }
 
   def apply(sc: SparkContext,
             property: RFProperty,
-            strategyFeature: RFStrategyFeature) = new RFAllInRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), new TypeInfoByte())
+            strategyFeature: RFStrategyFeature) = new RFRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), new TypeInfoByte())
 
   def apply[U: ClassTag](sc: SparkContext,
                          property: RFProperty,
                          strategyFeature: RFStrategyFeature,
-                         typeInfoWorking: TypeInfo[U]) = new RFAllInRunner[Double, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), typeInfoWorking)
+                         typeInfoWorking: TypeInfo[U],
+                         categoricalFeaturesInfo: RFCategoryInfo = new RFCategoryInfoEmpty) = new RFRunner[Double, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), typeInfoWorking)
 
   def apply[T: ClassTag,
   U: ClassTag](sc: SparkContext,
                property: RFProperty,
                strategyFeature: RFStrategyFeature,
                typeInfo: TypeInfo[T],
-               typeInfoWorking: TypeInfo[U]) = new RFAllInRunner[T, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), typeInfo, typeInfoWorking)
+               typeInfoWorking: TypeInfo[U]) = new RFRunner[T, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), typeInfo, typeInfoWorking)
 }

@@ -21,6 +21,10 @@ import org.apache.spark.storage.StorageLevel
 import reforest.rf.split.{RFStrategySplitDistribution, RFStrategySplitRandom}
 import reforest.util.{CCPropertiesImmutable, CCUtil}
 
+/**
+  * It contains all the configuration of ReForeSt
+  * @param property to load the property from file
+  */
 class RFProperty(val property : CCPropertiesImmutable) extends Serializable {
   val storageLevel = StorageLevel.MEMORY_AND_DISK
 

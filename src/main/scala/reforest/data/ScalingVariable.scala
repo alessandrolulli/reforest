@@ -24,18 +24,38 @@ import reforest.TypeInfo
 
 import scala.reflect.ClassTag
 
+/**
+  * It scales the value of the raw data according to different methodologies
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 trait ScalingVariable[T, U] extends Serializable {
 
+  /**
+    * It scales the data passed as argument
+    * @param data The value to be scaled
+    * @return The scaled data
+    */
   def scale(data: RawDataLabeled[T, U]): RawDataLabeled[T, U]
 
 }
 
+/**
+  * It scales the values according to the Basic Scaling of Blaser et al. "Random rotation ensembles".
+  * Numeric values are scaled to [0, 1] using the min and max values.
+  * @param sc The Spark Context
+  * @param typeInfo The type information about the raw data
+  * @param featureNumber The number of feature in the dataset
+  * @param input The raw dataset
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 class ScalingBasic[T : ClassTag, U : ClassTag](@transient private val sc: SparkContext,
                          typeInfo: Broadcast[TypeInfo[T]],
                          featureNumber: Int,
                          input: RDD[RawDataLabeled[T, U]]) extends ScalingVariable[T, U] {
 
-  val scaling: Broadcast[scala.collection.Map[Int, (T, T)]] = sc.broadcast(init())
+  private val scaling: Broadcast[scala.collection.Map[Int, (T, T)]] = sc.broadcast(init())
 
   private def scaleValue(index: Int, value: T): T = {
     val (min, max) = scaling.value(index)

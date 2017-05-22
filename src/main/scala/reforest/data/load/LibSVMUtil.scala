@@ -29,6 +29,13 @@ import scala.reflect.ClassTag
 
 /**
   * Forked from Apache Spark MLlib
+  * Load data in LibSVM format
+  *
+  * @param typeInfo     the type information of the raw data
+  * @param instrumented the instrumentation of the GC
+  * @param categoryInfo the information for the categorical features
+  * @tparam T raw data type
+  * @tparam U working data type
   */
 class LibSVMUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
                                            instrumented: Broadcast[GCInstrumented],
@@ -47,9 +54,9 @@ class LibSVMUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
     }
   }
 
-  def parseLibSVMFile(sc: SparkContext,
-                      path: String,
-                      minPartitions: Int): RDD[(Double, Array[Int], Array[T])] = {
+  private def parseLibSVMFile(sc: SparkContext,
+                              path: String,
+                              minPartitions: Int): RDD[(Double, Array[Int], Array[T])] = {
     sc.textFile(path, minPartitions)
       .map(_.trim)
       .filter(line => !(line.isEmpty || line.startsWith("#")))
@@ -60,7 +67,7 @@ class LibSVMUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
       })
   }
 
-  def parseLibSVMRecord(line: String): (Double, Array[Int], Array[T]) = {
+  private def parseLibSVMRecord(line: String): (Double, Array[Int], Array[T]) = {
     val items = line.split(' ')
     val label = Math.max(items.head.toDouble, 0)
     val (indices, values) = items.tail.filter(_.nonEmpty).map {

@@ -22,10 +22,17 @@ import reforest.TypeInfo
 import reforest.dataTree.{CutCategorical, CutDetailed}
 import reforest.rf.split.RFSplitter
 
+/**
+  * Utility to compute the entropy
+  * @param typeInfo the type information of the raw data
+  * @param typeInfoWorking the type information of the working data
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
                       typeInfoWorking: Broadcast[TypeInfo[U]]) extends Serializable {
 
-  def entropyFromPreComputedArray(classAccumulator: Array[Int], numElement: Int) = {
+  private def entropyFromPreComputedArray(classAccumulator: Array[Int], numElement: Int) = {
     var toReturn = 0d
 
     var c = 0
@@ -40,7 +47,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     toReturn
   }
 
-  def entropy(valueArray: Array[Array[Int]], numElement: Int, numClasses: Int, start: Int, end: Int): Double = {
+  private def entropy(valueArray: Array[Array[Int]], numElement: Int, numClasses: Int, start: Int, end: Int): Double = {
     val classAccumulator = new Array[Int](numClasses)
 
     var i = start
@@ -56,7 +63,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     entropyFromPreComputedArray(classAccumulator, numElement)
   }
 
-  def entropyCategoryExclude(valueArray: Array[Array[Int]], numElement: Int, numClasses: Int, categoryIndex: Int): Double = {
+  private def entropyCategoryExclude(valueArray: Array[Array[Int]], numElement: Int, numClasses: Int, categoryIndex: Int): Double = {
     val classAccumulator = new Array[Int](numClasses)
 
     var i = 1
@@ -74,7 +81,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     entropyFromPreComputedArray(classAccumulator, numElement)
   }
 
-  def entropyCategory(valueArray: Array[Array[Int]], numElement: Int, numClasses: Int, categoryIndex: Int): Double = {
+  private def entropyCategory(valueArray: Array[Array[Int]], numElement: Int, numClasses: Int, categoryIndex: Int): Double = {
     val classAccumulator = new Array[Int](numClasses)
 
     var c = 0
@@ -86,12 +93,12 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     entropyFromPreComputedArray(classAccumulator, numElement)
   }
 
-  def entropy(valueArray: Array[Array[Int]], numClasses: Int): Double = {
+  private def entropy(valueArray: Array[Array[Int]], numClasses: Int): Double = {
     val numElement = sum(valueArray)
     entropy(valueArray, numElement, numClasses, 0, valueArray.length - 1)
   }
 
-  def getLabel(valueArray: Array[Array[Int]], numClasses: Int): Option[Int] = {
+  private def getLabel(valueArray: Array[Array[Int]], numClasses: Int): Option[Int] = {
     if (valueArray.isEmpty) {
       Option.empty
     } else {
@@ -111,7 +118,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     }
   }
 
-  def getLabelOK(valueArray: Array[Array[Int]], label: Option[Int]): Int = {
+  private def getLabelOK(valueArray: Array[Array[Int]], label: Option[Int]): Int = {
     if (label.isDefined) {
       getLabelOK(valueArray, label.get)
     } else {
@@ -119,7 +126,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     }
   }
 
-  def getLabelOK(valueArray: Array[Array[Int]], label: Int): Int = {
+  private def getLabelOK(valueArray: Array[Array[Int]], label: Int): Int = {
     if (valueArray.isEmpty) {
       0
     } else {
@@ -135,11 +142,11 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     }
   }
 
-  def getLabel(valueArray: Array[Int]): Option[Int] = {
+  private def getLabel(valueArray: Array[Int]): Option[Int] = {
     Some(valueArray.zipWithIndex.maxBy(_._1)._2)
   }
 
-  def sum(valueArray: Array[Array[Int]]): Int = {
+  private def sum(valueArray: Array[Array[Int]]): Int = {
     var toReturn = 0
 
     var count = 0
@@ -156,7 +163,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     toReturn
   }
 
-  def sum(valueArray: Array[Int]): Int = {
+  private def sum(valueArray: Array[Int]): Int = {
     var toReturn = 0
 
     var count = 0
@@ -168,6 +175,16 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     toReturn
   }
 
+  /**
+    * It computes the best split
+    * @param data the information from which compute the best split
+    * @param featureId the feature index for which we compute the best split
+    * @param splitter the utility to compute the split for each feature
+    * @param depth the currently analyzed depth
+    * @param maxDepth the maximum configured depth
+    * @param numClasses the number of classes in the dataset
+    * @return the best split identified
+    */
   def getBestSplit(data: Array[Array[Int]],
                    featureId: Int,
                    splitter: RFSplitter[T, U],
@@ -234,6 +251,16 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     }
   }
 
+  /**
+    * It computes the best split for a categorical feature
+    * @param data the information from which compute the best split
+    * @param featureId the feature index for which we compute the best split
+    * @param splitter the utility to compute the split for each feature
+    * @param depth the currently analyzed depth
+    * @param maxDepth the maximum configured depth
+    * @param numClasses the number of classes in the dataset
+    * @return the best split identified
+    */
   def getBestSplitCategorical(data: Array[Array[Int]],
                               featureId: Int,
                               splitter: RFSplitter[T, U],

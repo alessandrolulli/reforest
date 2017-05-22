@@ -17,8 +17,16 @@
 
 package reforest.data
 
+/**
+  * The container for the raw data and the class label of an element
+  *
+  * @param label    the class label of the element
+  * @param features the raw data of the element
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 case class RawDataLabeled[T, U](label: Double,
-                             features: RawData[T, U]) extends Serializable {
+                                features: RawData[T, U]) extends Serializable {
   override def toString: String = {
     s"($label,$features)"
   }

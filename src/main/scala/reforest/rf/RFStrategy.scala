@@ -29,24 +29,70 @@ import reforest.util.{GCInstrumented, MemoryUtil}
 import scala.reflect.ClassTag
 import scala.util.Random
 
+/**
+  * Base class for the different random forest strategy implemented in ReForeSt
+  *
+  * @param strategyFeature the strategy to use to select the subset of features in each node
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 abstract class RFStrategy[T, U](strategyFeature: RFStrategyFeature) extends Serializable {
   var sampleSize: Option[Long] = Option.empty
 
+  /**
+    * It returns the number of samples in the dataset
+    *
+    * @return
+    */
   def getSampleSize: Long = {
     assert(sampleSize.isDefined)
     sampleSize.get
   }
 
+  /**
+    * It generates the bagging for an element
+    *
+    * @param size         The number of trees
+    * @param distribution The distribution to use for generating the bagging
+    * @return An array with the contribution to each tree
+    */
   def generateBagging(size: Int, distribution: PoissonDistribution): Array[Byte]
 
+  /**
+    * It returns the strategy to use to select the subset of features in each node
+    *
+    * @return The strategy to use
+    */
   def getStrategyFeature(): RFStrategyFeature = strategyFeature
 
+  /**
+    * It detects the splits for each feature in the dataset for the discretization
+    *
+    * @param input                  The raw dataset
+    * @param typeInfo               The type information for the raw data
+    * @param typeInfoWorking        The type information for the working data
+    * @param instrumented           The instrumentation for the GC
+    * @param categoricalFeatureInfo The information about categorical features
+    * @return A splitter manager which contain how to split each feature and a memory util
+    */
   def findSplits(input: RDD[RawDataLabeled[T, U]],
                  typeInfo: Broadcast[TypeInfo[T]],
                  typeInfoWorking: Broadcast[TypeInfo[U]],
                  instrumented: Broadcast[GCInstrumented],
                  categoricalFeatureInfo: Broadcast[RFCategoryInfo]): (RFSplitterManager[T, U], MemoryUtil)
 
+  /**
+    * It convert the raw data to the static data to use for computing random forest
+    *
+    * @param numTrees        the number of trees that will be computed
+    * @param macroIteration  the number of the macro iteration (if not all the trees are computed at the same time)
+    * @param splitterManager the splitter manager which contain how to split each feature
+    * @param partitionIndex  the Spark partition index
+    * @param instances       the raw dataset
+    * @param instrumented    the instrumentation for the GC
+    * @param memoryUtil      the memory util
+    * @return
+    */
   def prepareData(numTrees: Int,
                   macroIteration: Int,
                   splitterManager: RFSplitterManager[T, U],
@@ -55,9 +101,9 @@ abstract class RFStrategy[T, U](strategyFeature: RFStrategyFeature) extends Seri
                   instrumented: GCInstrumented,
                   memoryUtil: MemoryUtil): Iterator[StaticData[U]]
 
-  def findSplitSampleInput(property: RFProperty,
-                           input: RDD[RawDataLabeled[T, U]],
-                           instrumented: Broadcast[GCInstrumented]) = {
+  protected def findSplitSampleInput(property: RFProperty,
+                                     input: RDD[RawDataLabeled[T, U]],
+                                     instrumented: Broadcast[GCInstrumented]) = {
     sampleSize = Some(input.count)
     println("SAMPLE SIZE: " + sampleSize.get)
 
@@ -73,6 +119,14 @@ abstract class RFStrategy[T, U](strategyFeature: RFStrategyFeature) extends Seri
   }
 }
 
+/**
+  * The standard strategy to compute Random Forest according to Breiman et al. "Random forests"
+  *
+  * @param property        the ReForeSt's property
+  * @param strategyFeature the strategy to use to select the subset of features in each node
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 class RFStrategyStandard[T: ClassTag, U: ClassTag](property: RFProperty, strategyFeature: RFStrategyFeature) extends RFStrategy[T, U](strategyFeature) {
   def generateBagging(size: Int, distribution: PoissonDistribution) = {
     val toReturn = new Array[Byte](size)
@@ -84,23 +138,23 @@ class RFStrategyStandard[T: ClassTag, U: ClassTag](property: RFProperty, strateg
     toReturn
   }
 
-  def findSplits(input: RDD[RawDataLabeled[T, U]],
-                 typeInfo: Broadcast[TypeInfo[T]],
-                 typeInfoWorking: Broadcast[TypeInfo[U]],
-                 instrumented: Broadcast[GCInstrumented],
-                 categoricalFeatureInfo: Broadcast[RFCategoryInfo]): (RFSplitterManager[T, U], MemoryUtil) = {
+  override def findSplits(input: RDD[RawDataLabeled[T, U]],
+                          typeInfo: Broadcast[TypeInfo[T]],
+                          typeInfoWorking: Broadcast[TypeInfo[U]],
+                          instrumented: Broadcast[GCInstrumented],
+                          categoricalFeatureInfo: Broadcast[RFCategoryInfo]): (RFSplitterManager[T, U], MemoryUtil) = {
     val (memoryUtil, sampledInput) = findSplitSampleInput(property, input, instrumented)
 
     (new RFSplitterManagerSingle[T, U](property.strategySplit.findSplitsSimple(sampledInput, property.binNumber, property.featureNumber, memoryUtil.maximumConcurrentNumberOfFeature, typeInfo, typeInfoWorking, instrumented, categoricalFeatureInfo)), memoryUtil)
   }
 
-  def prepareData(numTrees: Int,
-                  macroIteration: Int,
-                  splitterManager: RFSplitterManager[T, U],
-                  partitionIndex: Int,
-                  instances: Iterator[RawDataLabeled[T, U]],
-                  instrumented: GCInstrumented,
-                  memoryUtil: MemoryUtil): Iterator[StaticData[U]] = {
+  override def prepareData(numTrees: Int,
+                           macroIteration: Int,
+                           splitterManager: RFSplitterManager[T, U],
+                           partitionIndex: Int,
+                           instances: Iterator[RawDataLabeled[T, U]],
+                           instrumented: GCInstrumented,
+                           memoryUtil: MemoryUtil): Iterator[StaticData[U]] = {
     val poisson = new PoissonDistribution(property.poissonMean)
     poisson.reseedRandomGenerator(0 + partitionIndex + 1)
 
@@ -123,17 +177,26 @@ class RFStrategyStandard[T: ClassTag, U: ClassTag](property: RFProperty, strateg
   }
 }
 
+/**
+  * The strategy to compute random rotation forest according to Blaser et al. "Random rotation ensembles"
+  *
+  * @param property        the ReForeSt's property
+  * @param strategyFeature the strategy to use to select the subset of features in each node
+  * @param rotationMatrix  the set of rotation matrices
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 class RFStrategyRotation[T: ClassTag, U: ClassTag](property: RFProperty, strategyFeature: RFStrategyFeature, rotationMatrix: Broadcast[Array[RFRotationMatrix[T, U]]]) extends RFStrategy[T, U](strategyFeature) {
 
-  def generateBagging(size: Int, distribution: PoissonDistribution) = {
+  override def generateBagging(size: Int, distribution: PoissonDistribution) = {
     Array.tabulate(size)(i => 1.toByte)
   }
 
-  def findSplits(input: RDD[RawDataLabeled[T, U]],
-                 typeInfo: Broadcast[TypeInfo[T]],
-                 typeInfoWorking: Broadcast[TypeInfo[U]],
-                 instrumented: Broadcast[GCInstrumented],
-                 categoricalFeatureInfo: Broadcast[RFCategoryInfo]): (RFSplitterManager[T, U], MemoryUtil) = {
+  override def findSplits(input: RDD[RawDataLabeled[T, U]],
+                          typeInfo: Broadcast[TypeInfo[T]],
+                          typeInfoWorking: Broadcast[TypeInfo[U]],
+                          instrumented: Broadcast[GCInstrumented],
+                          categoricalFeatureInfo: Broadcast[RFCategoryInfo]): (RFSplitterManager[T, U], MemoryUtil) = {
     val (memoryUtil, sampledInput) = findSplitSampleInput(property, input, instrumented)
 
     val splitterArray = new Array[RFSplitter[T, U]](rotationMatrix.value.length)
@@ -147,13 +210,13 @@ class RFStrategyRotation[T: ClassTag, U: ClassTag](property: RFProperty, strateg
     (new RFSplitterManagerCollection[T, U](splitterArray, property.binNumber, property.numTrees, splitterArray.length, categoricalFeatureInfo.value), memoryUtil)
   }
 
-  def prepareData(numTrees: Int,
-                  macroIteration: Int,
-                  splitterManager: RFSplitterManager[T, U],
-                  partitionIndex: Int,
-                  instances: Iterator[RawDataLabeled[T, U]],
-                  instrumented: GCInstrumented,
-                  memoryUtil: MemoryUtil): Iterator[StaticData[U]] = {
+  override def prepareData(numTrees: Int,
+                           macroIteration: Int,
+                           splitterManager: RFSplitterManager[T, U],
+                           partitionIndex: Int,
+                           instances: Iterator[RawDataLabeled[T, U]],
+                           instrumented: GCInstrumented,
+                           memoryUtil: MemoryUtil): Iterator[StaticData[U]] = {
     instances.map { instance =>
       instance.features match {
         case v: RawData[T, U] => {

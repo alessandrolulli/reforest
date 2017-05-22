@@ -21,7 +21,7 @@ import org.apache.spark.mllib.tree.RandomForest
 import org.apache.spark.mllib.tree.configuration.{Algo, QuantileStrategy, Strategy}
 import org.apache.spark.mllib.tree.impurity.Entropy
 import org.apache.spark.mllib.util.MLUtils
-import reforest.rf.RFProperty
+import reforest.rf.{RFCategoryInfoEmpty, RFCategoryInfoSpecialized, RFProperty}
 import reforest.util.{CCProperties, CCUtil, CCUtilIO}
 
 import scala.util.Random
@@ -50,8 +50,14 @@ object RandomForestExample
 
     // Train a RandomForest model.
     val numClasses = property.property.loader.getInt("numClasses", 3)
-//    val categoricalFeaturesInfo = Array.tabulate(200)(i => (i, 5)).toMap
-    val categoricalFeaturesInfo = Map[Int, Int]()
+
+
+    val categoricalFeaturesInfo = property.property.loader.get("category", "") match
+    {
+      case "" => Map[Int, Int]()
+      case categoryValue => Array.tabulate(200)(i => (i, 5)).toMap
+      case _ => Map[Int, Int]()
+    }
     val featureSubsetStrategy = "sqrt"
     val impurity = "entropy"
     val skipAccuracy = property.loader.getBoolean("skipAccuracy", true)

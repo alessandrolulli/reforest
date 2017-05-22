@@ -23,18 +23,39 @@ import reforest.data.{RawData, RawDataDense, RawDataLabeled, RotationMatrix}
 
 import scala.reflect.ClassTag
 
-class RFRotationMatrix[T : ClassTag, U : ClassTag](n : Int, typeInfo : Broadcast[TypeInfo[T]], seed : Int) extends Serializable {
+/**
+  * To rotate the raw data
+  *
+  * @param n        the size of the nxn matrix (typically n is the number of features in the dataset)
+  * @param typeInfo the type information for the raw data
+  * @param seed     a random generator seed
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
+class RFRotationMatrix[T: ClassTag, U: ClassTag](n: Int, typeInfo: Broadcast[TypeInfo[T]], seed: Int) extends Serializable {
 
   private val matrix = new RotationMatrix(n, seed)
 
-  def rotateRawData(element : RawData[T, U]) = {
+  /**
+    * It rotates a raw data
+    *
+    * @param element the element to rotate
+    * @return the rotated element
+    */
+  def rotateRawData(element: RawData[T, U]) = {
     val dense = element.toDense
     val densedRotated = matrix.rotate(dense.values, typeInfo.value)
 
     new RawDataDense[T, U](densedRotated, dense.nan)
   }
 
-  def rotate(element : RawDataLabeled[T, U]) = {
+  /**
+    * It rotates a raw data labeled
+    *
+    * @param element the element to rotate
+    * @return the rotated element
+    */
+  def rotate(element: RawDataLabeled[T, U]) = {
     new RawDataLabeled[T, U](element.label, rotateRawData(element.features))
   }
 }

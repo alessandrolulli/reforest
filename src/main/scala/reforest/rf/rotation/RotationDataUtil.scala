@@ -27,33 +27,56 @@ import reforest.rf.RFProperty
 
 import scala.reflect.ClassTag
 
+/**
+  * It provides utility for the random rotation matrix
+  *
+  * @param sc            the Spark Context
+  * @param property      the ReForeSt property
+  * @param typeInfo      the type info for the raw data
+  * @param minPartitions the minimum number of partitions for the RDD
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
 class RotationDataUtil[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext,
-                                                 property : RFProperty,
+                                                 property: RFProperty,
                                                  typeInfo: Broadcast[TypeInfo[T]],
                                                  minPartitions: Int) extends Serializable {
 
-  var scaledDataTraining: Option[RDD[RawDataLabeled[T, U]]] = Option.empty
-  var scaledDataTesting: Option[RDD[RawDataLabeled[T, U]]] = Option.empty
+  private var scaledDataTraining: Option[RDD[RawDataLabeled[T, U]]] = Option.empty
+  private var scaledDataTesting: Option[RDD[RawDataLabeled[T, U]]] = Option.empty
+  private var count = 0
 
   val matrices = generateMatrices(property.numRotation)
-  var count = 0
 
-  def generateMatrices(amount : Int) = {
+  private def generateMatrices(amount: Int) = {
     sc.parallelize(Array.tabulate(amount)(i => i)).map(i => new RFRotationMatrix[T, U](property.featureNumber, typeInfo, i)).collect()
   }
 
-  def rotate(training : RDD[RawDataLabeled[T, U]]) ={
+  /**
+    * Rotate the dataset
+    *
+    * @param training the dataset to rotate
+    * @return the rotated dataset
+    */
+  def rotate(training: RDD[RawDataLabeled[T, U]]) = {
     val rotationMatrix = matrices(count)
     count += 1
 
     (training.map(t => rotationMatrix.rotate(t)), rotationMatrix)
   }
 
-  def getScaledData(splitSize: Double, svmUtil: DataLoad[T, U]): (RDD[RawDataLabeled[T, U]], RDD[RawDataLabeled[T, U]]) = {
+  /**
+    * Get the dataset scaled
+    *
+    * @param splitSize the ratio to split training and testing dataset
+    * @param dataLoad  the utility to load the dataset from file
+    * @return the scaled training and testing dataset
+    */
+  def getScaledData(splitSize: Double, dataLoad: DataLoad[T, U]): (RDD[RawDataLabeled[T, U]], RDD[RawDataLabeled[T, U]]) = {
     if (scaledDataTesting.isDefined) {
       (scaledDataTraining.get, scaledDataTesting.get)
     } else {
-      val rawData = svmUtil.loadFile(sc, property.property.dataset, property.featureNumber, minPartitions)
+      val rawData = dataLoad.loadFile(sc, property.property.dataset, property.featureNumber, minPartitions)
 
       val scaling = new ScalingBasic[T, U](sc, typeInfo, property.featureNumber, rawData)
 
