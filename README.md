@@ -73,7 +73,7 @@ Otherwise, it is possible to use the following script:
 ```
 ## Authors
 * <a href="http://for.unipi.it/alessandro_lulli/">Alessandro Lulli</a>
-* <a href="www.lucaoneto.com">Luca Oneto</a>
+* <a href="http://www.lucaoneto.com">Luca Oneto</a>
 * <a href="http://www.dibris.unige.it/anguita-davide">Davide Anguita</a>
 
 The project has been developed at <a href="https://sites.google.com/site/smartlabdibrisunige/">Smartlab</a> UNIGE.
