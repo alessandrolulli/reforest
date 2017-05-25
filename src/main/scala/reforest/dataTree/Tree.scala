@@ -34,7 +34,7 @@ class Tree[T, U](val maxDepth: Int) extends Serializable {
   private val _maxNodeNumber = Math.pow(2, maxDepth + 1).toInt - 1
 
   private var _label: Array[Int] = Array.tabulate(_maxNodeNumber)(_ => -1)
-  private var _split: Array[Option[TCut[T, U]]] = Array.tabulate(_maxNodeNumber / 2)(_ => Option.empty)
+  private var _split: Array[Option[TCut[T, U]]] = Array.tabulate(_maxNodeNumber)(_ => Option.empty)
   private var _leaf: mutable.BitSet = mutable.BitSet.empty
 
   override def toString = {
@@ -67,7 +67,7 @@ class Tree[T, U](val maxDepth: Int) extends Serializable {
         if (_label(count) < 0) {
           _label(count) = other_._label(count)
         }
-        if (_split(count).isEmpty) {
+        if (count < _split.length && _split(count).isEmpty) {
           _split(count) = other_._split(count)
         }
         count += 1

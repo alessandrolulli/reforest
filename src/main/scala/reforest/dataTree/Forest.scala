@@ -52,7 +52,9 @@ abstract class Forest[T, U](val numTrees: Int, maxDepth: Int) extends Serializab
     var toReturn = ""
     var treeId = 0
     while (treeId < numTrees) {
-      toReturn += "TREE ID: " + treeId + "\n" + getTree(treeId).toString + "\n\n"
+      if(isActive(treeId)) {
+        toReturn += "TREE ID: " + treeId + "\n" + getTree(treeId).toString + "\n\n"
+      }
       treeId += 1
     }
     toReturn
@@ -63,19 +65,7 @@ abstract class Forest[T, U](val numTrees: Int, maxDepth: Int) extends Serializab
     *
     * @param other an another forest
     */
-  def merge(other: Forest[T, U]) = {
-    var count = 0
-    while (count < numTrees) {
-      if (other.isActive(count)) {
-        if (isActive(count)) {
-          getTree(count).merge(other.getTree(count))
-        } else {
-          getTree(count) = other.getTree(count)
-        }
-      }
-      count += 1
-    }
-  }
+  def merge(other: Forest[T, U]) : Unit
 
   /**
     * It predicts the class label of the given element
@@ -242,6 +232,20 @@ class ForestFull[T, U](numTrees: Int, maxDepth: Int) extends Forest[T, U](numTre
   override def getTree = tree
 
   override def isActive(treeId: Int): Boolean = true
+
+  override def merge(other: Forest[T, U]) : Unit = {
+    var count = 0
+    while (count < numTrees) {
+      if (other.isActive(count)) {
+        if (isActive(count)) {
+          tree(count).merge(other.getTree(count))
+        } else {
+          tree(count) = other.getTree(count)
+        }
+      }
+      count += 1
+    }
+  }
 }
 
 /**
@@ -259,6 +263,21 @@ class ForestIncremental[T, U](numTrees: Int, maxDepth: Int) extends Forest[T, U]
   override def getTree = tree
 
   override def isActive(treeId: Int): Boolean = activeTree.contains(treeId)
+
+  override def merge(other: Forest[T, U]) : Unit = {
+    var count = 0
+    while (count < numTrees) {
+      if (other.isActive(count)) {
+        if (isActive(count)) {
+          tree(count).merge(other.getTree(count))
+        } else {
+          tree(count) = other.getTree(count)
+          activeTree += count
+        }
+      }
+      count += 1
+    }
+  }
 
   /**
     * Add a tree to the forest

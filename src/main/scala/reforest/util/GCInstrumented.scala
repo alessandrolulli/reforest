@@ -21,17 +21,41 @@ import java.util.concurrent.{ScheduledFuture, ScheduledThreadPoolExecutor, TimeU
 
 import org.apache.spark.{SparkContext, TaskContext}
 
+/**
+  * Instrumentation for the Garbage Collector in order to retrieve useful information about the amount of memory
+  * used.
+  */
 trait GCInstrumented extends Serializable {
+  /**
+    * It starts the GC at periodic intervals.
+    */
   def start()
 
+  /**
+    * It stops the periodic invocation of the GC
+    */
   def stop()
 
+  /**
+    * It calls the GC
+    */
   def gc()
 
+  /**
+    * It calls the GC, executes the given function and calls the GC again
+    * @param f the function to be executed
+    */
   def gc(f: => Any)
 
+  /**
+    * It executes the GC on all the machines
+    */
   def gcALL()
 
+  /**
+    * It returns true if the instrumentation is active (i.e. it is calling the GC)
+    * @return true if the GC is instrumented
+    */
   def valid: Boolean
 }
 

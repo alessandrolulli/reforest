@@ -87,7 +87,7 @@ class MemoryUtil(val inputSize: Long, val property: RFProperty) extends Serializ
       println("BYTES AVAILABLE: "+sparkTotalByteAvailablePlusSafetyMinusWorkingData)
       println("BYTES FOR FCS AT LEAST: "+sizeForCluster)
 
-      sparkTotalByteAvailablePlusSafetyMinusWorkingData > sizeForCluster
+      fcsClusterNumber(nodeNumber) < 300 && sparkTotalByteAvailablePlusSafetyMinusWorkingData > sizeForCluster
     }
   }
 }

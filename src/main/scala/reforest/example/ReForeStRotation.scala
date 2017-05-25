@@ -21,17 +21,25 @@ import reforest.rf.rotation.RFRunnerRotation
 import reforest.rf.RFProperty
 import reforest.util.CCProperties
 
+/**
+  * An example to use the ReForeSt Rotation library to perform Random Rotations Forest
+  */
 object ReForeStRotation {
   def main(args: Array[String]): Unit = {
 
+    // Load and parse the configuration file.
     val property = new RFProperty(new CCProperties("ReForeSt", args(0)).load().getImmutable)
 
+    // Create the Random Rotations Forest classifier.
     val rfRunner = RFRunnerRotation.apply(property)
 
+    // Load and parse the data file and return the training data. It actually performs also the scaling of the data.
     val trainingData = rfRunner.loadData(0.7)
 
+    // Train a Random Rotations Forest model.
     val model = rfRunner.trainClassifier(trainingData)
 
+    // Evaluate model on test instances and compute test error
     val labelAndPreds = rfRunner.getTestData().map { point =>
       val prediction = model.predict(point.features)
       (point.label, prediction)

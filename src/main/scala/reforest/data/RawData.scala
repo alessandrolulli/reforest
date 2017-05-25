@@ -30,14 +30,60 @@ import scala.reflect.ClassTag
   */
 sealed trait RawData[T, U] extends Serializable {
 
+  /**
+    * To get the size of the values (i.e. the number of features)
+    * @return the dimension of the values
+    */
   def size: Int
+
+  /**
+    * A dense array representation of the values
+    * @return the array representation of the values
+    */
   def toArray: Array[T]
+
+  /**
+    * It returns the value for the feature i
+    * @param i the index of the feature to return
+    * @return the value for the feature i
+    */
   def apply(i: Int): T
+
+  /**
+    * It applies the given function to all the active values
+    * @param f the function to apply
+    */
   def foreachActive(f: (Int, T) => Unit): Unit
+
+  /**
+    * The number of active features for this element
+    * @return the number of active features
+    */
   def numActives: Int
+
+  /**
+    * The number of not zero values for this element
+    * @return the number of not zero values
+    */
   def numNonzeros: Int
+
+  /**
+    * It returns a sparse representation of this element
+    * @return a sparse representation of this element
+    */
   def toSparse: RawDataSparse[T, U]
+
+  /**
+    * It returns a dense representation of this element
+    * @return a dense representation of this element
+    */
   def toDense: RawDataDense[T, U]
+
+  /**
+    * It returns a compressed representation of this element choosing between dense or sparse based on the number of active
+    * values of this element
+    * @return a sparse or dense representation. The one requiring less memory to store the element
+    */
   def compressed: RawData[T, U] = {
     val nnz = numNonzeros
     if (1.5 * (nnz + 1.0) < size) {
@@ -47,7 +93,18 @@ sealed trait RawData[T, U] extends Serializable {
     }
   }
 
+  /**
+    * It converts the raw data in working data dense format
+    * @param splitter the manager that contains how to discretize the data
+    * @return the dense discretized representation of this raw data
+    */
   def toWorkingDataDense(splitter: RFSplitter[T, U]): WorkingDataDense[U]
+
+  /**
+    * It converts the raw data in working data sparse format
+    * @param splitter the manager that contains how to discretize the data
+    * @return the sparse discretized representation of this raw data
+    */
   def toWorkingDataSparse(splitter: RFSplitter[T, U]): WorkingDataSparse[U]
 }
 

@@ -23,10 +23,20 @@ import java.util.Calendar
 
 import reforest.rf.RFProperty
 
+/**
+  * An utility to perform IO
+  * @param property the ReForeSt properties
+  */
 class CCUtilIO(property: RFProperty) extends Serializable {
 
-  val hourFormat = new SimpleDateFormat("hh:mm:ss")
+  private val hourFormat = new SimpleDateFormat("hh:mm:ss")
 
+  /**
+    * It prints a list of values to a specified file
+    * @param file the file to use for writing
+    * @param data the list of values to write on the specified file
+    * @return
+    */
   def printToFile(file: String, data: String*): Int = {
     val printFile = new FileWriter(file, true)
     printFile.write(data.mkString(",")+
@@ -46,6 +56,11 @@ class CCUtilIO(property: RFProperty) extends Serializable {
     0
   }
 
+  /**
+    * It logs the time at which a specific event happens
+    * @param algo the algorithm name
+    * @param event the event
+    */
   def logTIME(algo: String, event: String) = {
     val printFile = new FileWriter("time-event.txt", true)
     val today = Calendar.getInstance().getTime()
@@ -54,6 +69,10 @@ class CCUtilIO(property: RFProperty) extends Serializable {
     printFile.close
   }
 
+  /**
+    * It logs some values to a standard file
+    * @param data the values to write
+    */
   def log(data: String*) = {
     //    val printFile = new FileWriter("log.txt", true)
     //    printFile.write(data.mkString("\n")+"\n")

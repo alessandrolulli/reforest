@@ -20,10 +20,21 @@ package reforest.util
 import java.io.{FileInputStream, InputStream}
 import java.util.Properties
 
-
+/**
+  * Utility to load the standard configuration properties and functions to load custom properties.
+  * @param algorithmName
+  * @param configurationFile
+  */
 class CCProperties(algorithmName: String, configurationFile: String) extends Serializable {
+  /**
+    * The java utility to load properties from file
+    */
   val property = new Properties
 
+  /**
+    * It loads all the property utility
+    * @return the same this value for chaining actions
+    */
   def load(): CCProperties = {
     var input: InputStream = null
 
@@ -34,26 +45,60 @@ class CCProperties(algorithmName: String, configurationFile: String) extends Ser
     this
   }
 
+  /**
+    * It loads a custom properties with a default value (String)
+    * @param data the property to load
+    * @param default the default value
+    * @return the value readed from file for the property or the default value
+    */
   def get(data: String, default: String) = {
     property.getProperty(data, default)
   }
 
+  /**
+    * It loads a custom properties with a default value (Boolean)
+    * @param data the property to load
+    * @param default the default value
+    * @return the value readed from file for the property or the default value
+    */
   def getBoolean(data: String, default: Boolean) = {
     get(data, default.toString).toBoolean
   }
 
+  /**
+    * It loads a custom properties with a default value (Int)
+    * @param data the property to load
+    * @param default the default value
+    * @return the value readed from file for the property or the default value
+    */
   def getInt(data: String, default: Int) = {
     get(data, default.toString).toInt
   }
 
+  /**
+    * It loads a custom properties with a default value (Long)
+    * @param data the property to load
+    * @param default the default value
+    * @return the value readed from file for the property or the default value
+    */
   def getLong(data: String, default: Long) = {
     get(data, default.toString).toLong
   }
 
+  /**
+    * It loads a custom properties with a default value (Double)
+    * @param data the property to load
+    * @param default the default value
+    * @return the value readed from file for the property or the default value
+    */
   def getDouble(data: String, default: Double) = {
     get(data, default.toString).toDouble
   }
 
+  /**
+    * It returns an immutable representation of the read configuration properties
+    * @return the immutable representation of the read configuration properties
+    */
   def getImmutable: CCPropertiesImmutable = {
     val dataset = get("dataset", "")
     val jarPath = get("jarPath", "")

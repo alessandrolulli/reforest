@@ -17,7 +17,14 @@
 
 package reforest.util
 
+/**
+  * An utility to clear arrays
+  */
 object Clear {
+  /**
+    * It clears an array
+    * @param data the array to clear
+    */
   def clear(data : Array[Int]) = {
     var i = 0
     while (i < data.length) {

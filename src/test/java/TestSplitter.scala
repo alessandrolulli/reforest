@@ -1,3 +1,5 @@
+import org.scalatest.{FlatSpec, Matchers}
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -15,32 +17,10 @@
  * limitations under the License.
  */
 
-package reforest.util
+class TestSplitter extends FlatSpec with Matchers{
+  val splitter = TestResourceFactory.getSplitterRandomDefault(-23.5, 12.7, 32)
 
-import scala.collection.Map
-
-/**
-  * A bi-directional map.
-  * Code from: http://stackoverflow.com/questions/9850786/is-there-such-a-thing-as-bidirectional-maps-in-scala
-  */
-object BiMap {
-
-  private[BiMap] trait MethodDistinctor
-
-  implicit object MethodDistinctor extends MethodDistinctor
-
-}
-
-case class BiMap[X, Y](map: Map[X, Y]) extends Serializable{
-  def this(tuples: (X, Y)*) = this(tuples.toMap)
-
-  private val reverseMap = map map (_.swap)
-  require(map.size == reverseMap.size, "no 1 to 1 relation")
-
-  def apply(x: X): Y = map(x)
-
-  def apply(y: Y)(implicit d: BiMap.MethodDistinctor): X = reverseMap(y)
-
-  val domain = map.keys
-  val codomain = reverseMap.keys
+  def checkRandomSplitter = {
+    assert(splitter.getBin(1, -25) == 0)
+  }
 }

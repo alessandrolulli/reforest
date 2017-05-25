@@ -20,7 +20,11 @@ package reforest.example
 import reforest.rf.{RFProperty, RFRunner}
 import reforest.util.CCProperties
 
+/**
+  * An example to use the ReForeSt library to perform Random Forest
+  */
 object ReForeSt {
+
   def main(args: Array[String]): Unit = {
 
     // Load and parse the configuration file.
@@ -32,7 +36,7 @@ object ReForeSt {
     // Load and parse the data file and return the training data.
     val trainingData = rfRunner.loadData(0.7)
 
-    // Train a RandomForest model.
+    // Train a Random Forest model.
     val model = rfRunner.trainClassifier(trainingData)
 
     // Evaluate model on test instances and compute test error

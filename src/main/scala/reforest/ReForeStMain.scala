@@ -68,6 +68,11 @@ object ReForeStMain {
         "accuracy", testErr.toString,
         "time", rfRunner.getTrainingTime.toString
       )
+    } else {
+      property.util.io.printToFile("stats.txt", property.appName, property.property.dataset,
+        "accuracy", "NOT-COMPUTED",
+        "time", rfRunner.getTrainingTime.toString
+      )
     }
   }
 }

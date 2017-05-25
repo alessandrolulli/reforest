@@ -26,10 +26,20 @@ import reforest.rf.{RFCategoryInfo, RFProperty}
 
 import scala.reflect.ClassTag
 
+/**
+  * An utility class
+  * @param property the ReForeSt properties
+  */
 class CCUtil(val property: RFProperty) extends Serializable {
+  /**
+    * A link to the utility to perform IO
+    */
   val io = new CCUtilIO(property)
-  var vertexNumber = 0L
 
+  /**
+    * It returns a Spark Context using the configurations loaded from file
+    * @return the Spark Context
+    */
   def getSparkContext(): SparkContext = {
     val conf = new SparkConf()
       .setMaster(property.property.sparkMaster)
@@ -62,6 +72,16 @@ class CCUtil(val property: RFProperty) extends Serializable {
     spark
   }
 
+  /**
+    * It returns the utility to load the dataset from file. There are available multiple data loader for different
+    * file formats (LibSVM, ARFF)
+    * @param typeInfo the type information for the raw data
+    * @param instrumented the instrumentations for the GC
+    * @param categoryInfo the informations for categorical features
+    * @tparam T raw data type
+    * @tparam U working data type
+    * @return the data loader specialized for the format of the dataset
+    */
   def getDataLoader[T:ClassTag, U:ClassTag](typeInfo: Broadcast[TypeInfo[T]],
                                    instrumented: Broadcast[GCInstrumented],
                                    categoryInfo: Broadcast[RFCategoryInfo]): DataLoad[T, U] = {

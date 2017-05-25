@@ -17,7 +17,27 @@
 
 package reforest.util
 
-
+/**
+  * An immutable representation of the configurations loaded from file
+  * @param loader an utility to load additional custom properties
+  * @param appName the application name
+  * @param dataset the dataset to use
+  * @param outputFile the output location
+  * @param jarPath the path to the jar file
+  * @param sparkMaster the URI of the Spark Master
+  * @param sparkPartition the minimum number of partitions for the RDD
+  * @param sparkExecutorMemory the amount of memory to use on each executor
+  * @param sparkBlockManagerSlaveTimeoutMs
+  * @param sparkCoresMax the amount of cores to use in the cluster
+  * @param sparkShuffleManager
+  * @param sparkCompressionCodec
+  * @param sparkShuffleConsolidateFiles
+  * @param sparkAkkaFrameSize
+  * @param sparkDriverMaxResultSize
+  * @param sparkExecutorInstances
+  * @param separator
+  * @param instrumented
+  */
 class CCPropertiesImmutable(val loader: CCProperties,
                             val appName: String,
                             val dataset: String,
