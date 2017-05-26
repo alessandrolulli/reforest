@@ -76,7 +76,7 @@ class RotationDataUtil[T: ClassTag, U: ClassTag](@transient private val sc: Spar
     if (scaledDataTesting.isDefined) {
       (scaledDataTraining.get, scaledDataTesting.get)
     } else {
-      val rawData = dataLoad.loadFile(sc, property.property.dataset, property.featureNumber, minPartitions)
+      val rawData = dataLoad.loadFile(sc, property.dataset, property.featureNumber, minPartitions)
 
       val scaling = new ScalingBasic[T, U](sc, typeInfo, property.featureNumber, rawData)
 

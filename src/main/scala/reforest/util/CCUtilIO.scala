@@ -25,10 +25,10 @@ import reforest.rf.RFProperty
 
 /**
   * An utility to perform IO
-  * @param property the ReForeSt properties
   */
-class CCUtilIO(property: RFProperty) extends Serializable {
+object CCUtilIO extends Serializable {
 
+  // property: RFProperty
   private val hourFormat = new SimpleDateFormat("hh:mm:ss")
 
   /**
@@ -37,7 +37,7 @@ class CCUtilIO(property: RFProperty) extends Serializable {
     * @param data the list of values to write on the specified file
     * @return
     */
-  def printToFile(file: String, data: String*): Int = {
+  def printToFile(property : RFProperty, file: String, data: String*): Int = {
     val printFile = new FileWriter(file, true)
     printFile.write(data.mkString(",")+
       ",strategy,"+property.strategy+
@@ -47,8 +47,8 @@ class CCUtilIO(property: RFProperty) extends Serializable {
       ",numTrees,"+property.numTrees.toString+
       ",maxDepth,"+property.maxDepth.toString+
       ",binNumber,"+property.binNumber.toString+
-      ",sparkCoresMax,"+property.property.sparkCoresMax.toString+
-      ",sparkExecutorInstances,"+property.property.sparkExecutorInstances.toString+
+      ",sparkCoresMax,"+property.sparkCoresMax.toString+
+      ",sparkExecutorInstances,"+property.sparkExecutorInstances.toString+
       ",numRotation,"+property.numRotation.toString+
       ",uuid,"+property.uuid + "\n")
     printFile.close
@@ -61,7 +61,7 @@ class CCUtilIO(property: RFProperty) extends Serializable {
     * @param algo the algorithm name
     * @param event the event
     */
-  def logTIME(algo: String, event: String) = {
+  def logTIME(property : RFProperty, algo: String, event: String) = {
     val printFile = new FileWriter("time-event.txt", true)
     val today = Calendar.getInstance().getTime()
     val currentTime = hourFormat.format(today)

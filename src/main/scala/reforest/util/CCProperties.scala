@@ -117,6 +117,8 @@ class CCProperties(algorithmName: String, configurationFile: String) extends Ser
     val outputFile = get("outputFile", "")
     val sparkExecutorInstances = get("sparkExecutorInstances", "-1").toInt
     val instrumented = get("instrumented", "false").toBoolean
+    val category = get("category", "")
+    val fileType = get("fileType", "")
 
     new CCPropertiesImmutable(this, algorithmName,
       dataset,
@@ -134,6 +136,8 @@ class CCProperties(algorithmName: String, configurationFile: String) extends Ser
       sparkDriverMaxResultSize,
       sparkExecutorInstances,
       separator,
-      instrumented)
+      instrumented,
+      category,
+      fileType)
   }
 }

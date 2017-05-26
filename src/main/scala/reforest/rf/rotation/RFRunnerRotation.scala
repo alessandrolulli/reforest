@@ -22,7 +22,7 @@ import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import reforest.data.RawDataLabeled
 import reforest.rf._
-import reforest.util.{GCInstrumented, GCInstrumentedEmpty}
+import reforest.util.{CCUtil, GCInstrumented, GCInstrumentedEmpty}
 import reforest.{TypeInfo, TypeInfoByte, TypeInfoDouble}
 
 import scala.reflect.ClassTag
@@ -79,7 +79,7 @@ class RFRunnerRotation[T: ClassTag, U: ClassTag](@transient val sc: SparkContext
 
       trainingTime += (t1 - t0)
 
-//      property.util.io.printToFile("stats.txt", property.appName, property.property.dataset,
+//      property.util.io.printToFile("stats.txt", property.appName, property.dataset,
 //        "numTreesRotation", numTreesPerIteration.toString,
 //        "numRotation", numRotation.toString,
 //        "rotation", i.toString,
@@ -101,16 +101,15 @@ class RFRunnerRotation[T: ClassTag, U: ClassTag](@transient val sc: SparkContext
   */
 object RFRunnerRotation {
   def apply(property: RFProperty) = {
-    val sc = property.util.getSparkContext()
-    sc.setLogLevel(property.property.loader.get("logLevel", "error"))
-    val dataUtil = new RotationDataUtil[Double, Byte](sc, property, sc.broadcast(new TypeInfoDouble), property.property.sparkCoresMax * 2)
+    val sc = CCUtil.getSparkContext(property)
+    val dataUtil = new RotationDataUtil[Double, Byte](sc, property, sc.broadcast(new TypeInfoDouble), property.sparkCoresMax * 2)
     new RFRunnerRotation[Double, Byte](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), new TypeInfoDouble(), new TypeInfoByte(), new RFStrategyRotation(property, property.strategyFeature, sc.broadcast(dataUtil.matrices)))
   }
 
   def apply[T: ClassTag, U: ClassTag](property: RFProperty, typeInfoRawData: TypeInfo[T], typeInfoWorkingData: TypeInfo[U]) = {
-    val sc = property.util.getSparkContext()
+    val sc = CCUtil.getSparkContext(property)
     val strategyFeature = property.strategyFeature
-    val dataUtil = new RotationDataUtil[T, U](sc, property, sc.broadcast(typeInfoRawData), property.property.sparkCoresMax * 2)
+    val dataUtil = new RotationDataUtil[T, U](sc, property, sc.broadcast(typeInfoRawData), property.sparkCoresMax * 2)
     new RFRunnerRotation[T, U](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), typeInfoRawData, typeInfoWorkingData, new RFStrategyRotation(property, strategyFeature, sc.broadcast(dataUtil.matrices)))
   }
 

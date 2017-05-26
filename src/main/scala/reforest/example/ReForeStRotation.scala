@@ -27,8 +27,16 @@ import reforest.util.CCProperties
 object ReForeStRotation {
   def main(args: Array[String]): Unit = {
 
-    // Load and parse the configuration file.
-    val property = new RFProperty(new CCProperties("ReForeSt", args(0)).load().getImmutable)
+    // Create the ReForeSt configuration.
+    val property = new RFProperty()
+    property.dataset = "data/sample-covtype.libsvm"
+    property.featureNumber = 794
+
+    property.numTrees = 100
+    property.maxDepth = 5
+    property.numClasses = 10
+
+    property.numRotation = 10
 
     // Create the Random Rotations Forest classifier.
     val rfRunner = RFRunnerRotation.apply(property)

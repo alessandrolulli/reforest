@@ -29,44 +29,47 @@ import scala.util.Random
 object MLLibRandomForest {
   def main(args: Array[String]): Unit = {
 
-    val property = new RFProperty(new CCProperties("RANDOM-FOREST-MLLIB", args(0)).load().getImmutable)
+    val property = new RFProperty()
+    property.appName = "RANDOM-FOREST-MLLIB"
+    property.dataset = "data/sample-infimnist.libsvm"
+    property.featureNumber = 794
 
-    val util = new CCUtil(property)
-    val utilIO = new CCUtilIO(property)
-    utilIO.logTIME(property.appName, "START")
+    property.numTrees = 100
+    property.maxDepth = 5
+    property.numClasses = 10
 
-    val sc = util.getSparkContext()
-    sc.setLogLevel(property.property.loader.get("logLevel", "error"))
 
-    utilIO.logTIME(property.appName, "START-PREPARE")
+    val sc = CCUtil.getSparkContext(property)
+
+    CCUtilIO.logTIME(property, property.appName, "START-PREPARE")
 
     val timeStart = System.currentTimeMillis()
-    val data = MLUtils.loadLibSVMFile(sc, property.property.dataset, property.loader.getInt("numFeatures", 0), property.property.sparkCoresMax * 2)
+    val data = MLUtils.loadLibSVMFile(sc, property.dataset, property.featureNumber, property.sparkCoresMax * 2)
     val t0 = System.currentTimeMillis()
 
     val splits = data.randomSplit(Array(0.7, 0.3), 0)
     val (trainingData, testData) = (splits(0), splits(1))
 
     // Train a RandomForest model.
-    val numClasses = property.property.loader.getInt("numClasses", 3)
+    val numClasses = property.numClasses
     //    val categoricalFeaturesInfo = Array.tabulate(200)(i => (i, 5)).toMap
     val categoricalFeaturesInfo = Map[Int, Int]()
     val featureSubsetStrategy = "sqrt"
     val impurity = "entropy"
-    val skipAccuracy = property.loader.getBoolean("skipAccuracy", true)
-    val numTrees = property.loader.getInt("numTrees", 3)
-    val maxDepth = property.loader.getInt("maxDepth", 3)
-    val binNumber = property.loader.getInt("binNumber", 32)
+    val skipAccuracy = property.skipAccuracy
+    val numTrees = property.numTrees
+    val maxDepth = property.maxDepth
+    val binNumber = property.binNumber
 
     val s = new
         Strategy(Algo.Classification, Entropy, maxDepth, numClasses, binNumber, QuantileStrategy.Sort, categoricalFeaturesInfo, 1)
 
-    utilIO.logTIME(property.appName, "START-TREE")
+    CCUtilIO.logTIME(property, property.appName, "START-TREE")
     val model = RandomForest.trainClassifier(trainingData, s, numTrees, featureSubsetStrategy, Random.nextInt())
 
 
     val timeEnd = System.currentTimeMillis()
-    utilIO.logTIME(property.appName, "START-ACCURACY")
+    CCUtilIO.logTIME(property, property.appName, "START-ACCURACY")
 
     val labelAndPreds = testData.map { point =>
       val prediction = model.predict(point.features)
@@ -75,7 +78,7 @@ object MLLibRandomForest {
 
     val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / testData.count()
     println("Test Error = " + testErr)
-    if (property.loader.getBoolean("outputTree", false)) {
+    if (property.outputTree) {
       println("Learned classification forest model:\n" + model.toDebugString)
     }
 

@@ -28,43 +28,37 @@ import scala.reflect.ClassTag
 
 /**
   * An utility class
-  * @param property the ReForeSt properties
   */
-class CCUtil(val property: RFProperty) extends Serializable {
-  /**
-    * A link to the utility to perform IO
-    */
-  val io = new CCUtilIO(property)
-
+object CCUtil extends Serializable {
   /**
     * It returns a Spark Context using the configurations loaded from file
     * @return the Spark Context
     */
-  def getSparkContext(): SparkContext = {
+  def getSparkContext(property : RFProperty): SparkContext = {
     val conf = new SparkConf()
-      .setMaster(property.property.sparkMaster)
+      .setMaster(property.sparkMaster)
       .setAppName(property.appName)
-      .set("spark.executor.memory", property.property.sparkExecutorMemory)
-      .set("spark.storage.blockManagerSlaveTimeoutMs", property.property.sparkBlockManagerSlaveTimeoutMs)
-      .set("spark.shuffle.manager", property.property.sparkShuffleManager)
-      .set("spark.shuffle.consolidateFiles", property.property.sparkShuffleConsolidateFiles)
-      .set("spark.io.compression.codec", property.property.sparkCompressionCodec)
-      .set("spark.akka.frameSize", property.property.sparkAkkaFrameSize)
+      .set("spark.executor.memory", property.sparkExecutorMemory)
+      .set("spark.storage.blockManagerSlaveTimeoutMs", property.sparkBlockManagerSlaveTimeoutMs)
+      .set("spark.shuffle.manager", property.sparkShuffleManager)
+      .set("spark.shuffle.consolidateFiles", property.sparkShuffleConsolidateFiles)
+      .set("spark.io.compression.codec", property.sparkCompressionCodec)
+      .set("spark.akka.frameSize", property.sparkAkkaFrameSize)
       //.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-      .set("spark.driver.maxResultSize", property.property.sparkDriverMaxResultSize)
+      .set("spark.driver.maxResultSize", property.sparkDriverMaxResultSize)
       .set("spark.core.connection.ack.wait.timeout", 600.toString)
       .set("spark.driver.maxResultSize", 0.toString)
     //				.set("spark.task.cpus", "8")
     //	.setJars(Array(property.jarPath)
     //)
 
-    if (property.property.sparkCoresMax > 0) {
-      conf.set("spark.cores.max", property.property.sparkCoresMax.toString)
-      val executorCore = property.property.sparkCoresMax / property.property.sparkExecutorInstances
+    if (property.sparkCoresMax > 0) {
+      conf.set("spark.cores.max", property.sparkCoresMax.toString)
+      val executorCore = property.sparkCoresMax / property.sparkExecutorInstances
       conf.set("spark.executor.cores", executorCore.toString)
     }
-    if (property.property.sparkExecutorInstances > 0)
-      conf.set("spark.executor.instances", property.property.sparkExecutorInstances.toString)
+    if (property.sparkExecutorInstances > 0)
+      conf.set("spark.executor.instances", property.sparkExecutorInstances.toString)
 
     //conf.registerKryoClasses(Array(classOf[scala.collection.mutable.HashMap[_, _]]))
     val spark = new SparkContext(conf)
@@ -82,12 +76,13 @@ class CCUtil(val property: RFProperty) extends Serializable {
     * @tparam U working data type
     * @return the data loader specialized for the format of the dataset
     */
-  def getDataLoader[T:ClassTag, U:ClassTag](typeInfo: Broadcast[TypeInfo[T]],
+  def getDataLoader[T:ClassTag, U:ClassTag](property : RFProperty,
+                                             typeInfo: Broadcast[TypeInfo[T]],
                                    instrumented: Broadcast[GCInstrumented],
                                    categoryInfo: Broadcast[RFCategoryInfo]): DataLoad[T, U] = {
-    val extension = FilenameUtils.getExtension(property.property.dataset).toUpperCase()
+    val extension = FilenameUtils.getExtension(property.dataset).toUpperCase()
 
-    property.loader.get("fileType", extension) match {
+    property.fileType match {
       case "LIBSVM" => new LibSVMUtil(typeInfo, instrumented, categoryInfo)
       case "SVM" => new LibSVMUtil(typeInfo, instrumented, categoryInfo)
       case "ARFF" => new ARFFUtil(typeInfo, instrumented, categoryInfo)

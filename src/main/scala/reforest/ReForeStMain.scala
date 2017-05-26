@@ -18,23 +18,23 @@
 package reforest
 
 import reforest.rf.rotation.{RFRunnerRotation, RotationDataUtil}
-import reforest.rf.{RFCategoryInfoEmpty, RFCategoryInfoSpecialized, RFProperty, RFRunner}
-import reforest.util.CCProperties
+import reforest.rf._
+import reforest.util.{CCProperties, CCUtil, CCUtilIO}
 
 object ReForeStMain {
   def main(args: Array[String]): Unit = {
 
-    val property = new RFProperty(new CCProperties("ReForeSt", args(0)).load().getImmutable)
+    val property = new RFPropertyFile(new CCProperties("ReForeSt", args(0)).load().getImmutable)
 
-    val sc = property.util.getSparkContext()
-    sc.setLogLevel(property.property.loader.get("logLevel", "error"))
+    val sc = CCUtil.getSparkContext(property)
+    sc.setLogLevel(property.loader.get("logLevel", "error"))
 
     val typeInfo = new TypeInfoByte
 
-    val category = property.property.loader.get("category", "") match
+    val category = property.loader.get("category", "") match
     {
       case "" => new RFCategoryInfoEmpty
-      case categoryValue => new RFCategoryInfoSpecialized(property.property.loader.get("categoryReMap", ""), categoryValue)
+      case categoryValue => new RFCategoryInfoSpecialized(property.loader.get("categoryReMap", ""), categoryValue)
       case _ => new RFCategoryInfoEmpty
     }
 
@@ -64,12 +64,12 @@ object ReForeStMain {
       println("Test Error = " + testErr)
       rfRunner.printTree()
 
-      property.util.io.printToFile("stats.txt", property.appName, property.property.dataset,
+      CCUtilIO.printToFile(property, "stats.txt", property.appName, property.property.dataset,
         "accuracy", testErr.toString,
         "time", rfRunner.getTrainingTime.toString
       )
     } else {
-      property.util.io.printToFile("stats.txt", property.appName, property.property.dataset,
+      CCUtilIO.printToFile(property, "stats.txt", property.appName, property.property.dataset,
         "accuracy", "NOT-COMPUTED",
         "time", rfRunner.getTrainingTime.toString
       )

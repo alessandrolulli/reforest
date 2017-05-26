@@ -55,6 +55,8 @@ class CCPropertiesImmutable(val loader: CCProperties,
                             val sparkDriverMaxResultSize: String,
                             val sparkExecutorInstances: Int,
                             val separator: String,
-                            val instrumented: Boolean) extends Serializable {
+                            val instrumented: Boolean,
+                            val category : String,
+                            val fileType : String) extends Serializable {
 
 }

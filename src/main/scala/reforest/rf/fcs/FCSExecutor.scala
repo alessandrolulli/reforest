@@ -271,7 +271,7 @@ class FCSExecutorAll[T, U](@transient private val sc: SparkContext,
     val t01 = System.currentTimeMillis()
 
     // CLUSTER STATS
-    val minClusterNumber = property.value.property.sparkCoresMax * 4
+    val minClusterNumber = property.value.sparkCoresMax * 4
     var clusterNumber = property.value.numTrees // Math.min(minClusterNumber, numTrees)
     var clusterSize = Math.ceil(property.value.numTrees.toDouble / clusterNumber).toInt
     var bucket = featureIdMap.value.map(t => t._1).toList.sortBy(_._1).toArray.zipWithIndex.map(t => (t._2 / clusterSize, t._1)).groupBy(_._1).map(t => t._2.map(u => u._2))

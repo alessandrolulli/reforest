@@ -53,7 +53,7 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
   val typeInfoWorkingBC = sc.broadcast(typeInfoWorking)
   val strategyBC = sc.broadcast(strategy)
 
-  val svm = property.util.getDataLoader[T, U](typeInfoBC, instrumented, categoricalFeaturesInfoBC)
+  val svm = CCUtil.getDataLoader[T, U](property, typeInfoBC, instrumented, categoricalFeaturesInfoBC)
   val dataPrepare = new RFDataPrepare[T, U](typeInfoBC, instrumented, strategyBC, property.permitSparseWorkingData, property.poissonMean)
 
   var trainingTime = 0l
@@ -73,7 +73,7 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
   }
 
   def getTrainingData(rawData: RDD[RawDataLabeled[T, U]], featureSQRT: collection.mutable.Map[(Int, Int), Array[Int]], numTrees: Int = property.numTrees, macroIteration: Int = 0) = {
-    property.util.io.logTIME(property.appName, "START-PREPARE")
+    CCUtilIO.logTIME(property, property.appName, "START-PREPARE")
     instrumented.value.gcALL()
 
     if (featureInfo.isEmpty) {
@@ -101,7 +101,7 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
   }
 
   def loadData(splitSize: Double) = {
-    val data = svm.loadFile(sc, property.property.dataset, property.featureNumber, property.property.sparkCoresMax * 2)
+    val data = svm.loadFile(sc, property.dataset, property.featureNumber, property.sparkCoresMax * 2)
     instrumented.value.gcALL
     val splits = data.randomSplit(Array(splitSize, (1 - splitSize)), 0)
     val (trainingData, testDataToSet) = (splits(0), splits(1))
@@ -118,7 +118,7 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
 
     trainingTime = (t1 - t0)
 
-    property.util.io.printToFile("stats.txt", property.appName, property.property.dataset,
+    CCUtilIO.printToFile(property, "stats.txt", property.appName, property.dataset,
       "timeALL", (t1 - t0).toString,
       "notConcurrentTime", notConcurrentTime.toString,
       "preparationTime", (timePreparationEND - timePreparationSTART).toString,
@@ -177,7 +177,7 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
       numTrees,
       macroIteration)
 
-    property.util.io.logTIME(property.appName, "START-TREE")
+    CCUtilIO.logTIME(property, property.appName, "START-TREE")
 
     def switchToFCS(nodeNumber: Int) = {
       //      memoryUtil.get.switchToFCS(depth, featureSQRT.size)
@@ -219,7 +219,7 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
       val treeFCS = new RFTreeGenerationFCS[T, U](sc, maxNodesConcurrent, propertyBC, typeInfoBC, sc.broadcast(typeInfoWorking), strategyBC, tree, strategy.getSampleSize)
       println("SWITCHING TO FCS")
       val t0 = System.currentTimeMillis()
-      forest = treeFCS.findBestCutFCS(sc, workingData.get, property.util, featureInfo.get, featureSQRT, forest, depth, instrumented, memoryUtil.get)
+      forest = treeFCS.findBestCutFCS(sc, workingData.get, featureInfo.get, featureSQRT, forest, depth, instrumented, memoryUtil.get)
       val t1 = System.currentTimeMillis()
       cycleTimeList += (t1 - t0).toString
     }
@@ -231,14 +231,13 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
 
 object RFRunner {
   def apply(property: RFProperty) = {
-    val sc = property.util.getSparkContext()
-    sc.setLogLevel(property.property.loader.get("logLevel", "error"))
+    val sc = CCUtil.getSparkContext(property)
     val strategyFeature = property.strategyFeature
     new RFRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), new TypeInfoByte())
   }
 
   def apply[T: ClassTag, U: ClassTag](property: RFProperty, typeInfoRawData: TypeInfo[T], typeInfoWorkingData: TypeInfo[U]) = {
-    val sc = property.util.getSparkContext()
+    val sc = CCUtil.getSparkContext(property)
     val strategyFeature = property.strategyFeature
     new RFRunner[T, U](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), typeInfoRawData, typeInfoWorkingData)
   }

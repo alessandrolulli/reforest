@@ -99,7 +99,6 @@ class RFTreeGenerationFCS[T, U](@transient private val sc: SparkContext,
 
   def findBestCutFCS(sc: SparkContext,
                      dataIndex: RDD[StaticData[U]],
-                     util: CCUtil,
                      splitter: Broadcast[RFSplitterManager[T, U]],
                      featureSelected: Map[(Int, Int), Array[Int]],
                      forestArg: Forest[T, U],

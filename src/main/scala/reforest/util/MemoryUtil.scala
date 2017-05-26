@@ -25,7 +25,7 @@ class MemoryUtil(val inputSize: Long, val property: RFProperty) extends Serializ
 
   val totalMemoryForWorkingData = memoryForWorkingDataPerNode * inputSize
 
-  val totalMemoryForWorkingDataPerWorker = totalMemoryForWorkingData / property.property.sparkExecutorInstances
+  val totalMemoryForWorkingDataPerWorker = totalMemoryForWorkingData / property.sparkExecutorInstances
   /*
   memory in bytes to store data for a node + DataOnWorker.nodeToArrayOffset (to save the offset of the bins)
    */
@@ -46,7 +46,7 @@ class MemoryUtil(val inputSize: Long, val property: RFProperty) extends Serializ
    */
   val memoryPerNode = (memoryPerNodeInMatrix + memoryForFeaturesPerNode + memoryForIdMappingPerNode + property.strategyFeature.getFeaturePerNodeNumber * 2 * 4) * 2
 
-  val sparkTotalByteAvailablePlusSafety = (((property.property.sparkExecutorMemory.replaceAll("\\D+", "").toDouble * 1024 * 1024) * 0.6) * (if (property.binNumber >= 64) 0.6 else 0.8))
+  val sparkTotalByteAvailablePlusSafety = (((property.sparkExecutorMemory.replaceAll("\\D+", "").toDouble * 1024 * 1024) * 0.6) * (if (property.binNumber >= 64) 0.6 else 0.8))
 
   val sparkTotalByteAvailablePlusSafetyMinusWorkingData = sparkTotalByteAvailablePlusSafety - totalMemoryForWorkingDataPerWorker
 
@@ -71,7 +71,7 @@ class MemoryUtil(val inputSize: Long, val property: RFProperty) extends Serializ
   def fcsSizeForCluster(depth : Int) = fcsClusterSize() * fcsSizeForNode(depth) * property.fcsSafeMemoryMultiplier
   def fcsSizeForNode(depth : Int) = (totalMemoryForWorkingData / Math.pow(2, depth))
   def fcsClusterNumber(nodeNumber : Int) = Math.max(1, Math.ceil(nodeNumber / fcsClusterSize())).toInt
-  def fcsClusterSize() =  property.fcsNodesPerCore * property.property.sparkCoresMax
+  def fcsClusterSize() =  property.fcsNodesPerCore * property.sparkCoresMax
 
   def switchToFCS(depth : Int, nodeNumber : Int) : Boolean = {
     if(property.fcsActiveForce) {

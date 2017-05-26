@@ -17,7 +17,7 @@
 
 package reforest.example
 
-import reforest.rf.{RFProperty, RFRunner}
+import reforest.rf.{RFProperty, RFPropertyFile, RFRunner}
 import reforest.util.CCProperties
 
 /**
@@ -27,8 +27,14 @@ object ReForeSt {
 
   def main(args: Array[String]): Unit = {
 
-    // Load and parse the configuration file.
-    val property = new RFProperty(new CCProperties("ReForeSt", args(0)).load().getImmutable)
+    // Create the ReForeSt configuration.
+    val property = new RFProperty()
+    property.dataset = "data/sample-infimnist.libsvm"
+    property.featureNumber = 794
+
+    property.numTrees = 100
+    property.maxDepth = 5
+    property.numClasses = 10
 
     // Create the Random Forest classifier.
     val rfRunner = RFRunner.apply(property)
