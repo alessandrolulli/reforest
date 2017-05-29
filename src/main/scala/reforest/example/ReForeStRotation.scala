@@ -30,13 +30,17 @@ object ReForeStRotation {
     // Create the ReForeSt configuration.
     val property = new RFProperty()
     property.dataset = "data/sample-covtype.libsvm"
-    property.featureNumber = 794
+    property.featureNumber = 54
 
     property.numTrees = 100
     property.maxDepth = 5
     property.numClasses = 10
 
-    property.numRotation = 10
+    property.numRotation = 2
+    property.sparkCoresMax = 4
+    property.sparkMaster = "local[4]"
+    property.sparkPartition = 32
+
 
     // Create the Random Rotations Forest classifier.
     val rfRunner = RFRunnerRotation.apply(property)

@@ -18,8 +18,7 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-    <!-- TODO: a jarjar format would be better -->
-    <id>reforest</id>
+    <id>reforest-project-maven</id>
     <formats>
         <format>tar.gz</format>
         <format>zip</format>
@@ -33,22 +32,22 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>target/site/scaladocs</directory>
-            <outputDirectory>doc</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src</directory>
-            <outputDirectory>src</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
             <directory>data</directory>
             <outputDirectory>data</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>target/local-repository</directory>
+            <outputDirectory>local-repository</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/scala/reforest/example</directory>
+            <outputDirectory>src/main/scala/reforest/example</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
@@ -56,9 +55,11 @@
     </fileSets>
     <files>
         <file>
-            <source>target/${artifactId}-${version}-jar-with-dependencies.jar</source>
-            <outputDirectory>lib</outputDirectory>
-            <destName>reforest-${version}.jar</destName>
+            <source>pom-prebuild-project.xml</source>
+            <outputDirectory></outputDirectory>
+            <destName>pom.xml</destName>
         </file>
     </files>
 </assembly>
+
+        <!--mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=lib\smartlab.ws\reforest\1.0\reforest-1.0.jar -DgroupId=smartlab.ws -DartifactId=reforest   -Dversion=1.0-SNAPSHOT -Dpackaging=jar -DlocalRepositoryPath=lib-->
