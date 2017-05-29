@@ -7,16 +7,6 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>Random Forests in Apache Spark</name>
 	<url>https://github.com/alessandrolulli/reforest</url>
-	<distributionManagement>
-  <repository>
-    <id>packagecloud-alessandrolulli</id>
-    <url>packagecloud+https://packagecloud.io/alessandrolulli/reforest</url>
-  </repository>
-  <snapshotRepository>
-    <id>packagecloud-alessandrolulli</id>
-    <url>packagecloud+https://packagecloud.io/alessandrolulli/reforest</url>
-  </snapshotRepository>
-</distributionManagement>
 	<repositories>
 		<repository>
 			<id>scala-tools.org</id>
@@ -176,12 +166,5 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<extensions>
-    <extension>
-      <groupId>io.packagecloud.maven.wagon</groupId>
-      <artifactId>maven-packagecloud-wagon</artifactId>
-      <version>0.0.4</version>
-    </extension>
-  </extensions>
 	</build>
 </project>
