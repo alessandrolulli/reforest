@@ -1,5 +1,17 @@
+sudo: false
 language: java
 notifications:
   email:
     on_success: change 
     on_failure: always
+services:
+- docker
+cache:
+  directories:
+  - "$HOME/.cache"
+deploy:
+  provider: script
+  script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
+  skip_cleanup: true
+  on:
+    snapshot: true
