@@ -9,19 +9,10 @@ Random Forests (RF) of tree classifiers are a popular ensemble method for classi
 ReForeSt is a distributed, scalable implementation of the RF learning algorithm which targets fast and memory efficient processing. ReForeSt main contributions are manifold: (i) it provides a novel approach for the RF implementation in a distributed environment targeting an in-memory efficient processing, (ii) it is faster and more memory efficient with respect to the de facto standard MLlib, (iii) the level of parallelism is self-configuring.
  </p>
  
- ### Build Status
- [![Build Status](https://travis-ci.org/alessandrolulli/reforest.svg?branch=master.svg?branch=master)](https://travis-ci.org/alessandrolulli/reforest.svg?branch=master)
+### Build Status
+[![Build Status](https://travis-ci.org/alessandrolulli/reforest.svg?branch=master)](https://travis-ci.org/alessandrolulli/reforest)
  
-### Publications
 
-**2017 - **
-
-Lulli, Alessandro and Oneto, Luca and Anguita, Davide
-**ReForeSt: Random Forest in Apache Spark**
- (2017) (to appear).
-
-```
-```
 
 ## How to build
 
