@@ -1,7 +1,8 @@
 <img src="https://raw.githubusercontent.com/alessandrolulli/reforest/master/_includes/logo.png">
 
 # ReForeSt
-[![Build Status](https://travis-ci.org/alessandrolulli/reforest.svg?branch=master)](https://travis-ci.org/alessandrolulli/reforest)[![license](https://img.shields.io/badge/license-APACHE%202.0-blue.svg]()
+[![Build Status](https://travis-ci.org/alessandrolulli/reforest.svg?branch=master)](https://travis-ci.org/alessandrolulli/reforest)
+[![license](https://img.shields.io/badge/license-APACHE%202.0-blue.svg]()
 
 <p style="text-align: justify;">
 Random Forests (RF) of tree classifiers are a popular ensemble method for classification. RF are usually preferred with respect to other classification techniques because of their limited hyperparameter sensitivity, high numerical robustness, native capacity of dealing with numerical and categorical features, and effectiveness in many real world classification problems. In this work we present ReForeSt, a Random Forests Apache Spark implementation which is easier to tune, faster, and less memory consuming with respect to MLlib, the de facto standard Apache Spark machine learning library. We perform an extensive comparison between ReForeSt and MLlib by taking advantage of the Google Cloud Platform. In particular, we test ReForeSt and MLlib with different library settings, on different real world datasets, and with a different number of machines and types. Results confirm that ReForeSt outperforms MLlib in all the above mentioned aspects.
