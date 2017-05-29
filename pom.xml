@@ -8,19 +8,15 @@
 	<name>Random Forests in Apache Spark</name>
 	<url>https://github.com/alessandrolulli/reforest</url>
 	<distributionManagement>
-		<repository>
-			<id>packagecloud-travis</id>
-			<url>
-				packagecloud+https://packagecloud.io/alessandrolulli/reforest
-			</url>
-		</repository>
-		<snapshotRepository>
-			<id>packagecloud-travis</id>
-			<url>
-				packagecloud+https://packagecloud.io/alessandrolulli/reforest
-			</url>
-		</snapshotRepository>
-	</distributionManagement>
+  <repository>
+    <id>packagecloud-alessandrolulli</id>
+    <url>packagecloud+https://packagecloud.io/alessandrolulli/reforest</url>
+  </repository>
+  <snapshotRepository>
+    <id>packagecloud-alessandrolulli</id>
+    <url>packagecloud+https://packagecloud.io/alessandrolulli/reforest</url>
+  </snapshotRepository>
+</distributionManagement>
 	<repositories>
 		<repository>
 			<id>scala-tools.org</id>
