@@ -172,7 +172,9 @@
                 <configuration>
                     <repoToken>${env.COVERALLS_TOKEN}</repoToken>
                     <sourceEncoding>UTF-8</sourceEncoding>
-                    <sourceDirectories>src/reforest</sourceDirectories>
+                    <sourceDirectories>
+                        <sourceDirectory>src/reforest</sourceDirectory>
+                    </sourceDirectories>
                     <scanForSources>true</scanForSources>
                 </configuration>
             </plugin>
