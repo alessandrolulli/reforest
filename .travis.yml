@@ -4,3 +4,5 @@ notifications:
   email:
     on_success: change 
     on_failure: always
+after_success:
+  - mvn clean org.eluder.coveralls:coveralls-maven-plugin:report
