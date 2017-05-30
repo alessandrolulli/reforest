@@ -172,27 +172,41 @@
                 <configuration>
                     <repoToken>${env.COVERALLS_TOKEN}</repoToken>
                     <sourceEncoding>UTF-8</sourceEncoding>
-                    <sourceDirectories>
-                        <sourceDirectory>src/main/scala/reforest</sourceDirectory>
-                    </sourceDirectories>
-                    <scanForSources>true</scanForSources>
+                    <!--<sourceDirectories>-->
+                        <!--<sourceDirectory>src/main/scala/</sourceDirectory>-->
+                        <!--<sourceDirectory>src/test/java</sourceDirectory>-->
+                    <!--</sourceDirectories>-->
+                    <!--<scanForSources>true</scanForSources>-->
                 </configuration>
             </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>cobertura-maven-plugin</artifactId>-->
+                <!--<version>2.6</version>-->
+                <!--<configuration>-->
+                    <!--<instrumentation>-->
+                        <!--<excludes>-->
+                            <!--<exclude>org/apache/spark/**/*</exclude>-->
+                            <!--<exclude>reforest/example/**/*</exclude>-->
+                        <!--</excludes>-->
+                    <!--</instrumentation>-->
+                    <!--<check>true</check>-->
+                    <!--<format>xml</format>-->
+                    <!--<aggregate>true</aggregate>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <instrumentation>
-                        <excludes>
-                            <exclude>org/apache/spark/**/*</exclude>
-                            <exclude>reforest/example/**/*</exclude>
-                        </excludes>
-                    </instrumentation>
-                    <check>true</check>
-                    <format>xml</format>
-                    <aggregate>true</aggregate>
-                </configuration>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

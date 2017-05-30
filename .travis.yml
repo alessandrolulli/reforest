@@ -4,5 +4,7 @@ notifications:
   email:
     on_success: change 
     on_failure: always
+script:
+    - mvn test jacoco:report
 after_success:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report
+    - mvn coveralls:report
