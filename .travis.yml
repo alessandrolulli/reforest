@@ -5,4 +5,4 @@ notifications:
     on_success: change 
     on_failure: always
 after_success:
-  - mvn clean test coveralls:report
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report

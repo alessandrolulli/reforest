@@ -74,7 +74,7 @@ class Cut[T, U](val idFeature: Int,
   }
 
   override def shouldGoLeft(data: RawData[T, U], typeInfo: TypeInfo[T]): Boolean = {
-    typeInfo.leq(data(idFeature), value)
+    typeInfo.isMinOrEqual(data(idFeature), value)
   }
 
   override def shouldGoLeftBin(data: WorkingData[U], typeInfo: TypeInfo[U]): Boolean = {

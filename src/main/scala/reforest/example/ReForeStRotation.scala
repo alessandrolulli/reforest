@@ -34,13 +34,9 @@ object ReForeStRotation {
 
     property.numTrees = 100
     property.maxDepth = 5
-    property.numClasses = 10
+    property.numClasses = 7
 
-    property.numRotation = 2
-    property.sparkCoresMax = 4
-    property.sparkMaster = "local[4]"
-    property.sparkPartition = 32
-
+    property.numRotation = 10
 
     // Create the Random Rotations Forest classifier.
     val rfRunner = RFRunnerRotation.apply(property)

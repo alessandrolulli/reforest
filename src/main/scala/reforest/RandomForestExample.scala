@@ -52,7 +52,7 @@ object RandomForestExample
     val categoricalFeaturesInfo = property.category match
     {
       case "" => Map[Int, Int]()
-      case categoryValue => Array.tabulate(200)(i => (i, 5)).toMap
+      case categoryValue : String => Array.tabulate(200)(i => (i, 5)).toMap
       case _ => Map[Int, Int]()
     }
     val featureSubsetStrategy = "sqrt"

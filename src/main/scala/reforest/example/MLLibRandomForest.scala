@@ -38,38 +38,23 @@ object MLLibRandomForest {
     property.maxDepth = 5
     property.numClasses = 10
 
-
     val sc = CCUtil.getSparkContext(property)
 
-    CCUtilIO.logTIME(property, property.appName, "START-PREPARE")
-
-    val timeStart = System.currentTimeMillis()
     val data = MLUtils.loadLibSVMFile(sc, property.dataset, property.featureNumber, property.sparkCoresMax * 2)
-    val t0 = System.currentTimeMillis()
 
     val splits = data.randomSplit(Array(0.7, 0.3), 0)
     val (trainingData, testData) = (splits(0), splits(1))
 
     // Train a RandomForest model.
-    val numClasses = property.numClasses
     //    val categoricalFeaturesInfo = Array.tabulate(200)(i => (i, 5)).toMap
     val categoricalFeaturesInfo = Map[Int, Int]()
     val featureSubsetStrategy = "sqrt"
     val impurity = "entropy"
-    val skipAccuracy = property.skipAccuracy
-    val numTrees = property.numTrees
-    val maxDepth = property.maxDepth
-    val binNumber = property.binNumber
 
     val s = new
-        Strategy(Algo.Classification, Entropy, maxDepth, numClasses, binNumber, QuantileStrategy.Sort, categoricalFeaturesInfo, 1)
+        Strategy(Algo.Classification, Entropy, property.maxDepth, property.numClasses, property.binNumber, QuantileStrategy.Sort, categoricalFeaturesInfo, 1)
 
-    CCUtilIO.logTIME(property, property.appName, "START-TREE")
-    val model = RandomForest.trainClassifier(trainingData, s, numTrees, featureSubsetStrategy, Random.nextInt())
-
-
-    val timeEnd = System.currentTimeMillis()
-    CCUtilIO.logTIME(property, property.appName, "START-ACCURACY")
+    val model = RandomForest.trainClassifier(trainingData, s, property.numTrees, featureSubsetStrategy, Random.nextInt())
 
     val labelAndPreds = testData.map { point =>
       val prediction = model.predict(point.features)
@@ -81,7 +66,5 @@ object MLLibRandomForest {
     if (property.outputTree) {
       println("Learned classification forest model:\n" + model.toDebugString)
     }
-
   }
-
 }

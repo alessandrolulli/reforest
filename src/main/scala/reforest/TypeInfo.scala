@@ -19,43 +19,121 @@ package reforest
 
 import reforest.data.{RawData, RawDataDense, RawDataSparse}
 
+/**
+  * Utilities to work with a generic type.
+  * These utilities are used to optimize the data structure to load the raw data and to store the working data.
+  * @tparam T The type of the data. Available {Byte, Short, Int, Float, Double}
+  */
 trait TypeInfo[T] extends Serializable {
+  /**
+    * The representation of zero
+    * @return the zero value
+    */
   def zero : T
 
+  /**
+    * The value representing NaN (not a number)
+    * @return the NaN value
+    */
   def NaN: T
 
+  /**
+    * The minimum allowed value
+    * @return the minimum allowed value
+    */
   def minValue : T
 
+  /**
+    * The maximum allowed value
+    * @return the maximum allowed value
+    */
   def maxValue : T
 
+  /**
+    * Check if the value passed as argument is a valid value for performing binning
+    * @param value the value to check
+    * @return true if the value is a valid value for performing binning
+    */
   def isValidForBIN(value : T) : Boolean
 
+  /**
+    * Check if the value not valid is defined
+    * @return true if the value not valid is defined
+    */
   def isNOTvalidDefined : Boolean
 
+  /**
+    * Convert the string value passed as parameter to T
+    * @param s The value to be converted
+    * @return The converted value
+    */
   def fromString(s: String): T
 
+  /**
+    * Convert the int value passed as parameter to T
+    * @param i The value to be converted
+    * @return The converted value
+    */
   def fromInt(i: Int): T
 
+  /**
+    * Convert the double value passed as parameter to T
+    * @param i The value to be converted
+    * @return The converted value
+    */
   def fromDouble(i: Double): T
 
+  /**
+    * Convert a value in T to Int
+    * @param i The value to be converted
+    * @return The converted value
+    */
   def toInt(i: T): Int
 
+  /**
+    * Convert a value in T to Double
+    * @param i The value to be converted
+    * @return The converted value
+    */
   def toDouble(i: T): Double
 
+  /**
+    * Perform a multiplication between two values of different types
+    * @param i the first value
+    * @param v the second value in a different type
+    * @param typeInfo the type information for the second value
+    * @tparam U the type of the second value
+    * @return the result of the multiplication in type T
+    */
   def mult[U](i: T, v : U, typeInfo: TypeInfo[U]) : T
 
-  def leq(a: T, b: T): Boolean
-
+  /**
+    * Get the cut represented by the passed bin in type T
+    * @param cut the bin number
+    * @param split the array representing all the candidate cut
+    * @return the cut in type T instead that the initial Int
+    */
   def getRealCut(cut: Int, split: Array[T]): T
 
-  def getSimpleSplit[U](min : T, max : T, binNumber : Int, typeInfo: TypeInfo[U]) : (T => U)
-
-  def getSimpleSplitInverted[U](min : T, max : T, binNumber : Int, typeInfo: TypeInfo[U]) : (U => T)
-
+  /**
+    * Find the index in the array passed as argument of the value passed as argument
+    * @param array the array with all the intervals
+    * @param value the value to search in the array
+    * @return the index of the value in the array
+    */
   def getIndex(array: Array[T], value: T): Int
 
+  /**
+    * The utility for ordering element in type T
+    * @return the utility for ordering element in type T
+    */
   def getOrdering : Ordering[T]
 
+  /**
+    * Find the minimum value in the RawData
+    * @param data the raw data
+    * @return the minimum value in the raw data
+    */
   def getMin(data : RawData[T, _]) : T = {
     data match {
       case d : RawDataDense[T, _] => getMin(d.values)
@@ -64,8 +142,18 @@ trait TypeInfo[T] extends Serializable {
     }
   }
 
+  /**
+    * Find the minimum value in the Array
+    * @param array the array
+    * @return the minimum value in the array
+    */
   def getMin(array : Array[T]) : T
 
+  /**
+    * Find the maximum value in the RawData
+    * @param data the raw data
+    * @return the maximum value in the raw data
+    */
   def getMax(data : RawData[T, _]) : T = {
     data match {
       case d : RawDataDense[T, _] => getMax(d.values)
@@ -74,12 +162,35 @@ trait TypeInfo[T] extends Serializable {
     }
   }
 
+  /**
+    * Find the maximum value in the Array
+    * @param array the array
+    * @return the maximum value in the array
+    */
   def getMax(array : Array[T]) : T
 
+  /**
+    * Find the min value between two values
+    * @param a the first value
+    * @param b the second value
+    * @return the minimum value
+    */
   def min(a : T, b : T) : T
 
+  /**
+    * Check if the first value is less or equal with respect to the second value
+    * @param a the first value
+    * @param b the second value
+    * @return true if the first value is less or equal with respect to the second value
+    */
   def isMinOrEqual(a : T, b : T) : Boolean
 
+  /**
+    * Find the max value between two values
+    * @param a the first value
+    * @param b the second value
+    * @return the maximum value
+    */
   def max(a : T, b : T) : T
 }
 
@@ -108,8 +219,6 @@ class TypeInfoDouble(override val isNOTvalidDefined : Boolean = false, override 
     case _ => !value.isNaN
   })
 
-  override def leq(a: Double, b: Double): Boolean = a <= b
-
   override def getRealCut(cut: Int, info: Array[Double]) = {
     if (cut < 0)
       0d
@@ -117,21 +226,6 @@ class TypeInfoDouble(override val isNOTvalidDefined : Boolean = false, override 
       Double.MaxValue
     else {
       info(cut - 1)
-    }
-  }
-
-  override def getSimpleSplit[U](min : Double, max : Double, binNumber : Int, typeInfo: TypeInfo[U]) : (Double => U) = {
-    val binSize = (max-min) / binNumber
-    (value : Double) => {
-      if(isNOTvalidDefined && value == NaN) typeInfo.zero else
-      typeInfo.fromInt(Math.min(binNumber - 1, Math.max(1, Math.ceil((value - (min + binSize)) / binSize))).toInt)
-    }
-  }
-
-  override def getSimpleSplitInverted[U](min : Double, max : Double, binNumber : Int, typeInfo: TypeInfo[U]) : (U => Double) = {
-    val binSize = (max-min) / binNumber
-    (value : U) => {
-      min + (mult(binSize, value, typeInfo))
     }
   }
 
@@ -165,8 +259,6 @@ class TypeInfoFloat(override val isNOTvalidDefined : Boolean = false, override v
     case _ => !value.isNaN
   })
 
-  override def leq(a: Float, b: Float): Boolean = a <= b
-
   override def getRealCut(cut: Int, info: Array[Float]) = {
     if (cut < 0)
       0f
@@ -177,83 +269,10 @@ class TypeInfoFloat(override val isNOTvalidDefined : Boolean = false, override v
     }
   }
 
-  override def getSimpleSplit[U](min : Float, max : Float, binNumber : Int, typeInfo: TypeInfo[U]) : (Float => U) = {
-    val binSize = (max-min) / binNumber
-    (value : Float) => {
-      if(isNOTvalidDefined && value == NaN) typeInfo.zero else
-      typeInfo.fromInt(Math.min(binNumber - 1, Math.max(1, Math.ceil((value - (min + binSize)) / binSize))).toInt)
-    }
-  }
-
-  override def getSimpleSplitInverted[U](min : Float, max : Float, binNumber : Int, typeInfo: TypeInfo[U]) : (U => Float) = {
-    val binSize = (max-min) / binNumber
-    (value : U) => {
-      min + (mult(binSize, value, typeInfo))
-    }
-  }
-
   override def getIndex(array: Array[Float], value: Float): Int = {
     java.util.Arrays.binarySearch(array, value)
   }
 }
-
-//class TypeInfoFloat16(override val isNOTvalidDefined : Boolean = false, override val NaN : Float16 = new Float16(0)) extends TypeInfo[Float16] {
-//  override def fromString(s: String) = Float16.fromFloat(s.toFloat)
-//
-//  override def fromInt(i: Int): Float16 = new Float16(i.toShort)
-//
-//  override def toInt(i: Float16): Int = i.raw.toInt
-//
-//  override def isValidForBIN(value : Float16) : Boolean = !isNOTvalidDefined || (NaN.raw match {
-//    case 0 => value != 0
-//    case _ => !value.isNaN
-//  })
-//
-//  override def leq(a: Float16, b: Float16): Boolean = a <= b
-//
-//  override def getRealCut(cut: Int, info: Array[Float16]) = {
-//    if (cut < 0)
-//      new Float16(0)
-//    else if (cut >= info.size)
-//      Float16.MaxValue
-//    else {
-//      info(cut - 1)
-//    }
-//  }
-//
-//  override def getSimpleSplit(min : Float16, max : Float16, binNumber : Int) : (Float16 => Byte) = {
-//    val binSize = (max-min) / new Float16(binNumber.toShort)
-//    val fBin = new Float16((binNumber - 1).toShort)
-//    (value : Float16) => {
-//      val actualBin = (value - (min + binSize)) / binSize
-//      val tmp = if(Float16.Zero > actualBin) Float16.Zero else actualBin
-//      if(fBin < tmp) fBin.raw.toByte else tmp.raw.toByte
-//    }
-//  }
-//
-//  override def getSimpleSplitInverted(min : Float16, max : Float16, binNumber : Int) : (Byte => Float16) = {
-//    val binSize = (max-min) / new Float16(binNumber.toShort)
-//    (value : Byte) => {
-//      min + (new Float16(value) * binSize)
-//    }
-//  }
-//
-//  override def getIndex(array: Array[Float16], value: Float16): Int = {
-//    java.util.Arrays.binarySearch(array.map(t => t.raw), value.raw)
-//  }
-//
-//  override def getOrdering: Ordering[Float16] = {
-//    Ordering.by(e => e.raw)
-//  }
-//
-//  override def getMin(array : Array[Float16]) : Float16 = array.min(getOrdering)
-//
-//  override def getMax(array : Array[Float16]) : Float16 = array.max(getOrdering)
-//
-//  override def min(a : Float16, b : Float16) : Float16 = if(a < b) a else b
-//
-//  override def max(a : Float16, b : Float16) : Float16 = if(a > b) a else b
-//}
 
 class TypeInfoByte(override val isNOTvalidDefined : Boolean =false, override val NaN : Byte = 0) extends TypeInfo[Byte] {
   override def zero: Byte = 0
@@ -280,8 +299,6 @@ class TypeInfoByte(override val isNOTvalidDefined : Boolean =false, override val
     case _ => !value.isNaN
   })
 
-  override def leq(a: Byte, b: Byte): Boolean = a <= b
-
   override def getRealCut(cut: Int, info: Array[Byte]) = {
     if (cut < 0)
       0.toByte
@@ -289,21 +306,6 @@ class TypeInfoByte(override val isNOTvalidDefined : Boolean =false, override val
       Byte.MaxValue
     else {
       info(cut - 1)
-    }
-  }
-
-  override def getSimpleSplit[U](min : Byte, max : Byte, binNumber : Int, typeInfo: TypeInfo[U]) : (Byte => U) = {
-    val binSize = (max-min) / binNumber
-    (value : Byte) => {
-      if(isNOTvalidDefined && value == NaN) typeInfo.zero else
-      typeInfo.fromInt(Math.min(binNumber - 1, Math.max(1, Math.ceil((value - (min + binSize)) / binSize))).toInt)
-    }
-  }
-
-  override def getSimpleSplitInverted[U](min : Byte, max : Byte, binNumber : Int, typeInfo: TypeInfo[U]) : (U => Byte) = {
-    val binSize = ((max-min) / binNumber).toByte
-    (value : U) => {
-      (min + (mult(binSize, value, typeInfo))).toByte
     }
   }
 
@@ -321,7 +323,6 @@ class TypeInfoShort(override val isNOTvalidDefined : Boolean = false, override v
   override def fromDouble(i: Double): Short = if(i.isNaN) NaN else i.toShort
   override def toInt(i: Short): Int = i.toInt
   override def toDouble(i: Short): Double = i
-  override def leq(a: Short, b: Short): Boolean = a <= b
   override def getOrdering: Ordering[Short] = scala.math.Ordering.Short
   override def getMin(array : Array[Short]) : Short = array.min
   override def getMax(array : Array[Short]) : Short = array.max
@@ -348,21 +349,6 @@ class TypeInfoShort(override val isNOTvalidDefined : Boolean = false, override v
     }
   }
 
-  override def getSimpleSplit[U](min : Short, max : Short, binNumber : Int, typeInfo: TypeInfo[U]) : (Short => U) = {
-    val binSize = (max-min) / binNumber
-    (value : Short) => {
-      if(isNOTvalidDefined && value == NaN) typeInfo.zero else
-      typeInfo.fromInt(Math.min(binNumber - 1, Math.max(1, Math.ceil((value - (min + binSize)) / binSize))).toInt)
-    }
-  }
-
-  override def getSimpleSplitInverted[U](min : Short, max : Short, binNumber : Int, typeInfo: TypeInfo[U]) : (U => Short) = {
-    val binSize = ((max-min) / binNumber).toShort
-    (value : U) => {
-      (min + (mult(binSize, value, typeInfo))).toShort
-    }
-  }
-
   override def getIndex(array: Array[Short], value: Short): Int = {
     java.util.Arrays.binarySearch(array, value)
   }
@@ -377,7 +363,6 @@ class TypeInfoInt(override val isNOTvalidDefined : Boolean = false, override val
   override def fromDouble(i: Double): Int = if(i.isNaN) NaN else i.toInt
   override def toInt(i: Int): Int = i
   override def toDouble(i: Int): Double = i
-  override def leq(a: Int, b: Int): Boolean = a <= b
   override def getOrdering: Ordering[Int] = scala.math.Ordering.Int
   override def getMin(array : Array[Int]) : Int = array.min
   override def getMax(array : Array[Int]) : Int = array.max
@@ -401,21 +386,6 @@ class TypeInfoInt(override val isNOTvalidDefined : Boolean = false, override val
       Short.MaxValue
     else {
       info(cut - 1)
-    }
-  }
-
-  override def getSimpleSplit[U](min : Int, max : Int, binNumber : Int, typeInfo: TypeInfo[U]) : (Int => U) = {
-    val binSize = (max-min) / binNumber
-    (value : Int) => {
-      if(isNOTvalidDefined && value == NaN) typeInfo.zero else
-        typeInfo.fromInt(Math.min(binNumber - 1, Math.max(1, Math.ceil((value - (min + binSize)) / binSize))).toInt)
-    }
-  }
-
-  override def getSimpleSplitInverted[U](min : Int, max : Int, binNumber : Int, typeInfo: TypeInfo[U]) : (U => Int) = {
-    val binSize = ((max-min) / binNumber)
-    (value : U) => {
-      (min + (mult(binSize, value, typeInfo)))
     }
   }
 

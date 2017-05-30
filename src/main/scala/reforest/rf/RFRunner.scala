@@ -185,7 +185,11 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
       if (property.fcsActive && property.fcsDepth != -1) {
         property.fcsDepth == depth
       } else {
-        property.fcsActive && memoryUtil.get.switchToFCS(depth, featureSQRT.size)
+        if(nodeNumber < property.sparkCoresMax) {
+          false
+        } else {
+          property.fcsActive && memoryUtil.get.switchToFCS(depth, featureSQRT.size)
+        }
       }
     }
 

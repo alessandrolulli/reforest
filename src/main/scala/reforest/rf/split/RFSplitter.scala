@@ -71,40 +71,6 @@ class RFSplitterSpecialized[T, U](split: Map[Int, Array[T]],
   }
 }
 
-class RFSplitterSimple[T, U](min: T,
-                             max: T,
-                             typeInfo: TypeInfo[T],
-                             typeInfoWorking: TypeInfo[U],
-                             numberBin: Int,
-                             categoricalFeatureInfo: RFCategoryInfo) extends RFSplitter[T, U] {
-
-  val simpleSplitter = typeInfo.getSimpleSplit(min, max, numberBin, typeInfoWorking)
-  val simpleSplitterInverted = typeInfo.getSimpleSplitInverted(min, max, numberBin, typeInfoWorking)
-
-  override def getBinNumber(idFeature: Int): U = {
-    if (categoricalFeatureInfo.isCategorical(idFeature))
-      typeInfoWorking.fromInt(categoricalFeatureInfo.getArity(idFeature))
-    else
-      typeInfoWorking.fromInt(numberBin)
-  }
-
-  override def getBin(index: Int, value: T): U = {
-    if (categoricalFeatureInfo.isCategorical(index)) {
-      typeInfoWorking.fromInt(typeInfo.toInt(value) + 1)
-    } else {
-      simpleSplitter(value)
-    }
-  }
-
-  override def getRealCut(index: Int, cut: U): T = {
-    simpleSplitterInverted(cut)
-  }
-
-  override def generateRFSizer(numClasses: Int): RFFeatureSizer = {
-    new RFFeatureSizerSimple(numberBin, numClasses, categoricalFeatureInfo)
-  }
-}
-
 class RFSplitterSimpleRandom[T, U](minT: T,
                              maxT: T,
                              typeInfo: TypeInfo[T],

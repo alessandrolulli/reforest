@@ -34,7 +34,7 @@ object ReForeStMain {
     val category = property.loader.get("category", "") match
     {
       case "" => new RFCategoryInfoEmpty
-      case categoryValue => new RFCategoryInfoSpecialized(property.loader.get("categoryReMap", ""), categoryValue)
+      case categoryValue : String => new RFCategoryInfoSpecialized(property.loader.get("categoryReMap", ""), categoryValue)
       case _ => new RFCategoryInfoEmpty
     }
 
