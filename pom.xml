@@ -171,6 +171,7 @@
     <version>4.3.0</version>
     <configuration>
         <repoToken>${env.COVERALLS_TOKEN}</repoToken>
+ <sourceEncoding>UTF-8</sourceEncoding>
     </configuration>
 </plugin>
 		</plugins>
