@@ -173,7 +173,7 @@
                     <repoToken>${env.COVERALLS_TOKEN}</repoToken>
                     <sourceEncoding>UTF-8</sourceEncoding>
                     <sourceDirectories>
-                        <sourceDirectory>src/reforest</sourceDirectory>
+                        <sourceDirectory>src/main/scala/reforest</sourceDirectory>
                     </sourceDirectories>
                     <scanForSources>true</scanForSources>
                 </configuration>
