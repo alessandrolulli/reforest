@@ -55,7 +55,7 @@
     </fileSets>
     <files>
         <file>
-            <source>pom-prebuild-project.xml</source>
+            <source>resources/prebuild-project/pom-prebuild-project.xml</source>
             <outputDirectory></outputDirectory>
             <destName>pom.xml</destName>
         </file>

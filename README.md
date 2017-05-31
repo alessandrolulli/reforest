@@ -4,64 +4,58 @@
 [![Build Status](https://travis-ci.org/alessandrolulli/reforest.svg?branch=master)](https://travis-ci.org/alessandrolulli/reforest)
 [![license](https://img.shields.io/badge/license-APACHE%202.0-blue.svg)](https://img.shields.io/badge/license-APACHE%202.0-blue.svg)
 
-<p style="text-align: justify;">
-Random Forests (RF) of tree classifiers are a popular ensemble method for classification. RF are usually preferred with respect to other classification techniques because of their limited hyperparameter sensitivity, high numerical robustness, native capacity of dealing with numerical and categorical features, and effectiveness in many real world classification problems. In this work we present ReForeSt, a Random Forests Apache Spark implementation which is easier to tune, faster, and less memory consuming with respect to MLlib, the de facto standard Apache Spark machine learning library. We perform an extensive comparison between ReForeSt and MLlib by taking advantage of the Google Cloud Platform. In particular, we test ReForeSt and MLlib with different library settings, on different real world datasets, and with a different number of machines and types. Results confirm that ReForeSt outperforms MLlib in all the above mentioned aspects.
- </p>
  <p style="text-align: justify;">
 ReForeSt is a distributed, scalable implementation of the RF learning algorithm which targets fast and memory efficient processing. ReForeSt main contributions are manifold: (i) it provides a novel approach for the RF implementation in a distributed environment targeting an in-memory efficient processing, (ii) it is faster and more memory efficient with respect to the de facto standard MLlib, (iii) the level of parallelism is self-configuring.
  </p>
 
 ## How to build
 
+An already packaged ReForeSt in zip or tar.gz format can be found in the directory "resources/package".
+Otherwise it is possible to build ReForeSt using Maven:
 ```
 mvn clean package
 ```
 
-## How to configure
-It is required a configuration file.
-A minimal configuration file is the following:
+## How to train a random forest with ReForeSt
 
 ```
-dataset /path-to-dataset/dataset
+import reforest.rf.{RFProperty, RFRunner}
 
-numFeatures 794
-numClasses 10
+// Create the ReForeSt configuration.
+val property = new RFProperty()
+property.dataset = "data/sample-infimnist.libsvm"
+property.featureNumber = 794
 
-jarPath /path-to-jar/reforest.jar
+property.numTrees = 100
+property.maxDepth = 5
+property.numClasses = 10
 
-sparkMaster spark://<ip-master>:7077
-sparkExecutorInstances 3
-sparkExecutorMemory 512m
-sparkCoresMax 6
+// Create the Random Forest classifier.
+val rfRunner = RFRunner.apply(property)
+
+// Load and parse the data file and return the training data.
+val trainingData = rfRunner.loadData(0.7)
+
+// Train a Random Forest model.
+val model = rfRunner.trainClassifier(trainingData)
+
+// Evaluate model on test instances and compute test error
+val labelAndPreds = rfRunner.getTestData().map { point =>
+  val prediction = model.predict(point.features)
+  (point.label, prediction)
+}
+
+val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / rfRunner.getTestData().count()
+rfRunner.printTree()
+rfRunner.sparkStop()
+
+println("Test Error = " + testErr)
 ```
 
-Detailed description of available configuration variables (* : are mandatory variables):
+## Quick Start
+To quickly start using ReForeSt we provide a pre-built Maven project with all the settings and configuration to automatically import the project in IntelliJ.
+The prebuilt-project can be found in "resources/package" in zip and tar.gz format.
 
-| Variable | Default Value | Description |
-| --- | --- | --- |
-| dataset | * | path to the dataset in SVM format |
-| numFeatures | * | number of features in the dataset |
-| numTrees | 3 | number of trees in the forest  |
-| maxDepth | 3 | maximum depth of each tree |
-| numClasses | 2 | number of classes in the dataset (it is required the first class being "0", the second "1", and so on) |
-| binNumber | 32 | number of bins to discretize input |
-| poissonMean | 1 | mean to use for the bagging construction |
-| maxNodesConcurrent | -1 | if -1 ReForeSt automatically compute the maximum number of nodes to be computed in an iteration |
-| typeDataInput | Double | type of data to use to load the input values (available in RFAllInLocalData) (Double, Float, Float16, Short) |
-| sparkMaster | * | IP address of the Apache Spark Master |
-| sparkExecutorInstances | * | number of worker machines |
-| sparkExecutorMemory | * | amount of memory of each worker machine |
-| sparkCoresMax | * | total number of cores to use |
-
-
-## How to run
-
-The main class is: randomForest.test.reforest.ReForeStMain
-Otherwise, it is possible to use the following script:
-
-```
-./run.sh CONFIG_FILE
-```
 ## Authors
 * <a href="http://for.unipi.it/alessandro_lulli/">Alessandro Lulli</a>
 * <a href="http://www.lucaoneto.com">Luca Oneto</a>

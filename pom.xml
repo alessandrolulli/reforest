@@ -100,8 +100,8 @@
                         <id>reforest-lib</id>
                         <configuration>
                             <descriptors>
-                                <descriptor>assembly.xml</descriptor>
-                                <descriptor>assembly-zip.xml</descriptor>
+                                <descriptor>resources/maven-assembly/assembly.xml</descriptor>
+                                <descriptor>resources/maven-assembly/assembly-zip.xml</descriptor>
                             </descriptors>
                             <archive>
                                 <manifest>
@@ -118,7 +118,7 @@
                         <id>reforest-prebuild-project</id>
                         <configuration>
                             <descriptors>
-                                <descriptor>assembly-project-maven.xml</descriptor>
+                                <descriptor>resources/maven-assembly/assembly-project-maven.xml</descriptor>
                             </descriptors>
                             <archive>
                                 <manifest>
@@ -172,29 +172,8 @@
                 <configuration>
                     <repoToken>${env.COVERALLS_TOKEN}</repoToken>
                     <sourceEncoding>UTF-8</sourceEncoding>
-                    <!--<sourceDirectories>-->
-                        <!--<sourceDirectory>src/main/scala/</sourceDirectory>-->
-                        <!--<sourceDirectory>src/test/java</sourceDirectory>-->
-                    <!--</sourceDirectories>-->
-                    <!--<scanForSources>true</scanForSources>-->
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>cobertura-maven-plugin</artifactId>-->
-                <!--<version>2.6</version>-->
-                <!--<configuration>-->
-                    <!--<instrumentation>-->
-                        <!--<excludes>-->
-                            <!--<exclude>org/apache/spark/**/*</exclude>-->
-                            <!--<exclude>reforest/example/**/*</exclude>-->
-                        <!--</excludes>-->
-                    <!--</instrumentation>-->
-                    <!--<check>true</check>-->
-                    <!--<format>xml</format>-->
-                    <!--<aggregate>true</aggregate>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
