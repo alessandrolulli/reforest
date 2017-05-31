@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/alessandrolulli/reforest/master/resources/img/reforest-logo.png" width="20%" height="20%">
+<center><img src="https://raw.githubusercontent.com/alessandrolulli/reforest/master/resources/img/reforest-logo.png" width="20%" height="20%"></center>
 
 # ReForeSt
 [![Build Status](https://travis-ci.org/alessandrolulli/reforest.svg?branch=master)](https://travis-ci.org/alessandrolulli/reforest)
