@@ -326,7 +326,7 @@ class FCSExecutorBucketBC[T, U](@transient private val sc: SparkContext,
     Math.ceil(clusterNumber.toDouble / maxBucketConcurrent).toInt
   }
 
-  def execute(nodes: Iterable[Array[(Int, Int)]],
+  private def execute(nodes: Iterable[Array[(Int, Int)]],
               limit: Option[Int],
               clusterNumber: Int,
               forestBC: Broadcast[Forest[T, U]],
@@ -367,9 +367,7 @@ class FCSExecutorBucketBC[T, U](@transient private val sc: SparkContext,
         dataIndex.unpersist()
         tmp
       } else {
-
         val tmp = Some(sc.broadcast(dataIndex.mapPartitions(t => filterWorkingDataBucket(t, validNodesBC, forestBC)).collect()))
-
         tmp
       }
 

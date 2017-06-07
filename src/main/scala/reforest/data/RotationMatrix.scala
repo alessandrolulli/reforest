@@ -35,6 +35,12 @@ class RotationMatrix(n: Int, seed : Int, input: Option[Array[Array[Double]]] = O
   private val matrix = generateRotationMatrix(input, seed)
 
   /**
+    * Returns the generated matrix
+    * @return the generated matrix
+    */
+  def getGeneratedMatrix = matrix
+
+  /**
     * It rotates an array of values using the rotation matrix
     * @param array the array that must be rotated
     * @param typeInfo the type information of the raw data

@@ -21,7 +21,7 @@ import org.apache.spark.mllib.tree.RandomForest
 import org.apache.spark.mllib.tree.configuration.{Algo, QuantileStrategy, Strategy}
 import org.apache.spark.mllib.tree.impurity.Entropy
 import org.apache.spark.mllib.util.MLUtils
-import reforest.rf.{RFCategoryInfoEmpty, RFCategoryInfoSpecialized, RFProperty}
+import reforest.rf.{RFCategoryInfoEmpty, RFCategoryInfoSpecialized, RFProperty, RFPropertyFile}
 import reforest.util.{CCProperties, CCUtil, CCUtilIO}
 
 import scala.util.Random
@@ -30,7 +30,7 @@ object RandomForestExample
 {
   def main(args: Array[String]): Unit = {
 
-    val property = new RFProperty()
+    val property = new RFPropertyFile(new CCProperties("MLLib", args(0)).load().getImmutable)
 
     CCUtilIO.logTIME(property, property.appName, "START")
 

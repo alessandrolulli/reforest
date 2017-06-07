@@ -1,10 +1,5 @@
 package org.apache.spark.ml.tree.impl
 
-/**
-  * Code from Apache Spark MLLib 2.1.0 https://github.com/apache/spark
-  * The following has been slightly modified to perform evaluation about memory consumption.
-  */
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -42,6 +37,11 @@ import scala.util.Random
 
 
 /**
+  * !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! ---
+  * Code from Apache Spark MLLib 2.1.0 https://github.com/apache/spark
+  * The following has been slightly modified to perform evaluation about memory consumption.
+  * !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! ---
+  *
   * ALGORITHM
   *
   * This is a sketch of the algorithm to help new developers.

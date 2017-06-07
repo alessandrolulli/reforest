@@ -17,8 +17,7 @@
 
 package reforest.example
 
-import reforest.rf.{RFProperty, RFPropertyFile, RFRunner}
-import reforest.util.CCProperties
+import reforest.rf.{RFProperty, RFRunner}
 
 /**
   * An example to use the ReForeSt library to perform Random Forest
