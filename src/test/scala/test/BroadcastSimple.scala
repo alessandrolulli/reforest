@@ -1,7 +1,7 @@
 package test
 
 import org.apache.spark.broadcast.Broadcast
-import reforest.{TypeInfo, TypeInfoDouble, TypeInfoInt}
+import reforest.{TypeInfoDouble, TypeInfoInt}
 
 import scala.reflect.ClassTag
 

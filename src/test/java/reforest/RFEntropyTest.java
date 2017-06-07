@@ -1,13 +1,11 @@
 package reforest;
 
-import org.apache.spark.broadcast.Broadcast;
 import org.junit.Assert;
 import org.junit.Test;
 import reforest.dataTree.CutDetailed;
 import reforest.rf.RFEntropy;
 import reforest.rf.split.RFSplitter;
 import test.BroadcastSimple;
-import test.BroadcastSimple$;
 import test.RFResourceFactory;
 
 /**
