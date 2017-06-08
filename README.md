@@ -2,6 +2,7 @@
 
 # ReForeSt
 [![Build Status](https://travis-ci.org/alessandrolulli/reforest.svg?branch=master)](https://travis-ci.org/alessandrolulli/reforest)
+[![Coverage Status](https://coveralls.io/repos/github/alessandrolulli/reforest/badge.svg)](https://coveralls.io/github/alessandrolulli/reforest)
 [![license](https://img.shields.io/badge/license-APACHE%202.0-blue.svg)](https://img.shields.io/badge/license-APACHE%202.0-blue.svg)
 
  <p style="text-align: justify;">
