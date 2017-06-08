@@ -32,7 +32,7 @@
  * limitations under the License.
  */
 
-package randomForest.test.reforest.rf
+package reforest.rf.fcs
 
 import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast

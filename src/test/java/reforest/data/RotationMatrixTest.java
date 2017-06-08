@@ -1,12 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package reforest.data;
 
 import org.junit.Test;
 import scala.Option;
 import static junit.framework.Assert.assertTrue;
 
-/**
- * Created by lulli on 6/7/17.
- */
 public class RotationMatrixTest {
     private final double[][] r = {{0.196319368905337, -0.327175014642606, 0.0721021455180706, 0.158157037632222, -0.0724520060140864, 0.271070493682438, -0.756053694579398, 0.338797042016847, 0.239714153012937, 0.0401352912456466},
             {-0.0992605743657903, 0.135257447539004, 0.52028643058393, 0.16598455992817, 0.396820248416089, 0.403959178723581, -0.0630399464455697, -0.312444697444082, -0.0102835930519755, -0.501251547184258},

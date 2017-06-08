@@ -61,7 +61,9 @@ class MemoryUtil(val inputSize: Long, val property: RFProperty) extends Serializ
   def fcsMaximumClusterConcurrent(numCluster: Int, depth : Int) :Int = {
     val concurrentBucket = Math.max(1, Math.floor(sparkTotalByteAvailablePlusSafetyMinusWorkingData / fcsSizeForCluster(depth)).toInt)
 
-    if(fcsSizeForCluster(depth) * concurrentBucket > totalMemoryForWorkingData) {
+    if(sparkTotalByteAvailablePlusSafetyMinusWorkingData > totalMemoryForWorkingData)
+      numCluster
+    else if(fcsSizeForCluster(depth) * concurrentBucket > totalMemoryForWorkingData) {
       numCluster
     } else {
       concurrentBucket

@@ -20,10 +20,10 @@ package reforest.rf
 import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
-import randomForest.test.reforest.rf.RFTreeGenerationFCS
 import reforest.data.load.{ARFFUtil, LibSVMUtil}
 import reforest.data.{RawDataLabeled, StaticData}
 import reforest.dataTree._
+import reforest.rf.fcs.RFTreeGenerationFCS
 import reforest.rf.split.RFSplitterManager
 import reforest.util._
 import reforest.{TypeInfo, TypeInfoByte, TypeInfoDouble}

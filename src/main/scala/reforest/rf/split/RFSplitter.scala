@@ -22,6 +22,7 @@ import reforest.rf.{RFCategoryInfo, RFFeatureSizer, RFFeatureSizerSimple, RFFeat
 
 import scala.collection.Map
 import scala.util.Random
+import collection.JavaConverters._
 
 trait RFSplitter[T, U] extends Serializable {
 
@@ -38,6 +39,11 @@ class RFSplitterSpecialized[T, U](split: Map[Int, Array[T]],
                                   typeInfo: TypeInfo[T],
                                   typeInfoWorking: TypeInfo[U],
                                   categoricalFeatureInfo: RFCategoryInfo) extends RFSplitter[T, U] {
+
+  def this(split: java.util.HashMap[Int, Array[T]],
+           typeInfo: TypeInfo[T],
+           typeInfoWorking: TypeInfo[U],
+           categoricalFeatureInfo: RFCategoryInfo) = this(split.asScala, typeInfo, typeInfoWorking, categoricalFeatureInfo)
 
   override def getBinNumber(idFeature: Int): U = {
     if (categoricalFeatureInfo.isCategorical(idFeature))

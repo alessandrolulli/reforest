@@ -381,9 +381,9 @@ class TypeInfoInt(override val isNOTvalidDefined : Boolean = false, override val
 
   override def getRealCut(cut: Int, info: Array[Int]) = {
     if (cut < 0)
-      0.toShort
+      0
     else if ((cut-1) >= info.size)
-      Short.MaxValue
+      Int.MaxValue
     else {
       info(cut - 1)
     }

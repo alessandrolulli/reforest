@@ -14,22 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reforest.rf;
+package reforest.test
 
-import org.junit.Test;
-import reforest.rf.split.RFSplitter;
-import test.RFResourceFactory;
+import org.apache.spark.broadcast.Broadcast
+import reforest.{TypeInfoDouble, TypeInfoInt}
 
-import static org.junit.Assert.assertEquals;
+import scala.reflect.ClassTag
 
-public class RFFeatureSizerTest {
-    private final int numberBin = 32;
-    private final int numClasses = 10;
-    private final RFSplitter<Double, Integer> splitter = RFResourceFactory.getSplitterRandomDefault(-23.5, 12.7, numberBin);
-    private final RFFeatureSizer sizer = splitter.generateRFSizer(numClasses);
+class BroadcastSimple[T: ClassTag](v: T) extends Broadcast[T](0) {
+  override def value: T = v
 
-    @Test
-    public void getSize(){
-        assertEquals((numberBin + 1)*numClasses, sizer.getSize(1));
-    }
+  override def getValue(): T = v
+
+  override def doDestroy(blocking: Boolean) = {}
+
+  override def doUnpersist(blocking: Boolean) = {}
+}
+
+object BroadcastSimple {
+  val typeInfoInt = new BroadcastSimple[TypeInfoInt](new TypeInfoInt(false, -100))
+  val typeInfoDouble = new BroadcastSimple[TypeInfoDouble](new TypeInfoDouble(false, -100))
 }
