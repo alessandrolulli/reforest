@@ -61,6 +61,7 @@ class RFPropertyFile(val property : CCPropertiesImmutable) extends RFProperty {
 
   category = property.category
   fileType = property.fileType
+  logStats = loader.getBoolean("logStats", false)
 
   // FCS
   fcsActive = loader.getBoolean("fcsActive", false)

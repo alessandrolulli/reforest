@@ -35,10 +35,11 @@ object MLLibRandomForest {
     property.featureNumber = 794
 
     property.numTrees = 100
-    property.maxDepth = 5
+    property.maxDepth = 8
     property.numClasses = 10
 
     val sc = CCUtil.getSparkContext(property)
+    sc.setLogLevel("error")
 
     val data = MLUtils.loadLibSVMFile(sc, property.dataset, property.featureNumber, property.sparkCoresMax * 2)
 

@@ -102,6 +102,7 @@ class RFRunnerRotation[T: ClassTag, U: ClassTag](@transient val sc: SparkContext
 object RFRunnerRotation {
   def apply(property: RFProperty) = {
     val sc = CCUtil.getSparkContext(property)
+    sc.setLogLevel("error")
     val dataUtil = new RotationDataUtil[Double, Byte](sc, property, sc.broadcast(new TypeInfoDouble), property.sparkCoresMax * 2)
     new RFRunnerRotation[Double, Byte](sc, property, dataUtil, sc.broadcast(new GCInstrumentedEmpty), new TypeInfoDouble(), new TypeInfoByte(), new RFStrategyRotation(property, property.strategyFeature, sc.broadcast(dataUtil.matrices)))
   }

@@ -118,14 +118,16 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
 
     trainingTime = (t1 - t0)
 
-    CCUtilIO.printToFile(property, "stats.txt", property.appName, property.dataset,
-      "timeALL", (t1 - t0).toString,
-      "notConcurrentTime", notConcurrentTime.toString,
-      "preparationTime", (timePreparationEND - timePreparationSTART).toString,
-      "cycleTime", cycleTimeList.mkString("|"),
-      "maxNodesConcurrent", maxNodesConcurrent.toString,
-      "maxFeaturePerIteration", featurePerIteration.toString
-    )
+    if(property.logStats) {
+      CCUtilIO.printToFile(property, "stats.txt", property.appName, property.dataset,
+        "timeALL", (t1 - t0).toString,
+        "notConcurrentTime", notConcurrentTime.toString,
+        "preparationTime", (timePreparationEND - timePreparationSTART).toString,
+        "cycleTime", cycleTimeList.mkString("|"),
+        "maxNodesConcurrent", maxNodesConcurrent.toString,
+        "maxFeaturePerIteration", featurePerIteration.toString
+      )
+    }
 
     new RFModelStandard[T, U](sc.broadcast(forest), typeInfoBC, property.numClasses)
   }
@@ -236,6 +238,7 @@ class RFRunner[T: ClassTag, U: ClassTag](@transient private val sc: SparkContext
 object RFRunner {
   def apply(property: RFProperty) = {
     val sc = CCUtil.getSparkContext(property)
+    sc.setLogLevel("error")
     val strategyFeature = property.strategyFeature
     new RFRunner[Double, Byte](sc, property, sc.broadcast(new GCInstrumentedEmpty), new RFStrategyStandard(property, strategyFeature), new TypeInfoDouble(), new TypeInfoByte())
   }

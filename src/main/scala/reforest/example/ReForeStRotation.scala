@@ -33,7 +33,7 @@ object ReForeStRotation {
     property.featureNumber = 54
 
     property.numTrees = 100
-    property.maxDepth = 5
+    property.maxDepth = 8
     property.numClasses = 7
 
     property.numRotation = 10

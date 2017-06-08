@@ -38,21 +38,22 @@ object CCUtilIO extends Serializable {
     * @return
     */
   def printToFile(property : RFProperty, file: String, data: String*): Int = {
-    val printFile = new FileWriter(file, true)
-    printFile.write(data.mkString(",")+
-      ",strategy,"+property.strategy+
-      ",strategyFeature,"+property.strategyFeature.getDescription+
-      ",strategySplit,"+property.strategySplit.getDescription+
-      ",fcsCycleActivation,"+property.fcsCycleActivation+
-      ",numTrees,"+property.numTrees.toString+
-      ",maxDepth,"+property.maxDepth.toString+
-      ",binNumber,"+property.binNumber.toString+
-      ",sparkCoresMax,"+property.sparkCoresMax.toString+
-      ",sparkExecutorInstances,"+property.sparkExecutorInstances.toString+
-      ",numRotation,"+property.numRotation.toString+
-      ",uuid,"+property.uuid + "\n")
-    printFile.close
-
+    if(property.logStats) {
+      val printFile = new FileWriter(file, true)
+      printFile.write(data.mkString(",") +
+        ",strategy," + property.strategy +
+        ",strategyFeature," + property.strategyFeature.getDescription +
+        ",strategySplit," + property.strategySplit.getDescription +
+        ",fcsCycleActivation," + property.fcsCycleActivation +
+        ",numTrees," + property.numTrees.toString +
+        ",maxDepth," + property.maxDepth.toString +
+        ",binNumber," + property.binNumber.toString +
+        ",sparkCoresMax," + property.sparkCoresMax.toString +
+        ",sparkExecutorInstances," + property.sparkExecutorInstances.toString +
+        ",numRotation," + property.numRotation.toString +
+        ",uuid," + property.uuid + "\n")
+      printFile.close
+    }
     0
   }
 
@@ -62,11 +63,13 @@ object CCUtilIO extends Serializable {
     * @param event the event
     */
   def logTIME(property : RFProperty, algo: String, event: String) = {
-    val printFile = new FileWriter("time-event.txt", true)
-    val today = Calendar.getInstance().getTime()
-    val currentTime = hourFormat.format(today)
-    printFile.write(currentTime+","+algo+","+event+","+property.uuid +"\n")
-    printFile.close
+    if(property.logStats) {
+      val printFile = new FileWriter("time-event.txt", true)
+      val today = Calendar.getInstance().getTime()
+      val currentTime = hourFormat.format(today)
+      printFile.write(currentTime + "," + algo + "," + event + "," + property.uuid + "\n")
+      printFile.close
+    }
   }
 
   /**

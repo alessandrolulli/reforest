@@ -32,7 +32,7 @@ object ReForeSt {
     property.featureNumber = 794
 
     property.numTrees = 100
-    property.maxDepth = 5
+    property.maxDepth = 8
     property.numClasses = 10
 
     // Create the Random Forest classifier.

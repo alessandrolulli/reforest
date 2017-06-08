@@ -43,6 +43,7 @@ class RFProperty extends Serializable {
   var appName = "ReForeSt"
   var category = ""
   var fileType = ""
+  var logStats = false
 
   // FCS
   var fcsActive = false
