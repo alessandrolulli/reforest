@@ -116,21 +116,6 @@ object RawData {
   def sparse[T: ClassTag, U: ClassTag](size: Int, indices: Array[Int], values: Array[T], nan: T): RawData[T, U] =
     new RawDataSparse[T, U](size, indices, values, nan)
 
-  def sparse[T: ClassTag, U: ClassTag](size: Int, elements: Seq[(Int, T)], nan: T): RawData[T, U] = {
-    require(size > 0, "The size of the requested sparse vector must be greater than 0.")
-
-    val (indices, values) = elements.sortBy(_._1).unzip
-    var prev = -1
-    indices.foreach { i =>
-      require(prev < i, s"Found duplicate indices: $i.")
-      prev = i
-    }
-    require(prev < size, s"You may not write an element to index $prev because the declared " +
-      s"size of your vector is $size")
-
-    new RawDataSparse[T, U](size, indices.toArray, values.toArray, nan)
-  }
-
   val MAX_HASH_NNZ = 128
 }
 

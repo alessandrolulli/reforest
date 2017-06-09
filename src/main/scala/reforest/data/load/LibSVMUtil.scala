@@ -67,7 +67,7 @@ class LibSVMUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
       })
   }
 
-  private def parseLibSVMRecord(line: String): (Double, Array[Int], Array[T]) = {
+  private[load] def parseLibSVMRecord(line: String): (Double, Array[Int], Array[T]) = {
     val items = line.split(' ')
     val label = Math.max(items.head.toDouble, 0)
     val (indices, values) = items.tail.filter(_.nonEmpty).map {

@@ -65,7 +65,7 @@ class ARFFUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
       })
   }
 
-  private def parseARFFRecord(line: String): (Double, Array[T]) = {
+  private[load] def parseARFFRecord(line: String): (Double, Array[T]) = {
     val items = line.split(',')
     val label = Math.max(items.last.toDouble, 0)
     val values = items.dropRight(1).filter(_.nonEmpty).map(typeInfo.value.fromString)

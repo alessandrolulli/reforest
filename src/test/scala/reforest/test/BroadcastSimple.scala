@@ -17,7 +17,10 @@
 package reforest.test
 
 import org.apache.spark.broadcast.Broadcast
-import reforest.{TypeInfoDouble, TypeInfoInt}
+import reforest.rf.RFCategoryInfo
+import reforest.util.{GCInstrumented, GCInstrumentedEmpty}
+import reforest.{TypeInfo, TypeInfoDouble, TypeInfoInt}
+import test.RFResourceFactory
 
 import scala.reflect.ClassTag
 
@@ -33,5 +36,7 @@ class BroadcastSimple[T: ClassTag](v: T) extends Broadcast[T](0) {
 
 object BroadcastSimple {
   val typeInfoInt = new BroadcastSimple[TypeInfoInt](new TypeInfoInt(false, -100))
-  val typeInfoDouble = new BroadcastSimple[TypeInfoDouble](new TypeInfoDouble(false, -100))
+  val typeInfoDouble : Broadcast[TypeInfo[Double]] = new BroadcastSimple[TypeInfo[Double]](new TypeInfoDouble(false, -100))
+  val gcInstrumentedEmpty : Broadcast[GCInstrumented] = new BroadcastSimple[GCInstrumented](new GCInstrumentedEmpty)
+  val categoryInfoEmpty : Broadcast[RFCategoryInfo] = new BroadcastSimple[RFCategoryInfo](RFResourceFactory.getCategoricalInfo)
 }
