@@ -23,34 +23,41 @@ mvn clean package
 import reforest.rf.{RFProperty, RFRunner}
 
 // Create the ReForeSt configuration.
-val property = new RFProperty()
-property.dataset = "data/sample-infimnist.libsvm"
-property.featureNumber = 794
+val property = RFParameterBuilder.apply
+  .addParameter(RFParameterType.Dataset, "data/test10k-labels")
+  .addParameter(RFParameterType.NumFeatures, 794)
+  .addParameter(RFParameterType.NumClasses, 10)
+  .addParameter(RFParameterType.NumTrees, 100)
+  .addParameter(RFParameterType.Depth, 10)
+  .addParameter(RFParameterType.BinNumber, 32)
+  .addParameter(RFParameterType.SparkMaster, "local[4]")
+  .addParameter(RFParameterType.SparkCoresMax, 4)
+  .addParameter(RFParameterType.SparkPartition, 4 * 4)
+  .addParameter(RFParameterType.SparkExecutorMemory, "4096m")
+  .addParameter(RFParameterType.SparkExecutorInstances, 1)
+  .build
 
-property.numTrees = 100
-property.maxDepth = 5
-property.numClasses = 10
+val sc = CCUtil.getSparkContext(property)
 
 // Create the Random Forest classifier.
-val rfRunner = RFRunner.apply(property)
-
-// Load and parse the data file and return the training data.
-val trainingData = rfRunner.loadData(0.7)
+val timeStart = System.currentTimeMillis()
+val rfRunner = ReForeStTrainerBuilder.apply(property).build(sc)
 
 // Train a Random Forest model.
-val model = rfRunner.trainClassifier(trainingData)
+val model = rfRunner.trainClassifier()
+val timeEnd = System.currentTimeMillis()
 
 // Evaluate model on test instances and compute test error
-val labelAndPreds = rfRunner.getTestData().map { point =>
+val labelAndPreds = rfRunner.getDataLoader.getTestingData.map { point =>
   val prediction = model.predict(point.features)
   (point.label, prediction)
 }
 
-val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / rfRunner.getTestData().count()
-rfRunner.printTree()
-rfRunner.sparkStop()
+val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / rfRunner.getDataLoader.getTestingData.count()
 
-println("Test Error = " + testErr)
+println("Accuracy: "+(1 - testErr))
+println("Time: " + (timeEnd - timeStart))
+rfRunner.sparkStop()
 ```
 
 ## Quick Start
