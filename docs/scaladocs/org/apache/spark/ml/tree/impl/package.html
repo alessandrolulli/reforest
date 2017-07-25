@@ -1,0 +1,145 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>impl - Random Forests in Apache Spark 1.2-SNAPSHOT API - org.apache.spark.ml.tree.impl</title>
+          <meta name="description" content="impl - Random Forests in Apache Spark 1.2 - SNAPSHOT API - org.apache.spark.ml.tree.impl" />
+          <meta name="keywords" content="impl Random Forests in Apache Spark 1.2 SNAPSHOT API org.apache.spark.ml.tree.impl" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'org.apache.spark.ml.tree.impl.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="org">org</a>.<a href="../../../../package.html" class="extype" name="org.apache">apache</a>.<a href="../../../package.html" class="extype" name="org.apache.spark">spark</a>.<a href="../../package.html" class="extype" name="org.apache.spark.ml">ml</a>.<a href="../package.html" class="extype" name="org.apache.spark.ml.tree">tree</a></p>
+        <h1>impl</h1><span class="permalink">
+      <a href="../../../../../../index.html#org.apache.spark.ml.tree.impl.package" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">impl</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="org.apache.spark.ml.tree.impl.RandomForestRunner" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RandomForestRunner"></a>
+      <a id="RandomForestRunner:RandomForestRunner"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RandomForestRunner$.html"><span class="name">RandomForestRunner</span></a><span class="result"> extends <span class="extype" name="org.apache.spark.internal.Logging">Logging</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#org.apache.spark.ml.tree.impl.package@RandomForestRunner" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">!!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! ---
+Code from Apache Spark MLLib 2.1.0 https://github.com/apache/spark
+The following has been slightly modified to perform evaluation about memory consumption.</p><div class="fullcomment"><div class="comment cmt"><p>!!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! ---
+Code from Apache Spark MLLib 2.1.0 https://github.com/apache/spark
+The following has been slightly modified to perform evaluation about memory consumption.
+!!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! --- !!! ---</p><p>ALGORITHM</p><p>This is a sketch of the algorithm to help new developers.</p><p>The algorithm partitions data by instances (rows).
+On each iteration, the algorithm splits a set of nodes.  In order to choose the best split
+for a given node, sufficient statistics are collected from the distributed data.
+For each node, the statistics are collected to some worker node, and that worker selects
+the best split.</p><p>This setup requires discretization of continuous features.  This binning is done in the
+findSplits() method during initialization, after which each continuous feature becomes
+an ordered discretized feature with at most maxBins possible values.</p><p>The main loop in the algorithm operates on a queue of nodes (nodeStack).  These nodes
+lie at the periphery of the tree being trained.  If multiple trees are being trained at once,
+then this queue contains nodes from all of them.  Each iteration works roughly as follows:
+  On the master node:</p><ul><li>Some number of nodes are pulled off of the queue (based on the amount of memory
+      required for their sufficient statistics).</li><li>For random forests, if featureSubsetStrategy is not &quot;all,&quot; then a subset of candidate
+      features are chosen for each node.  See method selectNodesToSplit().
+  On worker nodes, via method findBestSplits():</li><li>The worker makes one pass over its subset of instances.</li><li>For each (tree, node, feature, split) tuple, the worker collects statistics about
+      splitting.  Note that the set of (tree, node) pairs is limited to the nodes selected
+      from the queue for this iteration.  The set of features considered can also be limited
+      based on featureSubsetStrategy.</li><li>For each node, the statistics for that node are aggregated to a particular worker
+      via reduceByKey().  The designated worker chooses the best (feature, split) pair,
+      or chooses to stop splitting if the stopping criteria are met.
+  On the master node:</li><li>The master collects all decisions about splitting nodes and updates the model.</li><li>The updated model is passed to the workers on the next iteration.
+This process continues until the node queue is empty.</li></ul><p>Most of the methods in this implementation support the statistics aggregation, which is
+the heaviest part of the computation.  In general, this implementation is bound by either
+the cost of statistics computation on workers or by communicating the sufficient statistics.
+</p></div></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

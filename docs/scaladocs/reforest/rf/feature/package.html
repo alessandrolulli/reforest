@@ -1,0 +1,351 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>feature - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.rf.feature</title>
+          <meta name="description" content="feature - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.rf.feature" />
+          <meta name="keywords" content="feature Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.rf.feature" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'reforest.rf.feature.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="reforest">reforest</a>.<a href="../package.html" class="extype" name="reforest.rf">rf</a></p>
+        <h1>feature</h1><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">feature</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.rf.feature.RFFeatureManager" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFFeatureManagerextendsSerializable"></a>
+      <a id="RFFeatureManager:RFFeatureManager"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFFeatureManager.html"><span class="name">RFFeatureManager</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFFeatureManagerextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The manager to retrieve the informations of all the features for all the forests that are generated.</p><div class="fullcomment"><div class="comment cmt"><p>The manager to retrieve the informations of all the features for all the forests that are generated.
+It stores also the features that are used in each node of the forests
+</p></div></div>
+    </li><li name="reforest.rf.feature.RFFeatureSizer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="RFFeatureSizerextendsSerializable"></a>
+      <a id="RFFeatureSizer:RFFeatureSizer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RFFeatureSizer.html"><span class="name">RFFeatureSizer</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFFeatureSizerextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An utility to retrieve how must be large a data structure to contain the information relative to a given feature
+</p>
+    </li><li name="reforest.rf.feature.RFFeatureSizerSimple" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFFeatureSizerSimpleextendsRFFeatureSizer"></a>
+      <a id="RFFeatureSizerSimple:RFFeatureSizerSimple"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFFeatureSizerSimple.html"><span class="name">RFFeatureSizerSimple</span></a><span class="result"> extends <a href="RFFeatureSizer.html" class="extype" name="reforest.rf.feature.RFFeatureSizer">RFFeatureSizer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFFeatureSizerSimpleextendsRFFeatureSizer" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A simple feature sizer that assign the size for each feature equal to the number of configured bin
+</p>
+    </li><li name="reforest.rf.feature.RFFeatureSizerSimpleModelSelection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFFeatureSizerSimpleModelSelectionextendsRFFeatureSizer"></a>
+      <a id="RFFeatureSizerSimpleModelSelection:RFFeatureSizerSimpleModelSelection"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFFeatureSizerSimpleModelSelection.html"><span class="name">RFFeatureSizerSimpleModelSelection</span></a><span class="result"> extends <a href="RFFeatureSizer.html" class="extype" name="reforest.rf.feature.RFFeatureSizer">RFFeatureSizer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFFeatureSizerSimpleModelSelectionextendsRFFeatureSizer" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.feature.RFFeatureSizerSpecialized" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFFeatureSizerSpecializedextendsRFFeatureSizer"></a>
+      <a id="RFFeatureSizerSpecialized:RFFeatureSizerSpecialized"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFFeatureSizerSpecialized.html"><span class="name">RFFeatureSizerSpecialized</span></a><span class="result"> extends <a href="RFFeatureSizer.html" class="extype" name="reforest.rf.feature.RFFeatureSizer">RFFeatureSizer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFFeatureSizerSpecializedextendsRFFeatureSizer" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A feature sizer specialized for each feature
+</p>
+    </li><li name="reforest.rf.feature.RFFeatureSizerSpecializedModelSelection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFFeatureSizerSpecializedModelSelectionextendsRFFeatureSizer"></a>
+      <a id="RFFeatureSizerSpecializedModelSelection:RFFeatureSizerSpecializedModelSelection"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFFeatureSizerSpecializedModelSelection.html"><span class="name">RFFeatureSizerSpecializedModelSelection</span></a><span class="result"> extends <a href="RFFeatureSizer.html" class="extype" name="reforest.rf.feature.RFFeatureSizer">RFFeatureSizer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFFeatureSizerSpecializedModelSelectionextendsRFFeatureSizer" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.feature.RFStrategyFeature" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="RFStrategyFeatureextendsSerializable"></a>
+      <a id="RFStrategyFeature:RFStrategyFeature"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyFeature.html"><span class="name">RFStrategyFeature</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFStrategyFeatureextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It characterize the number of features to use as candidates for splitting at each tree node.</p>
+    </li><li name="reforest.rf.feature.RFStrategyFeatureALL" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyFeatureALLextendsRFStrategyFeature"></a>
+      <a id="RFStrategyFeatureALL:RFStrategyFeatureALL"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyFeatureALL.html"><span class="name">RFStrategyFeatureALL</span></a><span class="result"> extends <a href="RFStrategyFeature.html" class="extype" name="reforest.rf.feature.RFStrategyFeature">RFStrategyFeature</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFStrategyFeatureALLextendsRFStrategyFeature" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It characterize the number of features to use as candidates for splitting at each tree node.</p><div class="fullcomment"><div class="comment cmt"><p>It characterize the number of features to use as candidates for splitting at each tree node.
+It uses ALL the features</p></div></div>
+    </li><li name="reforest.rf.feature.RFStrategyFeatureBase" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyFeatureBaseextendsRFStrategyFeature"></a>
+      <a id="RFStrategyFeatureBase:RFStrategyFeatureBase"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyFeatureBase.html"><span class="name">RFStrategyFeatureBase</span></a><span class="result"> extends <a href="RFStrategyFeature.html" class="extype" name="reforest.rf.feature.RFStrategyFeature">RFStrategyFeature</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFStrategyFeatureBaseextendsRFStrategyFeature" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It characterize the number of features to use as candidates for splitting at each tree node.</p><div class="fullcomment"><div class="comment cmt"><p>It characterize the number of features to use as candidates for splitting at each tree node.
+It is a base class for returning a subset of the features</p></div></div>
+    </li><li name="reforest.rf.feature.RFStrategyFeatureCUSTOM" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyFeatureCUSTOMextendsRFStrategyFeatureBase"></a>
+      <a id="RFStrategyFeatureCUSTOM:RFStrategyFeatureCUSTOM"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyFeatureCUSTOM.html"><span class="name">RFStrategyFeatureCUSTOM</span></a><span class="result"> extends <a href="RFStrategyFeatureBase.html" class="extype" name="reforest.rf.feature.RFStrategyFeatureBase">RFStrategyFeatureBase</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFStrategyFeatureCUSTOMextendsRFStrategyFeatureBase" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It characterize the number of features to use as candidates for splitting at each tree node.</p><div class="fullcomment"><div class="comment cmt"><p>It characterize the number of features to use as candidates for splitting at each tree node.
+It uses a CUSTOM number of the features</p></div></div>
+    </li><li name="reforest.rf.feature.RFStrategyFeatureLOG2" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyFeatureLOG2extendsRFStrategyFeatureBase"></a>
+      <a id="RFStrategyFeatureLOG2:RFStrategyFeatureLOG2"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyFeatureLOG2.html"><span class="name">RFStrategyFeatureLOG2</span></a><span class="result"> extends <a href="RFStrategyFeatureBase.html" class="extype" name="reforest.rf.feature.RFStrategyFeatureBase">RFStrategyFeatureBase</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFStrategyFeatureLOG2extendsRFStrategyFeatureBase" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It characterize the number of features to use as candidates for splitting at each tree node.</p><div class="fullcomment"><div class="comment cmt"><p>It characterize the number of features to use as candidates for splitting at each tree node.
+It uses LOG2 features</p></div></div>
+    </li><li name="reforest.rf.feature.RFStrategyFeatureONETHIRD" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyFeatureONETHIRDextendsRFStrategyFeatureBase"></a>
+      <a id="RFStrategyFeatureONETHIRD:RFStrategyFeatureONETHIRD"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyFeatureONETHIRD.html"><span class="name">RFStrategyFeatureONETHIRD</span></a><span class="result"> extends <a href="RFStrategyFeatureBase.html" class="extype" name="reforest.rf.feature.RFStrategyFeatureBase">RFStrategyFeatureBase</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFStrategyFeatureONETHIRDextendsRFStrategyFeatureBase" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It characterize the number of features to use as candidates for splitting at each tree node.</p><div class="fullcomment"><div class="comment cmt"><p>It characterize the number of features to use as candidates for splitting at each tree node.
+It uses ONETHIRD features</p></div></div>
+    </li><li name="reforest.rf.feature.RFStrategyFeatureSQRT" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyFeatureSQRTextendsRFStrategyFeatureBase"></a>
+      <a id="RFStrategyFeatureSQRT:RFStrategyFeatureSQRT"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyFeatureSQRT.html"><span class="name">RFStrategyFeatureSQRT</span></a><span class="result"> extends <a href="RFStrategyFeatureBase.html" class="extype" name="reforest.rf.feature.RFStrategyFeatureBase">RFStrategyFeatureBase</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFStrategyFeatureSQRTextendsRFStrategyFeatureBase" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It characterize the number of features to use as candidates for splitting at each tree node.</p><div class="fullcomment"><div class="comment cmt"><p>It characterize the number of features to use as candidates for splitting at each tree node.
+It uses SQRT features</p></div></div>
+    </li><li name="reforest.rf.feature.RFStrategyFeatureSQRTSQRT" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyFeatureSQRTSQRTextendsRFStrategyFeatureBase"></a>
+      <a id="RFStrategyFeatureSQRTSQRT:RFStrategyFeatureSQRTSQRT"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyFeatureSQRTSQRT.html"><span class="name">RFStrategyFeatureSQRTSQRT</span></a><span class="result"> extends <a href="RFStrategyFeatureBase.html" class="extype" name="reforest.rf.feature.RFStrategyFeatureBase">RFStrategyFeatureBase</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.feature.package@RFStrategyFeatureSQRTSQRTextendsRFStrategyFeatureBase" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It characterize the number of features to use as candidates for splitting at each tree node.</p><div class="fullcomment"><div class="comment cmt"><p>It characterize the number of features to use as candidates for splitting at each tree node.
+It uses SQRTSQRT features</p></div></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

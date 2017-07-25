@@ -1,0 +1,158 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>load - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.data.load</title>
+          <meta name="description" content="load - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.data.load" />
+          <meta name="keywords" content="load Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.data.load" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'reforest.data.load.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="reforest">reforest</a>.<a href="../package.html" class="extype" name="reforest.data">data</a></p>
+        <h1>load</h1><span class="permalink">
+      <a href="../../../index.html#reforest.data.load.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">load</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.data.load.ARFFUtil" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ARFFUtil[T,U]extendsDataLoad[T,U]"></a>
+      <a id="ARFFUtil[T,U]:ARFFUtil[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ARFFUtil.html"><span class="name">ARFFUtil</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="DataLoad.html" class="extype" name="reforest.data.load.DataLoad">DataLoad</a>[<span class="extype" name="reforest.data.load.ARFFUtil.T">T</span>, <span class="extype" name="reforest.data.load.ARFFUtil.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.load.package@ARFFUtil[T,U]extendsDataLoad[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Load data in ARFF format
+</p><div class="fullcomment"><div class="comment cmt"><p>Load data in ARFF format
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.load.DataLoad" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="DataLoad[T,U]extendsSerializable"></a>
+      <a id="DataLoad[T,U]:DataLoad[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DataLoad.html"><span class="name">DataLoad</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.load.package@DataLoad[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An utility to load data from different file formats in raw data labeled</p><div class="fullcomment"><div class="comment cmt"><p>An utility to load data from different file formats in raw data labeled</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.load.LibSVMUtil" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="LibSVMUtil[T,U]extendsDataLoad[T,U]"></a>
+      <a id="LibSVMUtil[T,U]:LibSVMUtil[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="LibSVMUtil.html"><span class="name">LibSVMUtil</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="DataLoad.html" class="extype" name="reforest.data.load.DataLoad">DataLoad</a>[<span class="extype" name="reforest.data.load.LibSVMUtil.T">T</span>, <span class="extype" name="reforest.data.load.LibSVMUtil.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.load.package@LibSVMUtil[T,U]extendsDataLoad[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Forked from Apache Spark MLlib
+Load data in LibSVM format
+</p><div class="fullcomment"><div class="comment cmt"><p>Forked from Apache Spark MLlib
+Load data in LibSVM format
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

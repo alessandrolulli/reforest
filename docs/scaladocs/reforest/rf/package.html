@@ -1,0 +1,583 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>rf - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.rf</title>
+          <meta name="description" content="rf - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.rf" />
+          <meta name="keywords" content="rf Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.rf" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'reforest.rf.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="reforest">reforest</a></p>
+        <h1>rf</h1><span class="permalink">
+      <a href="../../index.html#reforest.rf.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rf</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.rf.RFCategoryInfo" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="RFCategoryInfoextendsSerializable"></a>
+      <a id="RFCategoryInfo:RFCategoryInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RFCategoryInfo.html"><span class="name">RFCategoryInfo</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFCategoryInfoextendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It contains the information for the categorical features
+</p>
+    </li><li name="reforest.rf.RFCategoryInfoEmpty" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFCategoryInfoEmptyextendsRFCategoryInfo"></a>
+      <a id="RFCategoryInfoEmpty:RFCategoryInfoEmpty"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFCategoryInfoEmpty.html"><span class="name">RFCategoryInfoEmpty</span></a><span class="result"> extends <a href="RFCategoryInfo.html" class="extype" name="reforest.rf.RFCategoryInfo">RFCategoryInfo</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFCategoryInfoEmptyextendsRFCategoryInfo" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The base class to use if the dataset does NOT contains categorical feature
+</p>
+    </li><li name="reforest.rf.RFCategoryInfoSpecialized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFCategoryInfoSpecializedextendsRFCategoryInfo"></a>
+      <a id="RFCategoryInfoSpecialized:RFCategoryInfoSpecialized"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFCategoryInfoSpecialized.html"><span class="name">RFCategoryInfoSpecialized</span></a><span class="result"> extends <a href="RFCategoryInfo.html" class="extype" name="reforest.rf.RFCategoryInfo">RFCategoryInfo</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFCategoryInfoSpecializedextendsRFCategoryInfo" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The base class to collect information about categorical features.</p><div class="fullcomment"><div class="comment cmt"><p>The base class to collect information about categorical features. To be used if the dataset contains categorical feature
+</p></div></div>
+    </li><li name="reforest.rf.RFDataPrepare" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFDataPrepare[T,U]extendsSerializable"></a>
+      <a id="RFDataPrepare[T,U]:RFDataPrepare[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFDataPrepare.html"><span class="name">RFDataPrepare</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFDataPrepare[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.RFEntropy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFEntropy[T,U]extendsSerializable"></a>
+      <a id="RFEntropy[T,U]:RFEntropy[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFEntropy.html"><span class="name">RFEntropy</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFEntropy[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Utility to compute the entropy
+</p><div class="fullcomment"><div class="comment cmt"><p>Utility to compute the entropy
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFModel" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="RFModel[T,U]extendsSerializable"></a>
+      <a id="RFModel[T,U]:RFModel[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RFModel.html"><span class="name">RFModel</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFModel[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It predicts the class for the raw data in the testing set
+</p><div class="fullcomment"><div class="comment cmt"><p>It predicts the class for the raw data in the testing set
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFModelAggregator" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFModelAggregator[T,U]extendsRFModel[T,U]"></a>
+      <a id="RFModelAggregator[T,U]:RFModelAggregator[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFModelAggregator.html"><span class="name">RFModelAggregator</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFModel.html" class="extype" name="reforest.rf.RFModel">RFModel</a>[<span class="extype" name="reforest.rf.RFModelAggregator.T">T</span>, <span class="extype" name="reforest.rf.RFModelAggregator.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFModelAggregator[T,U]extendsRFModel[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It aggregates multiple RFModel.</p><div class="fullcomment"><div class="comment cmt"><p>It aggregates multiple RFModel.
+It is possible to add models incrementally.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFModelFixedParameter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFModelFixedParameter[T,U]extendsRFModel[T,U]"></a>
+      <a id="RFModelFixedParameter[T,U]:RFModelFixedParameter[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFModelFixedParameter.html"><span class="name">RFModelFixedParameter</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFModel.html" class="extype" name="reforest.rf.RFModel">RFModel</a>[<span class="extype" name="reforest.rf.RFModelFixedParameter.T">T</span>, <span class="extype" name="reforest.rf.RFModelFixedParameter.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFModelFixedParameter[T,U]extendsRFModel[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This model overrides the parameters used in the contained model to predict the labels
+</p><div class="fullcomment"><div class="comment cmt"><p>This model overrides the parameters used in the contained model to predict the labels
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFModelRotate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFModelRotate[T,U]extendsRFModel[T,U]"></a>
+      <a id="RFModelRotate[T,U]:RFModelRotate[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFModelRotate.html"><span class="name">RFModelRotate</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFModel.html" class="extype" name="reforest.rf.RFModel">RFModel</a>[<span class="extype" name="reforest.rf.RFModelRotate.T">T</span>, <span class="extype" name="reforest.rf.RFModelRotate.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFModelRotate[T,U]extendsRFModel[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The model when using the rotation of ReForeSt.</p><div class="fullcomment"><div class="comment cmt"><p>The model when using the rotation of ReForeSt.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFModelSelection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFModelSelection[T,U]extendsSerializable"></a>
+      <a id="RFModelSelection[T,U]:RFModelSelection[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFModelSelection.html"><span class="name">RFModelSelection</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFModelSelection[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p>
+    </li><li name="reforest.rf.RFModelStandard" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFModelStandard[T,U]extendsRFModel[T,U]"></a>
+      <a id="RFModelStandard[T,U]:RFModelStandard[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFModelStandard.html"><span class="name">RFModelStandard</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFModel.html" class="extype" name="reforest.rf.RFModel">RFModel</a>[<span class="extype" name="reforest.rf.RFModelStandard.T">T</span>, <span class="extype" name="reforest.rf.RFModelStandard.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFModelStandard[T,U]extendsRFModel[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The base implementation for a RFModel
+</p><div class="fullcomment"><div class="comment cmt"><p>The base implementation for a RFModel
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFSkip" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFSkipextendsSerializable"></a>
+      <a id="RFSkip:RFSkip"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFSkip.html"><span class="name">RFSkip</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFSkipextendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.RFStrategy" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategy[T,U]extendsSerializable"></a>
+      <a id="RFStrategy[T,U]:RFStrategy[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategy.html"><span class="name">RFStrategy</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFStrategy[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Base class for the different random forest strategy implemented in ReForeSt
+</p><div class="fullcomment"><div class="comment cmt"><p>Base class for the different random forest strategy implemented in ReForeSt
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFStrategyModelSelection" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyModelSelection[T,U]extendsRFStrategy[T,U]"></a>
+      <a id="RFStrategyModelSelection[T,U]:RFStrategyModelSelection[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyModelSelection.html"><span class="name">RFStrategyModelSelection</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFStrategy.html" class="extype" name="reforest.rf.RFStrategy">RFStrategy</a>[<span class="extype" name="reforest.rf.RFStrategyModelSelection.T">T</span>, <span class="extype" name="reforest.rf.RFStrategyModelSelection.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFStrategyModelSelection[T,U]extendsRFStrategy[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The strategy implementation for the model selection</p><div class="fullcomment"><div class="comment cmt"><p>The strategy implementation for the model selection</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFStrategyRotation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyRotation[T,U]extendsRFStrategy[T,U]"></a>
+      <a id="RFStrategyRotation[T,U]:RFStrategyRotation[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyRotation.html"><span class="name">RFStrategyRotation</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFStrategy.html" class="extype" name="reforest.rf.RFStrategy">RFStrategy</a>[<span class="extype" name="reforest.rf.RFStrategyRotation.T">T</span>, <span class="extype" name="reforest.rf.RFStrategyRotation.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFStrategyRotation[T,U]extendsRFStrategy[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The strategy to compute random rotation forest according to Blaser et al.</p><div class="fullcomment"><div class="comment cmt"><p>The strategy to compute random rotation forest according to Blaser et al. &quot;Random rotation ensembles&quot;
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFStrategyStandard" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFStrategyStandard[T,U]extendsRFStrategy[T,U]"></a>
+      <a id="RFStrategyStandard[T,U]:RFStrategyStandard[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategyStandard.html"><span class="name">RFStrategyStandard</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFStrategy.html" class="extype" name="reforest.rf.RFStrategy">RFStrategy</a>[<span class="extype" name="reforest.rf.RFStrategyStandard.T">T</span>, <span class="extype" name="reforest.rf.RFStrategyStandard.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFStrategyStandard[T,U]extendsRFStrategy[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The standard strategy to compute Random Forest according to Breiman et al.</p><div class="fullcomment"><div class="comment cmt"><p>The standard strategy to compute Random Forest according to Breiman et al. &quot;Random forests&quot;
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.RFTreeGeneration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFTreeGeneration[T,U]extendsSerializable"></a>
+      <a id="RFTreeGeneration[T,U]:RFTreeGeneration[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFTreeGeneration.html"><span class="name">RFTreeGeneration</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFTreeGeneration[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.ReForeStRunner" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ReForeStRunner[T,U]extendsSerializable"></a>
+      <a id="ReForeStRunner[T,U]:ReForeStRunner[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ReForeStRunner.html"><span class="name">ReForeStRunner</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@ReForeStRunner[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It executes the ReForeSt tree learning
+</p><div class="fullcomment"><div class="comment cmt"><p>It executes the ReForeSt tree learning
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.ReForeStRunnerSLC" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReForeStRunnerSLC[T,U]extendsReForeStRunner[T,U]"></a>
+      <a id="ReForeStRunnerSLC[T,U]:ReForeStRunnerSLC[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReForeStRunnerSLC.html"><span class="name">ReForeStRunnerSLC</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="ReForeStRunner.html" class="extype" name="reforest.rf.ReForeStRunner">ReForeStRunner</a>[<span class="extype" name="reforest.rf.ReForeStRunnerSLC.T">T</span>, <span class="extype" name="reforest.rf.ReForeStRunnerSLC.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@ReForeStRunnerSLC[T,U]extendsReForeStRunner[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.ReForeStRunnerStandard" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReForeStRunnerStandard[T,U]extendsReForeStRunner[T,U]"></a>
+      <a id="ReForeStRunnerStandard[T,U]:ReForeStRunnerStandard[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReForeStRunnerStandard.html"><span class="name">ReForeStRunnerStandard</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="ReForeStRunner.html" class="extype" name="reforest.rf.ReForeStRunner">ReForeStRunner</a>[<span class="extype" name="reforest.rf.ReForeStRunnerStandard.T">T</span>, <span class="extype" name="reforest.rf.ReForeStRunnerStandard.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@ReForeStRunnerStandard[T,U]extendsReForeStRunner[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="reforest.rf.RFSkip" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFSkip"></a>
+      <a id="RFSkip:RFSkip"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RFSkip$.html"><span class="name">RFSkip</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFSkip" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.RFTreeGeneration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFTreeGeneration"></a>
+      <a id="RFTreeGeneration:RFTreeGeneration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RFTreeGeneration$.html"><span class="name">RFTreeGeneration</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@RFTreeGeneration" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.feature" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="feature"></a>
+      <a id="feature:feature"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="feature/package.html"><span class="name">feature</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@feature" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.parameter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="parameter"></a>
+      <a id="parameter:parameter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="parameter/package.html"><span class="name">parameter</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@parameter" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.rotation" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="rotation"></a>
+      <a id="rotation:rotation"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="rotation/package.html"><span class="name">rotation</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@rotation" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.slc" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="slc"></a>
+      <a id="slc:slc"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="slc/package.html"><span class="name">slc</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@slc" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.rf.split" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="split"></a>
+      <a id="split:split"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="split/package.html"><span class="name">split</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.rf.package@split" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

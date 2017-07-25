@@ -1,0 +1,348 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>util - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.util</title>
+          <meta name="description" content="util - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.util" />
+          <meta name="keywords" content="util Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.util" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'reforest.util.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="reforest">reforest</a></p>
+        <h1>util</h1><span class="permalink">
+      <a href="../../index.html#reforest.util.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">util</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.util.BiMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BiMap[X,Y]extendsSerializablewithProduct"></a>
+      <a id="BiMap[X,Y]:BiMap[X,Y]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BiMap.html"><span class="name">BiMap</span></a><span class="tparams">[<span name="X">X</span>, <span name="Y">Y</span>]</span><span class="params">(<span name="map">map: <span class="extype" name="scala.collection.Map">Map</span>[<span class="extype" name="reforest.util.BiMap.X">X</span>, <span class="extype" name="reforest.util.BiMap.Y">Y</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span> with <span class="extype" name="scala.Product">Product</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@BiMap[X,Y]extendsSerializablewithProduct" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.util.CCProperties" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CCPropertiesextendsSerializable"></a>
+      <a id="CCProperties:CCProperties"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CCProperties.html"><span class="name">CCProperties</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@CCPropertiesextendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Utility to load the standard configuration properties and functions to load custom properties.</p>
+    </li><li name="reforest.util.CCPropertiesImmutable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CCPropertiesImmutableextendsSerializable"></a>
+      <a id="CCPropertiesImmutable:CCPropertiesImmutable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CCPropertiesImmutable.html"><span class="name">CCPropertiesImmutable</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@CCPropertiesImmutableextendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An immutable representation of the configurations loaded from file</p>
+    </li><li name="reforest.util.GCInstrumented" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="GCInstrumentedextendsSerializable"></a>
+      <a id="GCInstrumented:GCInstrumented"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="GCInstrumented.html"><span class="name">GCInstrumented</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@GCInstrumentedextendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Instrumentation for the Garbage Collector in order to retrieve useful information about the amount of memory
+used.</p>
+    </li><li name="reforest.util.GCInstrumentedEmpty" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GCInstrumentedEmptyextendsGCInstrumented"></a>
+      <a id="GCInstrumentedEmpty:GCInstrumentedEmpty"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="GCInstrumentedEmpty.html"><span class="name">GCInstrumentedEmpty</span></a><span class="result"> extends <a href="GCInstrumented.html" class="extype" name="reforest.util.GCInstrumented">GCInstrumented</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@GCInstrumentedEmptyextendsGCInstrumented" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.util.GCInstrumentedFull" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GCInstrumentedFullextendsGCInstrumented"></a>
+      <a id="GCInstrumentedFull:GCInstrumentedFull"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="GCInstrumentedFull.html"><span class="name">GCInstrumentedFull</span></a><span class="result"> extends <a href="GCInstrumented.html" class="extype" name="reforest.util.GCInstrumented">GCInstrumented</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@GCInstrumentedFullextendsGCInstrumented" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.util.IncrementalMean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IncrementalMeanextendsAnyRef"></a>
+      <a id="IncrementalMean:IncrementalMean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="IncrementalMean.html"><span class="name">IncrementalMean</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@IncrementalMeanextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.util.MemoryUtil" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MemoryUtilextendsSerializable"></a>
+      <a id="MemoryUtil:MemoryUtil"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MemoryUtil.html"><span class="name">MemoryUtil</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@MemoryUtilextendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="reforest.util.BiMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="BiMap"></a>
+      <a id="BiMap:BiMap"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BiMap$.html"><span class="name">BiMap</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@BiMap" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A bi-directional map.</p><div class="fullcomment"><div class="comment cmt"><p>A bi-directional map.
+Code from: http://stackoverflow.com/questions/9850786/is-there-such-a-thing-as-bidirectional-maps-in-scala
+</p></div></div>
+    </li><li name="reforest.util.CCUtil" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CCUtil"></a>
+      <a id="CCUtil:CCUtil"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CCUtil$.html"><span class="name">CCUtil</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@CCUtil" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An utility class
+</p>
+    </li><li name="reforest.util.CCUtilIO" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CCUtilIO"></a>
+      <a id="CCUtilIO:CCUtilIO"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CCUtilIO$.html"><span class="name">CCUtilIO</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@CCUtilIO" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An utility to perform IO
+</p>
+    </li><li name="reforest.util.Clear" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Clear"></a>
+      <a id="Clear:Clear"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Clear$.html"><span class="name">Clear</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@Clear" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An utility to clear arrays
+</p>
+    </li><li name="reforest.util.GCRunner" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GCRunner"></a>
+      <a id="GCRunner:GCRunner"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GCRunner$.html"><span class="name">GCRunner</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@GCRunner" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.util.converter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="converter"></a>
+      <a id="converter:converter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="converter/package.html"><span class="name">converter</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.util.package@converter" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

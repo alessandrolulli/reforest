@@ -1,0 +1,270 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>split - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.rf.split</title>
+          <meta name="description" content="split - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.rf.split" />
+          <meta name="keywords" content="split Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.rf.split" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'reforest.rf.split.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="reforest">reforest</a>.<a href="../package.html" class="extype" name="reforest.rf">rf</a></p>
+        <h1>split</h1><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">split</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.rf.split.RFSplitter" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="RFSplitter[T,U]extendsSerializable"></a>
+      <a id="RFSplitter[T,U]:RFSplitter[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RFSplitter.html"><span class="name">RFSplitter</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFSplitter[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It contains the split to discretize the raw data in working data
+</p><div class="fullcomment"><div class="comment cmt"><p>It contains the split to discretize the raw data in working data
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.split.RFSplitterManager" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="RFSplitterManager[T,U]extendsSerializable"></a>
+      <a id="RFSplitterManager[T,U]:RFSplitterManager[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RFSplitterManager.html"><span class="name">RFSplitterManager</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFSplitterManager[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The manager to collect the information about how the data are discretized
+</p><div class="fullcomment"><div class="comment cmt"><p>The manager to collect the information about how the data are discretized
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.split.RFSplitterManagerCollection" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFSplitterManagerCollection[T,U]extendsRFSplitterManager[T,U]"></a>
+      <a id="RFSplitterManagerCollection[T,U]:RFSplitterManagerCollection[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFSplitterManagerCollection.html"><span class="name">RFSplitterManagerCollection</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFSplitterManager.html" class="extype" name="reforest.rf.split.RFSplitterManager">RFSplitterManager</a>[<span class="extype" name="reforest.rf.split.RFSplitterManagerCollection.T">T</span>, <span class="extype" name="reforest.rf.split.RFSplitterManagerCollection.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFSplitterManagerCollection[T,U]extendsRFSplitterManager[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The implementation of RFSplitterManager where each macro iteration has a different RFSplitter
+</p><div class="fullcomment"><div class="comment cmt"><p>The implementation of RFSplitterManager where each macro iteration has a different RFSplitter
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.split.RFSplitterManagerSingle" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFSplitterManagerSingle[T,U]extendsRFSplitterManager[T,U]"></a>
+      <a id="RFSplitterManagerSingle[T,U]:RFSplitterManagerSingle[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFSplitterManagerSingle.html"><span class="name">RFSplitterManagerSingle</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFSplitterManager.html" class="extype" name="reforest.rf.split.RFSplitterManager">RFSplitterManager</a>[<span class="extype" name="reforest.rf.split.RFSplitterManagerSingle.T">T</span>, <span class="extype" name="reforest.rf.split.RFSplitterManagerSingle.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFSplitterManagerSingle[T,U]extendsRFSplitterManager[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The implementation of RFSplitterManager where each tree has the same RFSplitter
+</p><div class="fullcomment"><div class="comment cmt"><p>The implementation of RFSplitterManager where each tree has the same RFSplitter
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.split.RFSplitterSimpleRandom" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFSplitterSimpleRandom[T,U]extendsRFSplitter[T,U]"></a>
+      <a id="RFSplitterSimpleRandom[T,U]:RFSplitterSimpleRandom[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFSplitterSimpleRandom.html"><span class="name">RFSplitterSimpleRandom</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFSplitter.html" class="extype" name="reforest.rf.split.RFSplitter">RFSplitter</a>[<span class="extype" name="reforest.rf.split.RFSplitterSimpleRandom.T">T</span>, <span class="extype" name="reforest.rf.split.RFSplitterSimpleRandom.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFSplitterSimpleRandom[T,U]extendsRFSplitter[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The implementation of RFSplitter when the same splits are used for all the features
+</p><div class="fullcomment"><div class="comment cmt"><p>The implementation of RFSplitter when the same splits are used for all the features
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.split.RFSplitterSpecialized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RFSplitterSpecialized[T,U]extendsRFSplitter[T,U]"></a>
+      <a id="RFSplitterSpecialized[T,U]:RFSplitterSpecialized[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFSplitterSpecialized.html"><span class="name">RFSplitterSpecialized</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RFSplitter.html" class="extype" name="reforest.rf.split.RFSplitter">RFSplitter</a>[<span class="extype" name="reforest.rf.split.RFSplitterSpecialized.T">T</span>, <span class="extype" name="reforest.rf.split.RFSplitterSpecialized.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFSplitterSpecialized[T,U]extendsRFSplitter[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The implementation of RFSplitter when each feature may have a different number of bin (until a max configured value)
+</p><div class="fullcomment"><div class="comment cmt"><p>The implementation of RFSplitter when each feature may have a different number of bin (until a max configured value)
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.split.RFStrategySplit" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="RFStrategySplitextendsSerializable"></a>
+      <a id="RFStrategySplit:RFStrategySplit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategySplit.html"><span class="name">RFStrategySplit</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFStrategySplitextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The interface for the different strategies to detect the split for the features
+</p>
+    </li><li name="reforest.rf.split.RFStrategySplitDistribution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFStrategySplitDistributionextendsRFStrategySplit"></a>
+      <a id="RFStrategySplitDistribution:RFStrategySplitDistribution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategySplitDistribution.html"><span class="name">RFStrategySplitDistribution</span></a><span class="result"> extends <a href="RFStrategySplit.html" class="extype" name="reforest.rf.split.RFStrategySplit">RFStrategySplit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFStrategySplitDistributionextendsRFStrategySplit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The strategy to detect the split in a way that for each feature the split approximately distributed evenly
+the elements of the dataset in the bins
+</p>
+    </li><li name="reforest.rf.split.RFStrategySplitRandom" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RFStrategySplitRandomextendsRFStrategySplit"></a>
+      <a id="RFStrategySplitRandom:RFStrategySplitRandom"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RFStrategySplitRandom.html"><span class="name">RFStrategySplitRandom</span></a><span class="result"> extends <a href="RFStrategySplit.html" class="extype" name="reforest.rf.split.RFStrategySplit">RFStrategySplit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.split.package@RFStrategySplitRandomextendsRFStrategySplit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The strategy to detect the same splits in a random way for all the features in the dataset
+</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

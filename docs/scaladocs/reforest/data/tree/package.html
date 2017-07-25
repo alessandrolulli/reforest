@@ -1,0 +1,417 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>tree - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.data.tree</title>
+          <meta name="description" content="tree - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.data.tree" />
+          <meta name="keywords" content="tree Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.data.tree" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'reforest.data.tree.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="reforest">reforest</a>.<a href="../package.html" class="extype" name="reforest.data">data</a></p>
+        <h1>tree</h1><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tree</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.data.tree.Cut" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Cut[T,U]extendsTCut[T,U]"></a>
+      <a id="Cut[T,U]:Cut[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Cut.html"><span class="name">Cut</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="TCut.html" class="extype" name="reforest.data.tree.TCut">TCut</a>[<span class="extype" name="reforest.data.tree.Cut.T">T</span>, <span class="extype" name="reforest.data.tree.Cut.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@Cut[T,U]extendsTCut[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A minimal implementation of a cut
+</p><div class="fullcomment"><div class="comment cmt"><p>A minimal implementation of a cut
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.CutCategorical" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="CutCategorical[T,U]extendsCutDetailed[T,U]"></a>
+      <a id="CutCategorical[T,U]:CutCategorical[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CutCategorical.html"><span class="name">CutCategorical</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="CutDetailed.html" class="extype" name="reforest.data.tree.CutDetailed">CutDetailed</a>[<span class="extype" name="reforest.data.tree.CutCategorical.T">T</span>, <span class="extype" name="reforest.data.tree.CutCategorical.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@CutCategorical[T,U]extendsCutDetailed[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A cut for categorical feature
+</p><div class="fullcomment"><div class="comment cmt"><p>A cut for categorical feature
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.CutCategoricalCompressed" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="CutCategoricalCompressed[T,U]extendsCut[T,U]"></a>
+      <a id="CutCategoricalCompressed[T,U]:CutCategoricalCompressed[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CutCategoricalCompressed.html"><span class="name">CutCategoricalCompressed</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="Cut.html" class="extype" name="reforest.data.tree.Cut">Cut</a>[<span class="extype" name="reforest.data.tree.CutCategoricalCompressed.T">T</span>, <span class="extype" name="reforest.data.tree.CutCategoricalCompressed.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@CutCategoricalCompressed[T,U]extendsCut[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A compressed representation for a categorical cut
+</p><div class="fullcomment"><div class="comment cmt"><p>A compressed representation for a categorical cut
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.CutDetailed" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="CutDetailed[T,U]extendsCut[T,U]"></a>
+      <a id="CutDetailed[T,U]:CutDetailed[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CutDetailed.html"><span class="name">CutDetailed</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="Cut.html" class="extype" name="reforest.data.tree.Cut">Cut</a>[<span class="extype" name="reforest.data.tree.CutDetailed.T">T</span>, <span class="extype" name="reforest.data.tree.CutDetailed.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@CutDetailed[T,U]extendsCut[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A detailed cut.</p><div class="fullcomment"><div class="comment cmt"><p>A detailed cut. It contains all the information to grow a tree
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.CutNotValid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="CutNotValid[T,U]extendsCutDetailed[T,U]"></a>
+      <a id="CutNotValid[T,U]:CutNotValid[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CutNotValid.html"><span class="name">CutNotValid</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="CutDetailed.html" class="extype" name="reforest.data.tree.CutDetailed">CutDetailed</a>[<span class="extype" name="reforest.data.tree.CutNotValid.T">T</span>, <span class="extype" name="reforest.data.tree.CutNotValid.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@CutNotValid[T,U]extendsCutDetailed[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A cut for not valid elements
+</p><div class="fullcomment"><div class="comment cmt"><p>A cut for not valid elements
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.CutNotValidCompressed" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="CutNotValidCompressed[T,U]extendsCut[T,U]"></a>
+      <a id="CutNotValidCompressed[T,U]:CutNotValidCompressed[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CutNotValidCompressed.html"><span class="name">CutNotValidCompressed</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="Cut.html" class="extype" name="reforest.data.tree.Cut">Cut</a>[<span class="extype" name="reforest.data.tree.CutNotValidCompressed.T">T</span>, <span class="extype" name="reforest.data.tree.CutNotValidCompressed.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@CutNotValidCompressed[T,U]extendsCut[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A compressed representation for the CutNotValid
+</p><div class="fullcomment"><div class="comment cmt"><p>A compressed representation for the CutNotValid
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.Forest" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="Forest[T,U]extendsSerializable"></a>
+      <a id="Forest[T,U]:Forest[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Forest.html"><span class="name">Forest</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@Forest[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A base class to construct a forest
+</p><div class="fullcomment"><div class="comment cmt"><p>A base class to construct a forest
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.ForestFull" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ForestFull[T,U]extendsForest[T,U]"></a>
+      <a id="ForestFull[T,U]:ForestFull[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ForestFull.html"><span class="name">ForestFull</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="Forest.html" class="extype" name="reforest.data.tree.Forest">Forest</a>[<span class="extype" name="reforest.data.tree.ForestFull.T">T</span>, <span class="extype" name="reforest.data.tree.ForestFull.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@ForestFull[T,U]extendsForest[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A forest where all the trees are initialized
+</p><div class="fullcomment"><div class="comment cmt"><p>A forest where all the trees are initialized
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.ForestIncremental" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ForestIncremental[T,U]extendsForest[T,U]"></a>
+      <a id="ForestIncremental[T,U]:ForestIncremental[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ForestIncremental.html"><span class="name">ForestIncremental</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="Forest.html" class="extype" name="reforest.data.tree.Forest">Forest</a>[<span class="extype" name="reforest.data.tree.ForestIncremental.T">T</span>, <span class="extype" name="reforest.data.tree.ForestIncremental.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@ForestIncremental[T,U]extendsForest[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A forest where at the beginning no trees are initialized.</p><div class="fullcomment"><div class="comment cmt"><p>A forest where at the beginning no trees are initialized. It supports incremental addition of trees
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.ForestManager" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ForestManager[T,U]extendsSerializable"></a>
+      <a id="ForestManager[T,U]:ForestManager[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ForestManager.html"><span class="name">ForestManager</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@ForestManager[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This class handles all the forests that must be generated.</p><div class="fullcomment"><div class="comment cmt"><p>This class handles all the forests that must be generated. This is particularly useful when doing the model
+selection. It stores a forest for each combination of the parameters.</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.NodeId" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="NodeIdextendsProductwithSerializable"></a>
+      <a id="NodeId:NodeId"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NodeId.html"><span class="name">NodeId</span></a><span class="params">(<span name="forestId">forestId: <span class="extype" name="scala.Int">Int</span></span>, <span name="treeId">treeId: <span class="extype" name="scala.Int">Int</span></span>, <span name="nodeId">nodeId: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@NodeIdextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It represents how a node can be recognized in all the forests</p><div class="fullcomment"><div class="comment cmt"><p>It represents how a node can be recognized in all the forests</p></div><dl class="paramcmts block"><dt class="param">forestId</dt><dd class="cmt"><p>the forest identifier of the node</p></dd><dt class="param">treeId</dt><dd class="cmt"><p>the tree identifier in the forest of the node</p></dd><dt class="param">nodeId</dt><dd class="cmt"><p>the node identifier in the tree of the node</p></dd></dl></div>
+    </li><li name="reforest.data.tree.TCut" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="TCut[T,U]extendsSerializable"></a>
+      <a id="TCut[T,U]:TCut[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TCut.html"><span class="name">TCut</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@TCut[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It represents a cut in a node of a tree
+</p><div class="fullcomment"><div class="comment cmt"><p>It represents a cut in a node of a tree
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.Tree" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="Tree[T,U]extendsSerializable"></a>
+      <a id="Tree[T,U]:Tree[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Tree.html"><span class="name">Tree</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@Tree[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A tree of the forest
+</p><div class="fullcomment"><div class="comment cmt"><p>A tree of the forest
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.TreeFull" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TreeFull[T,U]extendsTree[T,U]"></a>
+      <a id="TreeFull[T,U]:TreeFull[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TreeFull.html"><span class="name">TreeFull</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="Tree.html" class="extype" name="reforest.data.tree.Tree">Tree</a>[<span class="extype" name="reforest.data.tree.TreeFull.T">T</span>, <span class="extype" name="reforest.data.tree.TreeFull.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@TreeFull[T,U]extendsTree[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A tree of the forest.</p><div class="fullcomment"><div class="comment cmt"><p>A tree of the forest. The nodes are stored in an array.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.tree.TreeSparse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TreeSparse[T,U]extendsTree[T,U]"></a>
+      <a id="TreeSparse[T,U]:TreeSparse[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TreeSparse.html"><span class="name">TreeSparse</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="Tree.html" class="extype" name="reforest.data.tree.Tree">Tree</a>[<span class="extype" name="reforest.data.tree.TreeSparse.T">T</span>, <span class="extype" name="reforest.data.tree.TreeSparse.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@TreeSparse[T,U]extendsTree[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A tree of the forest.</p><div class="fullcomment"><div class="comment cmt"><p>A tree of the forest. The nodes are stored in a map.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="reforest.data.tree.CutDetailed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CutDetailed"></a>
+      <a id="CutDetailed:CutDetailed"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CutDetailed$.html"><span class="name">CutDetailed</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@CutDetailed" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.tree.Tree" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Tree"></a>
+      <a id="Tree:Tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Tree$.html"><span class="name">Tree</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.tree.package@Tree" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Utility to construct a tree
+</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

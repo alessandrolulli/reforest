@@ -1,0 +1,473 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>slc - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.rf.slc</title>
+          <meta name="description" content="slc - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.rf.slc" />
+          <meta name="keywords" content="slc Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.rf.slc" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'reforest.rf.slc.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="reforest">reforest</a>.<a href="../package.html" class="extype" name="reforest.rf">rf</a></p>
+        <h1>slc</h1><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">slc</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.rf.slc.ElementMapping" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ElementMappingextendsSerializable"></a>
+      <a id="ElementMapping:ElementMapping"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ElementMapping.html"><span class="name">ElementMapping</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@ElementMappingextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Data structure to maintain the indices of the elements in the dataset amenable for a specific node
+</p>
+    </li><li name="reforest.rf.slc.ElementMappingArrayBuffer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElementMappingArrayBufferextendsElementMapping"></a>
+      <a id="ElementMappingArrayBuffer:ElementMappingArrayBuffer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ElementMappingArrayBuffer.html"><span class="name">ElementMappingArrayBuffer</span></a><span class="result"> extends <a href="ElementMapping.html" class="extype" name="reforest.rf.slc.ElementMapping">ElementMapping</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@ElementMappingArrayBufferextendsElementMapping" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An ArrayBuffer implementation of the ElementMapping data structure
+</p>
+    </li><li name="reforest.rf.slc.ElementMappingBitSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElementMappingBitSetextendsElementMapping"></a>
+      <a id="ElementMappingBitSet:ElementMappingBitSet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ElementMappingBitSet.html"><span class="name">ElementMappingBitSet</span></a><span class="result"> extends <a href="ElementMapping.html" class="extype" name="reforest.rf.slc.ElementMapping">ElementMapping</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@ElementMappingBitSetextendsElementMapping" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A BitSet implementation of the ElementMapping data structure
+</p>
+    </li><li name="reforest.rf.slc.ElementMappingBitSetJava" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElementMappingBitSetJavaextendsElementMapping"></a>
+      <a id="ElementMappingBitSetJava:ElementMappingBitSetJava"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ElementMappingBitSetJava.html"><span class="name">ElementMappingBitSetJava</span></a><span class="result"> extends <a href="ElementMapping.html" class="extype" name="reforest.rf.slc.ElementMapping">ElementMapping</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@ElementMappingBitSetJavaextendsElementMapping" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A Java BitSet implementation of the ElementMapping data structure
+</p>
+    </li><li name="reforest.rf.slc.ElementMappingEmpty" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ElementMappingEmptyextendsElementMapping"></a>
+      <a id="ElementMappingEmpty:ElementMappingEmpty"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ElementMappingEmpty.html"><span class="name">ElementMappingEmpty</span></a><span class="result"> extends <a href="ElementMapping.html" class="extype" name="reforest.rf.slc.ElementMapping">ElementMapping</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@ElementMappingEmptyextendsElementMapping" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An Empty implementation of the ElementMapping data structure.</p><div class="fullcomment"><div class="comment cmt"><p>An Empty implementation of the ElementMapping data structure.
+This is used when we do not need to remember the indices.  This implementation permits to have the code identical
+altough not requiring memory consumption.
+This is particularly useful when processing node that are at the maximum computable depth in order to not
+remember the mapping for its children that will not be computed.
+</p></div></div>
+    </li><li name="reforest.rf.slc.ElementMappingListBuffer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElementMappingListBufferextendsElementMapping"></a>
+      <a id="ElementMappingListBuffer:ElementMappingListBuffer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ElementMappingListBuffer.html"><span class="name">ElementMappingListBuffer</span></a><span class="result"> extends <a href="ElementMapping.html" class="extype" name="reforest.rf.slc.ElementMapping">ElementMapping</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@ElementMappingListBufferextendsElementMapping" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A ListBuffer implementation of the ElementMapping data structure
+</p>
+    </li><li name="reforest.rf.slc.NodeProcessingList" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="NodeProcessingList[T]extendsSerializable"></a>
+      <a id="NodeProcessingList[T]:NodeProcessingList[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="NodeProcessingList.html"><span class="name">NodeProcessingList</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@NodeProcessingList[T]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Data structure containing the list of nodes that still need the computation in SLC.</p><div class="fullcomment"><div class="comment cmt"><p>Data structure containing the list of nodes that still need the computation in SLC.
+In general it is an interface representing a list of objects that has implementation as a Queue or as a Stack</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the data type contained in the data structure</p></dd></dl></div>
+    </li><li name="reforest.rf.slc.NodeProcessingQueue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="NodeProcessingQueue[T]extendsNodeProcessingList[T]"></a>
+      <a id="NodeProcessingQueue[T]:NodeProcessingQueue[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NodeProcessingQueue.html"><span class="name">NodeProcessingQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="NodeProcessingList.html" class="extype" name="reforest.rf.slc.NodeProcessingList">NodeProcessingList</a>[<span class="extype" name="reforest.rf.slc.NodeProcessingQueue.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@NodeProcessingQueue[T]extendsNodeProcessingList[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A Queue implementation of the NodeProcessingList</p><div class="fullcomment"><div class="comment cmt"><p>A Queue implementation of the NodeProcessingList</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the data type contained in the data structure</p></dd></dl></div>
+    </li><li name="reforest.rf.slc.NodeProcessingStack" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="NodeProcessingStack[T]extendsNodeProcessingList[T]"></a>
+      <a id="NodeProcessingStack[T]:NodeProcessingStack[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NodeProcessingStack.html"><span class="name">NodeProcessingStack</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="NodeProcessingList.html" class="extype" name="reforest.rf.slc.NodeProcessingList">NodeProcessingList</a>[<span class="extype" name="reforest.rf.slc.NodeProcessingStack.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@NodeProcessingStack[T]extendsNodeProcessingList[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A Stack implementation of the NodeProcessingList</p><div class="fullcomment"><div class="comment cmt"><p>A Stack implementation of the NodeProcessingList</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the data type contained in the data structure</p></dd></dl></div>
+    </li><li name="reforest.rf.slc.NodeStackContainer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="NodeStackContainerextendsProductwithSerializable"></a>
+      <a id="NodeStackContainer:NodeStackContainer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NodeStackContainer.html"><span class="name">NodeStackContainer</span></a><span class="params">(<span name="nodeId">nodeId: <span class="extype" name="scala.Int">Int</span></span>, <span name="mapping">mapping: <span class="extype" name="scala.Option">Option</span>[<a href="ElementMapping.html" class="extype" name="reforest.rf.slc.ElementMapping">ElementMapping</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@NodeStackContainerextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Contains the information stored in the stack of nodes to be computed in the SLC, namely the node identifier to be computed
+and the list of indices of data amenable for the node in the dataset</p><div class="fullcomment"><div class="comment cmt"><p>Contains the information stored in the stack of nodes to be computed in the SLC, namely the node identifier to be computed
+and the list of indices of data amenable for the node in the dataset</p></div><dl class="paramcmts block"><dt class="param">nodeId</dt><dd class="cmt"><p>the node identifier</p></dd><dt class="param">mapping</dt><dd class="cmt"><p>the list of indices in the dataset of the data amenable for the node</p></dd></dl></div>
+    </li><li name="reforest.rf.slc.SLCDataset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SLCDataset[U]extendsSerializable"></a>
+      <a id="SLCDataset[U]:SLCDataset[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SLCDataset.html"><span class="name">SLCDataset</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@SLCDataset[U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It manages the dataset when performing SLC.</p><div class="fullcomment"><div class="comment cmt"><p>It manages the dataset when performing SLC. The actions are:
+*) free the memory used by the working data in the machines
+*) collect the entire dataset in each machine to perform SLC
+*) keep the dataset update on the machines when the number of trees change in the model selection</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.slc.SLCExecutor" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SLCExecutor[T,U]extendsSerializable"></a>
+      <a id="SLCExecutor[T,U]:SLCExecutor[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SLCExecutor.html"><span class="name">SLCExecutor</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@SLCExecutor[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The executor of the SLC computation.</p><div class="fullcomment"><div class="comment cmt"><p>The executor of the SLC computation.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.slc.SLCExecutorAll" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SLCExecutorAll[T,U]extendsSLCExecutor[T,U]"></a>
+      <a id="SLCExecutorAll[T,U]:SLCExecutorAll[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SLCExecutorAll.html"><span class="name">SLCExecutorAll</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="SLCExecutor.html" class="extype" name="reforest.rf.slc.SLCExecutor">SLCExecutor</a>[<span class="extype" name="reforest.rf.slc.SLCExecutorAll.T">T</span>, <span class="extype" name="reforest.rf.slc.SLCExecutorAll.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@SLCExecutorAll[T,U]extendsSLCExecutor[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The base implementation of the SLCExecutor
+</p><div class="fullcomment"><div class="comment cmt"><p>The base implementation of the SLCExecutor
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.slc.SLCExecutorAllMergeForest" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SLCExecutorAllMergeForest[T,U]extendsSLCExecutorAll[T,U]"></a>
+      <a id="SLCExecutorAllMergeForest[T,U]:SLCExecutorAllMergeForest[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SLCExecutorAllMergeForest.html"><span class="name">SLCExecutorAllMergeForest</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="SLCExecutorAll.html" class="extype" name="reforest.rf.slc.SLCExecutorAll">SLCExecutorAll</a>[<span class="extype" name="reforest.rf.slc.SLCExecutorAllMergeForest.T">T</span>, <span class="extype" name="reforest.rf.slc.SLCExecutorAllMergeForest.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@SLCExecutorAllMergeForest[T,U]extendsSLCExecutorAll[T,U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A SLCExecutor able to merge the forests
+</p><div class="fullcomment"><div class="comment cmt"><p>A SLCExecutor able to merge the forests
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.rf.slc.SLCTreeGeneration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SLCTreeGeneration[T,U]extendsSerializable"></a>
+      <a id="SLCTreeGeneration[T,U]:SLCTreeGeneration[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SLCTreeGeneration.html"><span class="name">SLCTreeGeneration</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@SLCTreeGeneration[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="reforest.rf.slc.ElementMapping" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElementMapping"></a>
+      <a id="ElementMapping:ElementMapping"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ElementMapping$.html"><span class="name">ElementMapping</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@ElementMapping" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Utility object to create an Element mapping
+</p>
+    </li><li name="reforest.rf.slc.NodeProcessingQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NodeProcessingQueue"></a>
+      <a id="NodeProcessingQueue:NodeProcessingQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NodeProcessingQueue$.html"><span class="name">NodeProcessingQueue</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@NodeProcessingQueue" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Utility to create a NodeProcessingQueue
+</p>
+    </li><li name="reforest.rf.slc.NodeProcessingStack" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NodeProcessingStack"></a>
+      <a id="NodeProcessingStack:NodeProcessingStack"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NodeProcessingStack$.html"><span class="name">NodeProcessingStack</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@NodeProcessingStack" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Utility to create a NodeProcessingStack
+</p>
+    </li><li name="reforest.rf.slc.SLCExecutor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SLCExecutor"></a>
+      <a id="SLCExecutor:SLCExecutor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SLCExecutor$.html"><span class="name">SLCExecutor</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@SLCExecutor" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An utility to build a SLCExecutor
+</p>
+    </li><li name="reforest.rf.slc.SLCStorer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SLCStorer"></a>
+      <a id="SLCStorer:SLCStorer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SLCStorer$.html"><span class="name">SLCStorer</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.rf.slc.package@SLCStorer" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It is used to store locally in the machine the indices of the dataset amenable for each node.</p><div class="fullcomment"><div class="comment cmt"><p>It is used to store locally in the machine the indices of the dataset amenable for each node.
+It is currently used during SLC computation when using the model selection to reduce the computational time
+between different iterations of the model selection.</p><p>It should be used also when doing the fully distributed computation to save the indicies of the working data
+stored in the machine.
+</p></div></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

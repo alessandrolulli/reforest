@@ -1,0 +1,586 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>data - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.data</title>
+          <meta name="description" content="data - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.data" />
+          <meta name="keywords" content="data Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.data" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'reforest.data.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="reforest">reforest</a></p>
+        <h1>data</h1><span class="permalink">
+      <a href="../../index.html#reforest.data.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">data</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.data.RawData" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="RawData[T,U]extendsSerializable"></a>
+      <a id="RawData[T,U]:RawData[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RawData.html"><span class="name">RawData</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawData[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Forked from Apache Spark MLlib
+https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/Vectors.scala</p><div class="fullcomment"><div class="comment cmt"><p>Forked from Apache Spark MLlib
+https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/Vectors.scala</p><p>It contains the working data stored in an optimized manner
+</p></div></div>
+    </li><li name="reforest.data.RawDataDense" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RawDataDense[T,U]extendsRawData[T,U]"></a>
+      <a id="RawDataDense[T,U]:RawDataDense[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDataDense.html"><span class="name">RawDataDense</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RawData.html" class="extype" name="reforest.data.RawData">RawData</a>[<span class="extype" name="reforest.data.RawDataDense.T">T</span>, <span class="extype" name="reforest.data.RawDataDense.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDataDense[T,U]extendsRawData[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.RawDataLabeled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RawDataLabeled[T,U]extendsSerializablewithProduct"></a>
+      <a id="RawDataLabeled[T,U]:RawDataLabeled[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDataLabeled.html"><span class="name">RawDataLabeled</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="params">(<span name="label">label: <span class="extype" name="scala.Double">Double</span></span>, <span name="features">features: <a href="RawData.html" class="extype" name="reforest.data.RawData">RawData</a>[<span class="extype" name="reforest.data.RawDataLabeled.T">T</span>, <span class="extype" name="reforest.data.RawDataLabeled.U">U</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span> with <span class="extype" name="scala.Product">Product</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDataLabeled[T,U]extendsSerializablewithProduct" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The container for the raw data and the class label of an element
+</p><div class="fullcomment"><div class="comment cmt"><p>The container for the raw data and the class label of an element
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd><dt class="param">label</dt><dd class="cmt"><p>the class label of the element</p></dd><dt class="param">features</dt><dd class="cmt"><p>the raw data of the element</p></dd></dl></div>
+    </li><li name="reforest.data.RawDataSparse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RawDataSparse[T,U]extendsRawData[T,U]"></a>
+      <a id="RawDataSparse[T,U]:RawDataSparse[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDataSparse.html"><span class="name">RawDataSparse</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RawData.html" class="extype" name="reforest.data.RawData">RawData</a>[<span class="extype" name="reforest.data.RawDataSparse.T">T</span>, <span class="extype" name="reforest.data.RawDataSparse.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDataSparse[T,U]extendsRawData[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.RawDataset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RawDataset[T,U]extendsSerializable"></a>
+      <a id="RawDataset[T,U]:RawDataset[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDataset.html"><span class="name">RawDataset</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDataset[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This class stores the raw data.</p><div class="fullcomment"><div class="comment cmt"><p>This class stores the raw data.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.RawDatasetBuilder" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RawDatasetBuilder[T,U]extendsAnyRef"></a>
+      <a id="RawDatasetBuilder[T,U]:RawDatasetBuilder[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDatasetBuilder.html"><span class="name">RawDatasetBuilder</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDatasetBuilder[T,U]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The builder for the RawDataset class
+</p><div class="fullcomment"><div class="comment cmt"><p>The builder for the RawDataset class
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.RawDatasetBuilderModelSelection" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RawDatasetBuilderModelSelection[T,U]extendsRawDatasetBuilder[T,U]"></a>
+      <a id="RawDatasetBuilderModelSelection[T,U]:RawDatasetBuilderModelSelection[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDatasetBuilderModelSelection.html"><span class="name">RawDatasetBuilderModelSelection</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RawDatasetBuilder.html" class="extype" name="reforest.data.RawDatasetBuilder">RawDatasetBuilder</a>[<span class="extype" name="reforest.data.RawDatasetBuilderModelSelection.T">T</span>, <span class="extype" name="reforest.data.RawDatasetBuilderModelSelection.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDatasetBuilderModelSelection[T,U]extendsRawDatasetBuilder[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The builder for the RawDataset class when using model selection
+</p><div class="fullcomment"><div class="comment cmt"><p>The builder for the RawDataset class when using model selection
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.RawDatasetBuilderRotation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RawDatasetBuilderRotation[T,U]extendsRawDatasetBuilder[T,U]"></a>
+      <a id="RawDatasetBuilderRotation[T,U]:RawDatasetBuilderRotation[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDatasetBuilderRotation.html"><span class="name">RawDatasetBuilderRotation</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RawDatasetBuilder.html" class="extype" name="reforest.data.RawDatasetBuilder">RawDatasetBuilder</a>[<span class="extype" name="reforest.data.RawDatasetBuilderRotation.T">T</span>, <span class="extype" name="reforest.data.RawDatasetBuilderRotation.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDatasetBuilderRotation[T,U]extendsRawDatasetBuilder[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The builder for the RawDataset class when using random rotations
+</p><div class="fullcomment"><div class="comment cmt"><p>The builder for the RawDataset class when using random rotations
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.RawDatasetModelSelection" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RawDatasetModelSelection[T,U]extendsRawDataset[T,U]"></a>
+      <a id="RawDatasetModelSelection[T,U]:RawDatasetModelSelection[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDatasetModelSelection.html"><span class="name">RawDatasetModelSelection</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="RawDataset.html" class="extype" name="reforest.data.RawDataset">RawDataset</a>[<span class="extype" name="reforest.data.RawDatasetModelSelection.T">T</span>, <span class="extype" name="reforest.data.RawDatasetModelSelection.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDatasetModelSelection[T,U]extendsRawDataset[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The implementation to be used for the model selection
+</p><div class="fullcomment"><div class="comment cmt"><p>The implementation to be used for the model selection
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.RotationMatrix" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RotationMatrixextendsSerializable"></a>
+      <a id="RotationMatrix:RotationMatrix"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RotationMatrix.html"><span class="name">RotationMatrix</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RotationMatrixextendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A rotation matrix constructed according to Blaser et al.</p><div class="fullcomment"><div class="comment cmt"><p>A rotation matrix constructed according to Blaser et al. &quot;Random rotation ensembles&quot;</p></div></div>
+    </li><li name="reforest.data.ScalingBasic" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ScalingBasic[T,U]extendsScalingVariable[T,U]"></a>
+      <a id="ScalingBasic[T,U]:ScalingBasic[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ScalingBasic.html"><span class="name">ScalingBasic</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <a href="ScalingVariable.html" class="extype" name="reforest.data.ScalingVariable">ScalingVariable</a>[<span class="extype" name="reforest.data.ScalingBasic.T">T</span>, <span class="extype" name="reforest.data.ScalingBasic.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@ScalingBasic[T,U]extendsScalingVariable[T,U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It scales the values according to the Basic Scaling of Blaser et al.</p><div class="fullcomment"><div class="comment cmt"><p>It scales the values according to the Basic Scaling of Blaser et al. &quot;Random rotation ensembles&quot;.
+Numeric values are scaled to [0, 1] using the min and max values.</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.ScalingVariable" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ScalingVariable[T,U]extendsSerializable"></a>
+      <a id="ScalingVariable[T,U]:ScalingVariable[T,U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ScalingVariable.html"><span class="name">ScalingVariable</span></a><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@ScalingVariable[T,U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It scales the value of the raw data according to different methodologies</p><div class="fullcomment"><div class="comment cmt"><p>It scales the value of the raw data according to different methodologies</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>raw data type</p></dd><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.StaticData" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="StaticData[U]extendsSerializable"></a>
+      <a id="StaticData[U]:StaticData[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="StaticData.html"><span class="name">StaticData</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@StaticData[U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It represents the data that are stored statically in the main memory to compute the random forest.</p><div class="fullcomment"><div class="comment cmt"><p>It represents the data that are stored statically in the main memory to compute the random forest.
+</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.StaticDataClassic" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="StaticDataClassic[U]extendsStaticData[U]"></a>
+      <a id="StaticDataClassic[U]:StaticDataClassic[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StaticDataClassic.html"><span class="name">StaticDataClassic</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <a href="StaticData.html" class="extype" name="reforest.data.StaticData">StaticData</a>[<span class="extype" name="reforest.data.StaticDataClassic.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@StaticDataClassic[U]extendsStaticData[U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It represent the basic static data where the working data is the same for all the trees and the bagging is represented as an array
+</p><div class="fullcomment"><div class="comment cmt"><p>It represent the basic static data where the working data is the same for all the trees and the bagging is represented as an array
+</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.StaticDataRotation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="StaticDataRotation[U]extendsStaticData[U]"></a>
+      <a id="StaticDataRotation[U]:StaticDataRotation[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StaticDataRotation.html"><span class="name">StaticDataRotation</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <a href="StaticData.html" class="extype" name="reforest.data.StaticData">StaticData</a>[<span class="extype" name="reforest.data.StaticDataRotation.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@StaticDataRotation[U]extendsStaticData[U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Static data when computing multiple rotations at the same time
+</p><div class="fullcomment"><div class="comment cmt"><p>Static data when computing multiple rotations at the same time
+</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.StaticDataRotationSingle" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="StaticDataRotationSingle[U]extendsStaticData[U]"></a>
+      <a id="StaticDataRotationSingle[U]:StaticDataRotationSingle[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StaticDataRotationSingle.html"><span class="name">StaticDataRotationSingle</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <a href="StaticData.html" class="extype" name="reforest.data.StaticData">StaticData</a>[<span class="extype" name="reforest.data.StaticDataRotationSingle.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@StaticDataRotationSingle[U]extendsStaticData[U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Static data when computing one rotation at a time
+</p><div class="fullcomment"><div class="comment cmt"><p>Static data when computing one rotation at a time
+</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.WorkingData" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="WorkingData[U]extendsSerializable"></a>
+      <a id="WorkingData[U]:WorkingData[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="WorkingData.html"><span class="name">WorkingData</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@WorkingData[U]extendsSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It contains the discretized data of the raw data</p><div class="fullcomment"><div class="comment cmt"><p>It contains the discretized data of the raw data</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.WorkingDataDense" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="WorkingDataDense[U]extendsWorkingData[U]"></a>
+      <a id="WorkingDataDense[U]:WorkingDataDense[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="WorkingDataDense.html"><span class="name">WorkingDataDense</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <a href="WorkingData.html" class="extype" name="reforest.data.WorkingData">WorkingData</a>[<span class="extype" name="reforest.data.WorkingDataDense.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@WorkingDataDense[U]extendsWorkingData[U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Data saved in densed format.</p><div class="fullcomment"><div class="comment cmt"><p>Data saved in densed format. Each feature value is saved.</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li><li name="reforest.data.WorkingDataSparse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="WorkingDataSparse[U]extendsWorkingData[U]"></a>
+      <a id="WorkingDataSparse[U]:WorkingDataSparse[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="WorkingDataSparse.html"><span class="name">WorkingDataSparse</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <a href="WorkingData.html" class="extype" name="reforest.data.WorkingData">WorkingData</a>[<span class="extype" name="reforest.data.WorkingDataSparse.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@WorkingDataSparse[U]extendsWorkingData[U]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Data saved in sparse format.</p><div class="fullcomment"><div class="comment cmt"><p>Data saved in sparse format. Only the known values are saved with a parallel structure where are saved the indices of the
+known values.</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>working data type</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="reforest.data.RawData" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RawData"></a>
+      <a id="RawData:RawData"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RawData$.html"><span class="name">RawData</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawData" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.RawDataDense" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RawDataDense"></a>
+      <a id="RawDataDense:RawDataDense"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDataDense$.html"><span class="name">RawDataDense</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDataDense" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.RawDataSparse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RawDataSparse"></a>
+      <a id="RawDataSparse:RawDataSparse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RawDataSparse$.html"><span class="name">RawDataSparse</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@RawDataSparse" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.WorkingDataDense" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="WorkingDataDense"></a>
+      <a id="WorkingDataDense:WorkingDataDense"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="WorkingDataDense$.html"><span class="name">WorkingDataDense</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@WorkingDataDense" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.WorkingDataSparse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="WorkingDataSparse"></a>
+      <a id="WorkingDataSparse:WorkingDataSparse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="WorkingDataSparse$.html"><span class="name">WorkingDataSparse</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@WorkingDataSparse" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.load" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="load"></a>
+      <a id="load:load"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="load/package.html"><span class="name">load</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@load" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.matrix" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="matrix"></a>
+      <a id="matrix:matrix"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="matrix/package.html"><span class="name">matrix</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@matrix" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="reforest.data.tree" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tree"></a>
+      <a id="tree:tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="tree/package.html"><span class="name">tree</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#reforest.data.package@tree" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

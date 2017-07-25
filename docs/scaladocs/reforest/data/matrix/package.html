@@ -1,0 +1,160 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>matrix - Random Forests in Apache Spark 1.2-SNAPSHOT API - reforest.data.matrix</title>
+          <meta name="description" content="matrix - Random Forests in Apache Spark 1.2 - SNAPSHOT API - reforest.data.matrix" />
+          <meta name="keywords" content="matrix Random Forests in Apache Spark 1.2 SNAPSHOT API reforest.data.matrix" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'reforest.data.matrix.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="reforest">reforest</a>.<a href="../package.html" class="extype" name="reforest.data">data</a></p>
+        <h1>matrix</h1><span class="permalink">
+      <a href="../../../index.html#reforest.data.matrix.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">matrix</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="reforest.data.matrix.DataOnWorker" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DataOnWorkerextendsSerializable"></a>
+      <a id="DataOnWorker:DataOnWorker"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DataOnWorker.html"><span class="name">DataOnWorker</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.matrix.package@DataOnWorkerextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="reforest.data.matrix.DataOnWorker" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="DataOnWorker"></a>
+      <a id="DataOnWorker:DataOnWorker"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DataOnWorker$.html"><span class="name">DataOnWorker</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.matrix.package@DataOnWorker" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">It is a singleton.</p><div class="fullcomment"><div class="comment cmt"><p>It is a singleton. It maintains in each machine the Matrix to collect the information to compute the best cuts.
+In each iteration:</p><ul><li>the first thread accessing the singleton initializes the Matrix</li><li>all the partitions concurrently update the matrix during the &quot;Local Information Collection&quot; step</li><li>during the &quot;Distributed Information Aggregation&quot; step the fist thread entering is the one in charge of sending
+the data to the shuffling phase</li><li>the Matrix is freed
+</li></ul></div></div>
+    </li><li name="reforest.data.matrix.DataOnWorkerManager" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="DataOnWorkerManager"></a>
+      <a id="DataOnWorkerManager:DataOnWorkerManager"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DataOnWorkerManager$.html"><span class="name">DataOnWorkerManager</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#reforest.data.matrix.package@DataOnWorkerManager" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An utility class to handle the matrices in each machine.</p><div class="fullcomment"><div class="comment cmt"><p>An utility class to handle the matrices in each machine.
+For each combination of binNumber and featurePerNodeultiplier a matrix is initialized.
+</p></div></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
