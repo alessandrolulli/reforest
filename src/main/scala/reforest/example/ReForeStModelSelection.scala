@@ -35,6 +35,7 @@ object ReForeStModelSelection {
       .addParameter(RFParameterType.NumFeatures, 794)
       .addParameter(RFParameterType.NumClasses, 10)
       .addParameter(RFParameterType.ModelSelectionEpsilon, 0.001)
+      .addParameter(RFParameterType.ModelSelectionEpsilonRemove, 0.02)
       .addParameter(RFParameterType.NumTrees, Array(50, 80, 100))
       .addParameter(RFParameterType.Depth, Array(5, 10))
       .addParameter(RFParameterType.FeatureMultiplierPerNode, Array(1d, 2d))
@@ -46,8 +47,8 @@ object ReForeStModelSelection {
       .addParameter(RFParameterType.SparkExecutorInstances, 1)
       .addParameter(RFParameterType.SLCActive, true)
       .addParameter(RFParameterType.ModelSelection, true)
-//      .addParameter(RFParameterType.TestAll, true)
-//      .addParameter(RFParameterType.LogStat, true)
+      .addParameter(RFParameterType.TestAll, true)
+      .addParameter(RFParameterType.LogStat, true)
       .addStrategyFeature(new RFStrategyFeatureSQRT(794))
       .build
 

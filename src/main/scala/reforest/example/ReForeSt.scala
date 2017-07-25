@@ -41,7 +41,7 @@ object ReForeSt {
       .addParameter(RFParameterType.SparkPartition, 4 * 4)
       .addParameter(RFParameterType.SparkExecutorMemory, "1096m")
       .addParameter(RFParameterType.SparkExecutorInstances, 1)
-      .addParameter(RFParameterType.SLCActive, false)
+      .addParameter(RFParameterType.SLCActive, true)
       .build
 
     val sc = CCUtil.getSparkContext(property)

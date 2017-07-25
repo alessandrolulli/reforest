@@ -50,7 +50,7 @@ object RFParameterType extends Enumeration {
 
   case object OutputTree extends RFParameterTypeBoolean(false)
 
-  case object SLCActive extends RFParameterTypeBoolean(false)
+  case object SLCActive extends RFParameterTypeBoolean(true)
 
   case object SLCActiveForce extends RFParameterTypeBoolean(false)
 
