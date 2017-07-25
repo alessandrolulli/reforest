@@ -22,7 +22,8 @@ import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.{SparkConf, SparkContext}
 import reforest.TypeInfo
 import reforest.data.load.{ARFFUtil, DataLoad, LibSVMUtil}
-import reforest.rf.{RFCategoryInfo, RFProperty}
+import reforest.rf.RFCategoryInfo
+import reforest.rf.parameter.RFParameter
 
 import scala.reflect.ClassTag
 
@@ -34,7 +35,7 @@ object CCUtil extends Serializable {
     * It returns a Spark Context using the configurations loaded from file
     * @return the Spark Context
     */
-  def getSparkContext(property : RFProperty): SparkContext = {
+  def getSparkContext(property : RFParameter): SparkContext = {
     val conf = new SparkConf()
       .setMaster(property.sparkMaster)
       .setAppName(property.appName)
@@ -43,11 +44,13 @@ object CCUtil extends Serializable {
       .set("spark.shuffle.manager", property.sparkShuffleManager)
       .set("spark.shuffle.consolidateFiles", property.sparkShuffleConsolidateFiles)
       .set("spark.io.compression.codec", property.sparkCompressionCodec)
-      .set("spark.akka.frameSize", property.sparkAkkaFrameSize)
+//      .set("spark.akka.frameSize", property.sparkAkkaFrameSize)
+      .set("spark.rpc.message.maxSize", property.sparkAkkaFrameSize)
       //.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .set("spark.driver.maxResultSize", property.sparkDriverMaxResultSize)
       .set("spark.core.connection.ack.wait.timeout", 600.toString)
       .set("spark.driver.maxResultSize", 0.toString)
+//      .set("spark.executor.extraClassPath", property.sparkExecutorExtraClassPath)
     //				.set("spark.task.cpus", "8")
     //	.setJars(Array(property.jarPath)
     //)
@@ -76,7 +79,7 @@ object CCUtil extends Serializable {
     * @tparam U working data type
     * @return the data loader specialized for the format of the dataset
     */
-  def getDataLoader[T:ClassTag, U:ClassTag](property : RFProperty,
+  def getDataLoader[T:ClassTag, U:ClassTag](property : RFParameter,
                                              typeInfo: Broadcast[TypeInfo[T]],
                                    instrumented: Broadcast[GCInstrumented],
                                    categoryInfo: Broadcast[RFCategoryInfo]): DataLoad[T, U] = {

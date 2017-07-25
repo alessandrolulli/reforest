@@ -18,6 +18,7 @@ package reforest.rf;
 
 import org.junit.Assert;
 import org.junit.Test;
+import reforest.rf.feature.*;
 
 public class RFStrategyFeatureTest {
 

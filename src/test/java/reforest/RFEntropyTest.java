@@ -18,8 +18,11 @@ package reforest;
 
 import org.junit.Assert;
 import org.junit.Test;
-import reforest.dataTree.CutDetailed;
+import reforest.data.tree.CutDetailed;
+import reforest.rf.RFCategoryInfoEmpty;
 import reforest.rf.RFEntropy;
+import reforest.rf.feature.RFFeatureSizer;
+import reforest.rf.feature.RFFeatureSizerSimple;
 import reforest.rf.split.RFSplitter;
 import reforest.test.BroadcastSimple;
 import test.RFResourceFactory;
@@ -35,9 +38,10 @@ public class RFEntropyTest {
     @Test
     public void getBestSplit() {
 
+        RFFeatureSizer featureSizer = new RFFeatureSizerSimple(32, 2, new RFCategoryInfoEmpty());
         RFEntropy<Double, Integer> entropy = new RFEntropy(BroadcastSimple.typeInfoDouble(), BroadcastSimple.typeInfoInt());
 
-        CutDetailed<Double, Integer> cut = entropy.getBestSplit(data, 1, splitter, 3, 10, numClasses);
+        CutDetailed<Double, Integer> cut = entropy.getBestSplit(data, 1, splitter, featureSizer, 3, 10, numClasses);
 
         Assert.assertEquals(2, BroadcastSimple.typeInfoInt().value().toInt(cut.bin()));
         Assert.assertEquals(15, cut.left());

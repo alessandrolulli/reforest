@@ -169,12 +169,12 @@ class RawDataDense[T: ClassTag, U: ClassTag](val values: Array[T],
     nnz
   }
 
-  override def toDense = this
+  override def toDense : RawDataDense[T,U] = this
 
   def toWorkingDataDense(splitter: RFSplitter[T, U]): WorkingDataDense[U] = {
     var i = 0
-    val arr = new Array[U](values.size)
-    while (i < values.size) {
+    val arr = new Array[U](values.length)
+    while (i < values.length) {
       arr(i) = splitter.getBin(i, values(i))
       i += 1
     }
@@ -184,8 +184,8 @@ class RawDataDense[T: ClassTag, U: ClassTag](val values: Array[T],
 
   def toWorkingDataSparse(splitter: RFSplitter[T, U]): WorkingDataSparse[U] = {
     var i = 0
-    val indices = new Array[Int](values.size)
-    val arr = new Array[U](values.size)
+    val indices = new Array[Int](values.length)
+    val arr = new Array[U](values.length)
     while (i < values.length) {
       indices(i) = i
       arr(i) = splitter.getBin(i, values(i))
@@ -254,7 +254,7 @@ class RawDataSparse[T: ClassTag, U: ClassTag](
     nnz
   }
 
-  override def toSparse = this
+  override def toSparse : RawDataSparse[T, U]= this
 
   def toWorkingDataDense(splitter: RFSplitter[T, U]): WorkingDataDense[U] = {
     var i = 0
@@ -270,7 +270,7 @@ class RawDataSparse[T: ClassTag, U: ClassTag](
 
   def toWorkingDataSparse(splitter: RFSplitter[T, U]): WorkingDataSparse[U] = {
     var i = 0
-    val arr = new Array[U](indices.size)
+    val arr = new Array[U](indices.length)
     while (i < indices.length) {
       arr(i) = splitter.getBin(indices(i), values(i))
       i += 1

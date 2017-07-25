@@ -19,12 +19,14 @@ package reforest.rf
 
 import org.apache.spark.broadcast.Broadcast
 import reforest.TypeInfo
-import reforest.dataTree.{CutCategorical, CutDetailed}
+import reforest.data.tree.{CutCategorical, CutDetailed}
+import reforest.rf.feature.RFFeatureSizer
 import reforest.rf.split.RFSplitter
 
 /**
   * Utility to compute the entropy
-  * @param typeInfo the type information of the raw data
+  *
+  * @param typeInfo        the type information of the raw data
   * @param typeInfoWorking the type information of the working data
   * @tparam T raw data type
   * @tparam U working data type
@@ -51,7 +53,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     val classAccumulator = new Array[Int](numClasses)
 
     var i = start
-    while(i <= end) {
+    while (i <= end) {
       var c = 0
       while (c < valueArray(i).length) {
         classAccumulator(c) += valueArray(i)(c)
@@ -67,7 +69,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
     val classAccumulator = new Array[Int](numClasses)
 
     var i = 1
-    while(i <= valueArray.length - 1) {
+    while (i <= valueArray.length - 1) {
       if (i != categoryIndex) {
         var c = 0
         while (c < valueArray(i).length) {
@@ -114,7 +116,18 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
         count += 1
       }
 
-      Some(classAccumulator.zipWithIndex.maxBy(_._1)._2)
+      var label = -1
+      var labelCount = Int.MinValue
+      count = 0
+      while (count < classAccumulator.length) {
+        if (classAccumulator(count) > labelCount) {
+          label = count
+          labelCount = classAccumulator(count)
+        }
+        count += 1
+      }
+
+      Some(label)
     }
   }
 
@@ -177,17 +190,19 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
 
   /**
     * It computes the best split
-    * @param data the information from which compute the best split
-    * @param featureId the feature index for which we compute the best split
-    * @param splitter the utility to compute the split for each feature
-    * @param depth the currently analyzed depth
-    * @param maxDepth the maximum configured depth
+    *
+    * @param data       the information from which compute the best split
+    * @param featureId  the feature index for which we compute the best split
+    * @param splitter   the utility to compute the split for each feature
+    * @param depth      the currently analyzed depth
+    * @param maxDepth   the maximum configured depth
     * @param numClasses the number of classes in the dataset
     * @return the best split identified
     */
   def getBestSplit(data: Array[Array[Int]],
                    featureId: Int,
                    splitter: RFSplitter[T, U],
+                   featureSizer: RFFeatureSizer,
                    depth: Int,
                    maxDepth: Int,
                    numClasses: Int): CutDetailed[T, U] = {
@@ -214,8 +229,10 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
         i += 1
       }
       val left = data.slice(1, cut + 1)
+      //      val left = mySlice(data, 1, cut + 1)
       val leftTOT = sum(left)
       val right = data.slice(cut + 1, data.length)
+      //      val right = mySlice(data, cut + 1, data.length)
       val rightTOT = sum(right)
       val calculateLabel = true //depth >= maxDepth || leftTOT <= 1 || rightTOT <= 1 || elNumberNOTValid > 0
       val leftLabel = if (calculateLabel) getLabel(left, numClasses) else Option.empty
@@ -233,8 +250,8 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
       val notvalidOK = if (notValidLabel.isDefined) data(0)(notValidLabel.get) else 0
 
       new CutDetailed[T, U](featureId,
-        splitter.getRealCut(featureId, typeInfoWorking.value.fromInt(cut)),
-        typeInfoWorking.value.fromInt(cut),
+        splitter.getRealCut(featureId, typeInfoWorking.value.fromInt(featureSizer.getDeShrinkedValue(featureId, cut))),
+        cut,
         eEnd,
         if (calculateLabel) getLabel(data, numClasses) else Option.empty,
         (elNumber - elNumberValid),
@@ -247,17 +264,29 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
         leftOK,
         rightOK)
     } else {
-      new CutDetailed(featureId, typeInfo.value.NaN, typeInfoWorking.value.NaN)
+      new CutDetailed(featureId, typeInfo.value.NaN, typeInfoWorking.value.toInt(typeInfoWorking.value.NaN), 0, getLabel(data, numClasses))
     }
+  }
+
+  def mySlice(data: Array[Array[Int]], start: Int, end: Int) = {
+    val toReturn = Array.tabulate(end - start)(_ => Array[Int]())
+    var count = 0
+    while (count < toReturn.length) {
+      toReturn(count) = data(start + count)
+      count += 1
+    }
+
+    toReturn
   }
 
   /**
     * It computes the best split for a categorical feature
-    * @param data the information from which compute the best split
-    * @param featureId the feature index for which we compute the best split
-    * @param splitter the utility to compute the split for each feature
-    * @param depth the currently analyzed depth
-    * @param maxDepth the maximum configured depth
+    *
+    * @param data       the information from which compute the best split
+    * @param featureId  the feature index for which we compute the best split
+    * @param splitter   the utility to compute the split for each feature
+    * @param depth      the currently analyzed depth
+    * @param maxDepth   the maximum configured depth
     * @param numClasses the number of classes in the dataset
     * @return the best split identified
     */
@@ -310,7 +339,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
       new CutCategorical[T, U](featureId,
         typeInfo.value.fromInt(cut),
         eEnd,
-        typeInfoWorking.value.fromInt(cut),
+        cut,
         if (calculateLabel) getLabel(data, numClasses) else Option.empty,
         (elNumber - elNumberValid),
         leftTOT,
@@ -322,7 +351,7 @@ class RFEntropy[T, U](typeInfo: Broadcast[TypeInfo[T]],
         leftOK,
         rightOK)
     } else {
-      new CutDetailed(featureId, typeInfo.value.NaN, typeInfoWorking.value.NaN)
+      new CutDetailed(featureId, typeInfo.value.NaN, typeInfoWorking.value.toInt(typeInfoWorking.value.NaN))
     }
   }
 }

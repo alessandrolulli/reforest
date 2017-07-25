@@ -30,9 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RFResourceFactory {
-    public static RFCategoryInfo getCategoricalInfo = new RFCategoryInfoEmpty();
-    public static TypeInfoDouble typeInfoDouble = new TypeInfoDouble(false, 0);
-    public static TypeInfoInt typeInfoInt = new TypeInfoInt(false, 0);
+    public static final RFCategoryInfo getCategoricalInfo = new RFCategoryInfoEmpty();
+    public static final TypeInfoDouble typeInfoDouble = new TypeInfoDouble(false, 0);
+    public static final TypeInfoInt typeInfoInt = new TypeInfoInt(false, 0);
 
     public static <T, U> RFSplitter<T, U> getSplitterRandom(T min, T max, TypeInfo<T> typeInfo, TypeInfo<U> typeInfoWorking, int numberBin) {
         return new RFSplitterSimpleRandom<T, U>(min, max,
@@ -60,6 +60,6 @@ public class RFResourceFactory {
         map.put(1, aDouble);
         map.put(2, aDouble);
 
-        return new RFSplitterSpecialized(map, typeInfoDouble, typeInfoInt, getCategoricalInfo);
+        return new RFSplitterSpecialized(map, typeInfoDouble, typeInfoInt, getCategoricalInfo, aDouble.length+1);
     }
 }

@@ -32,7 +32,7 @@ import scala.reflect.ClassTag
   * @tparam T raw data type
   * @tparam U working data type
   */
-class RFRotationMatrix[T: ClassTag, U: ClassTag](n: Int, typeInfo: Broadcast[TypeInfo[T]], seed: Int) extends Serializable {
+class RFRotationMatrix[T: ClassTag, U: ClassTag](n: Int, typeInfo: TypeInfo[T], seed: Int) extends Serializable {
 
   private val matrix = new RotationMatrix(n, seed)
 
@@ -44,7 +44,7 @@ class RFRotationMatrix[T: ClassTag, U: ClassTag](n: Int, typeInfo: Broadcast[Typ
     */
   def rotateRawData(element: RawData[T, U]) = {
     val dense = element.toDense
-    val densedRotated = matrix.rotate(dense.values, typeInfo.value)
+    val densedRotated = matrix.rotate(dense.values, typeInfo)
 
     new RawDataDense[T, U](densedRotated, dense.nan)
   }

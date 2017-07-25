@@ -17,45 +17,117 @@
 
 package reforest.rf.split
 
-import reforest.rf.{RFCategoryInfo, RFFeatureSizer, RFFeatureSizerSimple}
+import reforest.rf.RFCategoryInfo
+import reforest.rf.feature.{RFFeatureSizer, RFFeatureSizerSimple, RFFeatureSizerSimpleModelSelection}
 
 /**
   * The manager to collect the information about how the data are discretized
+  *
   * @tparam T raw data type
   * @tparam U working data type
   */
 trait RFSplitterManager[T, U] extends Serializable {
+
   /**
     * The number of bin used for the feature passed as argument. It is always <= number of configured bin
-    * @param idFeature the feature index
-    * @param idTree
+    *
+    * @param idFeature the feature identifier
+    * @param idTree    the index of the tree
+    * @return the number of bin for the feature
+    */
+  def getBinNumber(idFeature: Int, idTree: Int = 0): U
+
+  /**
+    * Discretize a value to the correct bin number
+    *
+    * @param idFeature the feature identifier
+    * @param value     the raw value
+    * @param idTree    the index of the tree
+    * @return the discretized value
+    */
+  def getBin(idFeature: Int, value: T, idTree: Int = 0): U
+
+  /**
+    * Retrieve the raw value from a bin number
+    *
+    * @param idFeature the feature identifier
+    * @param cut       the bin number of the cut
+    * @param idTree    the index of the tree
+    * @return the raw value
+    */
+  def getRealCut(idFeature: Int, cut: U, idTree: Int = 0): T
+
+  /**
+    * Get the splitter for the given macro iteration
+    *
+    * @param macroIteration the macro iteration number
+    * @param idTree         the identifier of the tree
+    * @return the specialized splitter for the given macro iteration and tree
+    */
+  def getSplitter(macroIteration: Int, idTree: Int = 0): RFSplitter[T, U]
+
+  /**
+    * It generates a RFFeatureSizer to know how large a data structure must be to contain all the contributions
+    *
+    * @param numClasses the number of classes in the dataset
+    * @return a specialized RFFeatureSizer
+    */
+  def generateRFSizer(numClasses: Int): RFFeatureSizer
+
+  /**
+    * It generates a RFFeatureSizer to know how large a data structure must be to contain all the contributions.
+    * This must be used during the model selection when requesting a RFFeatureSizer for less number of bin
+    * with respect to the number of bins in the working data
+    *
+    * @param numClasses        the number of classes in the dataset
+    * @param binNumberShrinked the maximum number of bin used
     * @return
     */
-  def getBinNumber(idFeature: Int, idTree : Int = 0): U
-
-
-  def getBin(idFeature: Int, value: T, idTree : Int = 0): U
-  def getRealCut(idFeature: Int, cut: U, idTree : Int = 0): T
-  def getSplitter(macroIteration : Int, idTree : Int = 0) : RFSplitter[T, U]
-  def generateRFSizer(numClasses: Int): RFFeatureSizer
+  def generateRFSizer(numClasses: Int, binNumberShrinked: Int): RFFeatureSizer
 }
 
-class RFSplitterManagerSingle[T, U](splitter : RFSplitter[T, U]) extends RFSplitterManager[T, U] {
-  def getBinNumber(idFeature: Int, idTree : Int = 0): U = splitter.getBinNumber(idFeature)
-  def getBin(idFeature: Int, value: T, idTree : Int = 0): U = splitter.getBin(idFeature, value)
-  def getRealCut(idFeature: Int, cut: U, idTree : Int = 0): T = splitter.getRealCut(idFeature, cut)
-  def getSplitter(macroIteration : Int, idTree : Int = 0) : RFSplitter[T, U] = splitter
-  def generateRFSizer(numClasses: Int): RFFeatureSizer = splitter.generateRFSizer(numClasses)
+/**
+  * The implementation of RFSplitterManager where each tree has the same RFSplitter
+  *
+  * @param splitter
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
+class RFSplitterManagerSingle[T, U](splitter: RFSplitter[T, U]) extends RFSplitterManager[T, U] {
+  override def getBinNumber(idFeature: Int, idTree: Int = 0): U = splitter.getBinNumber(idFeature)
+
+  override def getBin(idFeature: Int, value: T, idTree: Int = 0): U = splitter.getBin(idFeature, value)
+
+  override def getRealCut(idFeature: Int, cut: U, idTree: Int = 0): T = splitter.getRealCut(idFeature, cut)
+
+  override def getSplitter(macroIteration: Int, idTree: Int = 0): RFSplitter[T, U] = splitter
+
+  override def generateRFSizer(numClasses: Int): RFFeatureSizer = splitter.generateRFSizer(numClasses)
+
+  override def generateRFSizer(numClasses: Int, binNumberShrinked: Int): RFFeatureSizer = splitter.generateRFSizer(numClasses, binNumberShrinked)
 }
 
-class RFSplitterManagerCollection[T, U](splitter : Array[RFSplitter[T, U]],
-                                        binNumber : Int,
-                                        numTrees : Int,
-                                        numMacroIteration : Int,
-                                        categoryInfo : RFCategoryInfo) extends RFSplitterManager[T, U] {
-  def getBinNumber(idFeature: Int, idTree : Int = 0): U = splitter(idTree/numMacroIteration).getBinNumber(idFeature)
-  def getBin(idFeature: Int, value: T, idTree : Int = 0): U = splitter(idTree/numMacroIteration).getBin(idFeature, value)
-  def getRealCut(idFeature: Int, cut: U, idTree : Int = 0): T = splitter(idTree/numMacroIteration).getRealCut(idFeature, cut)
-  def getSplitter(macroIteration : Int, idTree : Int = 0) : RFSplitter[T, U] = splitter(macroIteration)
-  def generateRFSizer(numClasses: Int): RFFeatureSizer = new RFFeatureSizerSimple(binNumber, numClasses, categoryInfo)
+/**
+  * The implementation of RFSplitterManager where each macro iteration has a different RFSplitter
+  *
+  * @param splitter a list of RFSplitter (one for each macro iteration)
+  * @tparam T raw data type
+  * @tparam U working data type
+  */
+class RFSplitterManagerCollection[T, U](splitter: Array[RFSplitter[T, U]],
+                                        binNumber: Int,
+                                        numTrees: Int,
+                                        numMacroIteration: Int,
+                                        categoryInfo: RFCategoryInfo) extends RFSplitterManager[T, U] {
+  override def getBinNumber(idFeature: Int, idTree: Int = 0): U = splitter(idTree / numMacroIteration).getBinNumber(idFeature)
+
+  override def getBin(idFeature: Int, value: T, idTree: Int = 0): U = splitter(idTree / numMacroIteration).getBin(idFeature, value)
+
+  override def getRealCut(idFeature: Int, cut: U, idTree: Int = 0): T = splitter(idTree / numMacroIteration).getRealCut(idFeature, cut)
+
+  override def getSplitter(macroIteration: Int, idTree: Int = 0): RFSplitter[T, U] = splitter(macroIteration)
+
+  override def generateRFSizer(numClasses: Int): RFFeatureSizer = new RFFeatureSizerSimple(binNumber, numClasses, categoryInfo)
+
+  override def generateRFSizer(numClasses: Int, binNumberShrinked: Int): RFFeatureSizer = new RFFeatureSizerSimpleModelSelection(binNumber, numClasses, categoryInfo, binNumberShrinked)
 }

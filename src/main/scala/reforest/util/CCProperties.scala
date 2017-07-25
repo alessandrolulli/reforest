@@ -20,6 +20,8 @@ package reforest.util
 import java.io.{FileInputStream, InputStream}
 import java.util.Properties
 
+import reforest.rf.parameter.RFParameterType
+
 /**
   * Utility to load the standard configuration properties and functions to load custom properties.
   * @param algorithmName
@@ -38,9 +40,9 @@ class CCProperties(algorithmName: String, configurationFile: String) extends Ser
   def load(): CCProperties = {
     var input: InputStream = null
 
-    input = new FileInputStream(configurationFile);
+    input = new FileInputStream(configurationFile)
 
-    property.load(input);
+    property.load(input)
 
     this
   }
@@ -76,6 +78,26 @@ class CCProperties(algorithmName: String, configurationFile: String) extends Ser
   }
 
   /**
+    * It loads a custom properties as an array written in CSV format with a default value (Int)
+    * @param data the property to load
+    * @param default the default value
+    * @return the value readed from file for the property or the default value
+    */
+  def getIntArray(data: String, default: Int) : Array[Int] = {
+    get(data, default.toString).split(",").map(_.trim).map(_.toInt)
+  }
+
+  /**
+    * It loads a custom properties as an array written in CSV format with a default value (Double)
+    * @param data the property to load
+    * @param default the default value
+    * @return the value readed from file for the property or the default value
+    */
+  def getDoubleArray(data: String, default: Double) : Array[Double] = {
+    get(data, default.toString).split(",").map(_.trim).map(_.toDouble)
+  }
+
+  /**
     * It loads a custom properties with a default value (Long)
     * @param data the property to load
     * @param default the default value
@@ -100,29 +122,25 @@ class CCProperties(algorithmName: String, configurationFile: String) extends Ser
     * @return the immutable representation of the read configuration properties
     */
   def getImmutable: CCPropertiesImmutable = {
-    val dataset = get("dataset", "")
-    val jarPath = get("jarPath", "")
-    val sparkMaster = get("sparkMaster", "local[2]")
-    val sparkExecutorMemory = get("sparkExecutorMemory", "14g")
-    val sparkPartition = get("sparkPartition", "32").toInt
-    val sparkBlockManagerSlaveTimeoutMs = get("sparkBlockManagerSlaveTimeoutMs", "500000")
-    val sparkCoresMax = get("sparkCoresMax", "-1").toInt
-    val sparkAkkaFrameSize = get("sparkAkkaFrameSize", "100").toString
-    val sparkShuffleManager = get("sparkShuffleManager", "SORT").toString
-    val sparkCompressionCodec = get("sparkCompressionCodec", "lz4").toString
-    val sparkShuffleConsolidateFiles = get("sparkShuffleConsolidateFiles", "false").toString
-    val sparkDriverMaxResultSize = get("sparkDriverMaxResultSize", "1g").toString
-    var separator = get("edgelistSeparator", "space")
-    if (separator.equals("space")) separator = " "
-    val outputFile = get("outputFile", "")
-    val sparkExecutorInstances = get("sparkExecutorInstances", "-1").toInt
-    val instrumented = get("instrumented", "false").toBoolean
-    val category = get("category", "")
-    val fileType = get("fileType", "")
+    val dataset = get("dataset", RFParameterType.Dataset.defaultValue)
+    val jarPath = get("jarPath", RFParameterType.JarPath.defaultValue)
+    val sparkMaster = get("sparkMaster", RFParameterType.SparkMaster.defaultValue)
+    val sparkExecutorMemory = get("sparkExecutorMemory", RFParameterType.SparkExecutorMemory.defaultValue)
+    val sparkPartition = get("sparkPartition", RFParameterType.SparkPartition.defaultValue.toString).toInt
+    val sparkBlockManagerSlaveTimeoutMs = get("sparkBlockManagerSlaveTimeoutMs", RFParameterType.SparkBlockManagerSlaveTimeoutMs.defaultValue)
+    val sparkCoresMax = get("sparkCoresMax", RFParameterType.SparkCoresMax.defaultValue.toString).toInt
+    val sparkAkkaFrameSize = get("sparkAkkaFrameSize", RFParameterType.SparkAkkaFrameSize.defaultValue).toString
+    val sparkShuffleManager = get("sparkShuffleManager", RFParameterType.SparkShuffleManager.defaultValue).toString
+    val sparkCompressionCodec = get("sparkCompressionCodec", RFParameterType.SparkCompressionCodec.defaultValue).toString
+    val sparkShuffleConsolidateFiles = get("sparkShuffleConsolidateFiles", RFParameterType.SparkShuffleConsolidateFiles.defaultValue).toString
+    val sparkDriverMaxResultSize = get("sparkDriverMaxResultSize", RFParameterType.SparkDriverMaxResultSize.defaultValue).toString
+    val sparkExecutorInstances = get("sparkExecutorInstances", RFParameterType.SparkExecutorInstances.defaultValue.toString).toInt
+    val instrumented = get("instrumented", RFParameterType.Instrumented.defaultValue.toString).toBoolean
+    val category = get("category", RFParameterType.Category.defaultValue)
+    val fileType = get("fileType", RFParameterType.FileType.defaultValue)
 
     new CCPropertiesImmutable(this, algorithmName,
       dataset,
-      outputFile,
       jarPath,
       sparkMaster,
       sparkPartition,
@@ -135,7 +153,6 @@ class CCProperties(algorithmName: String, configurationFile: String) extends Ser
       sparkAkkaFrameSize,
       sparkDriverMaxResultSize,
       sparkExecutorInstances,
-      separator,
       instrumented,
       category,
       fileType)

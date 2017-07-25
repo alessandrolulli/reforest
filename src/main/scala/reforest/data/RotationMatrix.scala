@@ -84,8 +84,8 @@ class RotationMatrix(n: Int, seed : Int, input: Option[Array[Array[Double]]] = O
     val m: Array[Array[Double]] = if (input.isDefined) input.get else Array.tabulate(n)(_ => Array.fill(n)(randomGenerator.nextDouble()))
     val qr = new QRDecomposition(new Jama.Matrix(m))
 
-    val q = qr.getQ()
-    val r = qr.getR()
+    val q = qr.getQ
+    val r = qr.getR
     for (i <- 0 to n - 1) {
       for (j <- 0 to n - 1) {
         if (i == j) {
@@ -106,6 +106,6 @@ class RotationMatrix(n: Int, seed : Int, input: Option[Array[Array[Double]]] = O
     //        for(i <- 0 to n - 1) m2.set(i, 0, -m2.get(i,0))
     //      }
 
-    m2.getArray()
+    m2.getArray
   }
 }

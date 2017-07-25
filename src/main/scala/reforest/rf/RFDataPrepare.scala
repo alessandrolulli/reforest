@@ -21,7 +21,8 @@ import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import reforest.TypeInfo
 import reforest.data.{RawDataLabeled, StaticData}
-import reforest.rf.split.RFSplitterManager
+import reforest.data.tree.ForestManager
+import reforest.rf.split.{RFSplitter, RFSplitterManager}
 import reforest.util.{GCInstrumented, MemoryUtil}
 
 class RFDataPrepare[T, U](typeInfo: Broadcast[TypeInfo[T]],
@@ -31,7 +32,7 @@ class RFDataPrepare[T, U](typeInfo: Broadcast[TypeInfo[T]],
                           poissonMean: Double) extends Serializable {
 
   def prepareData(dataIndex: RDD[RawDataLabeled[T, U]],
-                  splitter: Broadcast[RFSplitterManager[T, U]],
+                  splitter : Broadcast[RFSplitter[T, U]],
                   featureNumber: Int,
                   memoryUtil: MemoryUtil,
                   numTrees: Int,
@@ -40,7 +41,7 @@ class RFDataPrepare[T, U](typeInfo: Broadcast[TypeInfo[T]],
 
     dataIndex.mapPartitionsWithIndex { (partitionIndex, instances) =>
 
-      strategy.value.prepareData(numTrees, macroIteration, splitter.value, partitionIndex, instances, instrumented.value, memoryUtil)
+      strategy.value.prepareData(numTrees, macroIteration, splitter, partitionIndex, instances, instrumented.value, memoryUtil)
     }
   }
 }

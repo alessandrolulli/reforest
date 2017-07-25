@@ -17,7 +17,7 @@
 
 package reforest.rf.split;
 
-import reforest.rf.RFFeatureSizer;
+import reforest.rf.feature.RFFeatureSizer;
 import test.RFResourceFactory;
 import org.junit.*;
 

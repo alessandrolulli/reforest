@@ -27,28 +27,57 @@ import reforest.util.GCInstrumented
 import scala.collection.{Map, mutable}
 import scala.reflect.ClassTag
 
-trait RFStrategySplit extends Serializable{
-  def getDescription : String
-  def findSplitsSimple[T : ClassTag, U : ClassTag](input: RDD[RawDataLabeled[T, U]],
-                       binNumber: Int,
-                       featureNumber: Int,
-                       featurePerIteration: Int,
-                       typeInfo: Broadcast[TypeInfo[T]],
-                       typeInfoWorking: Broadcast[TypeInfo[U]],
-                       instrumented: Broadcast[GCInstrumented],
-                       categoricalFeatureInfo : Broadcast[RFCategoryInfo]): RFSplitter[T, U]
+/**
+  * The interface for the different strategies to detect the split for the features
+  */
+trait RFStrategySplit extends Serializable {
+
+  /**
+    * A textual description of the strategy
+    *
+    * @return the textual description of the strategy
+    */
+  def getDescription: String
+
+  /**
+    * Detect the split for the deatures in the dataset
+    *
+    * @param input                  the input raw dataset
+    * @param binNumber              the number of bin for the working data
+    * @param featureNumber          the number of features in the dataset
+    * @param featurePerIteration    the number of features that can be processed in each iteration to detect the splits
+    * @param typeInfo               the type information for the raw data
+    * @param typeInfoWorking        the type information for the working data
+    * @param instrumented           the instrumentation for the garbage collector
+    * @param categoricalFeatureInfo the information about categorical features
+    * @tparam T raw data type
+    * @tparam U working data type
+    * @return the RFSplitter to discretize the data according to the detected splits
+    */
+  def findSplitsSimple[T: ClassTag, U: ClassTag](input: RDD[RawDataLabeled[T, U]],
+                                                 binNumber: Int,
+                                                 featureNumber: Int,
+                                                 featurePerIteration: Int,
+                                                 typeInfo: Broadcast[TypeInfo[T]],
+                                                 typeInfoWorking: Broadcast[TypeInfo[U]],
+                                                 instrumented: Broadcast[GCInstrumented],
+                                                 categoricalFeatureInfo: Broadcast[RFCategoryInfo]): RFSplitter[T, U]
 }
 
+/**
+  * The strategy to detect the same splits in a random way for all the features in the dataset
+  */
 class RFStrategySplitRandom extends RFStrategySplit {
-  def getDescription : String = "RANDOM"
-  def findSplitsSimple[T : ClassTag, U : ClassTag](input: RDD[RawDataLabeled[T, U]],
-                       binNumber: Int,
-                       featureNumber: Int,
-                       featurePerIteration: Int,
-                       typeInfo: Broadcast[TypeInfo[T]],
-                       typeInfoWorking: Broadcast[TypeInfo[U]],
-                       instrumented: Broadcast[GCInstrumented],
-                       categoricalFeatureInfo : Broadcast[RFCategoryInfo]): RFSplitter[T, U] = {
+  def getDescription: String = "RANDOM"
+
+  def findSplitsSimple[T: ClassTag, U: ClassTag](input: RDD[RawDataLabeled[T, U]],
+                                                 binNumber: Int,
+                                                 featureNumber: Int,
+                                                 featurePerIteration: Int,
+                                                 typeInfo: Broadcast[TypeInfo[T]],
+                                                 typeInfoWorking: Broadcast[TypeInfo[U]],
+                                                 instrumented: Broadcast[GCInstrumented],
+                                                 categoricalFeatureInfo: Broadcast[RFCategoryInfo]): RFSplitter[T, U] = {
 
     val (min, max) = input.map(t => (typeInfo.value.getMin(t.features), typeInfo.value.getMax(t.features)))
       .reduce((a, b) => (typeInfo.value.min(a._1, b._1), typeInfo.value.max(a._2, b._2)))
@@ -57,16 +86,21 @@ class RFStrategySplitRandom extends RFStrategySplit {
   }
 }
 
+/**
+  * The strategy to detect the split in a way that for each feature the split approximately distributed evenly
+  * the elements of the dataset in the bins
+  */
 class RFStrategySplitDistribution extends RFStrategySplit {
-  def getDescription : String = "DISTRIBUTION"
-  def findSplitsSimple[T : ClassTag, U : ClassTag](input: RDD[RawDataLabeled[T, U]],
-                       binNumber: Int,
-                       featureNumber: Int,
-                       featurePerIteration: Int,
-                       typeInfo: Broadcast[TypeInfo[T]],
-                       typeInfoWorking: Broadcast[TypeInfo[U]],
-                       instrumented: Broadcast[GCInstrumented],
-                       categoricalFeatureInfo : Broadcast[RFCategoryInfo]): RFSplitter[T, U] = {
+  def getDescription: String = "DISTRIBUTION"
+
+  def findSplitsSimple[T: ClassTag, U: ClassTag](input: RDD[RawDataLabeled[T, U]],
+                                                 binNumber: Int,
+                                                 featureNumber: Int,
+                                                 featurePerIteration: Int,
+                                                 typeInfo: Broadcast[TypeInfo[T]],
+                                                 typeInfoWorking: Broadcast[TypeInfo[U]],
+                                                 instrumented: Broadcast[GCInstrumented],
+                                                 categoricalFeatureInfo: Broadcast[RFCategoryInfo]): RFSplitter[T, U] = {
 
     val iterationNumber = Math.ceil(featureNumber.toDouble / featurePerIteration).toInt
     var iteration = 0
@@ -99,10 +133,10 @@ class RFStrategySplitDistribution extends RFStrategySplit {
       iteration += 1
     }
 
-    new RFSplitterSpecialized(continuousSplits, typeInfo.value, typeInfoWorking.value, categoricalFeatureInfo.value)
+    new RFSplitterSpecialized(continuousSplits, typeInfo.value, typeInfoWorking.value, categoricalFeatureInfo.value, binNumber)
   }
 
-  def findSplitsForContinuousFeature[T : ClassTag, U : ClassTag](featureSamples: Iterable[T], binNumber: Int, typeInfo: Broadcast[TypeInfo[T]]): Array[T] = {
+  def findSplitsForContinuousFeature[T: ClassTag, U: ClassTag](featureSamples: Iterable[T], binNumber: Int, typeInfo: Broadcast[TypeInfo[T]]): Array[T] = {
     val splits: Array[T] = if (featureSamples.isEmpty) {
       Array.empty
     } else {

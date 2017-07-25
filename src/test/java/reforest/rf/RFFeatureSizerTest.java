@@ -17,6 +17,9 @@
 package reforest.rf;
 
 import org.junit.Test;
+import reforest.rf.feature.RFFeatureSizer;
+import reforest.rf.feature.RFFeatureSizerSimpleModelSelection;
+import reforest.rf.feature.RFFeatureSizerSpecializedModelSelection;
 import reforest.rf.split.RFSplitter;
 import test.RFResourceFactory;
 
@@ -31,5 +34,16 @@ public class RFFeatureSizerTest {
     @Test
     public void getSize(){
         assertEquals((numberBin + 1)*numClasses, sizer.getSize(1));
+    }
+
+    @Test
+    public void shrinker() {
+        RFFeatureSizerSimpleModelSelection sizer = new RFFeatureSizerSimpleModelSelection(32, 2, new RFCategoryInfoEmpty(), 16);
+
+        assertEquals(0, sizer.getShrinkedValue(1, 0));
+        assertEquals(1, sizer.getShrinkedValue(1, -1));
+        assertEquals(16, sizer.getShrinkedValue(1, 32));
+        assertEquals(16, sizer.getShrinkedValue(1, 33));
+        assertEquals(16, sizer.getShrinkedValue(1, 100));
     }
 }

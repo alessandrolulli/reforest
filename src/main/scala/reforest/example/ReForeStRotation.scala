@@ -17,46 +17,57 @@
 
 package reforest.example
 
-import reforest.rf.rotation.RFRunnerRotation
-import reforest.rf.RFProperty
-import reforest.util.CCProperties
+import reforest.ReForeStTrainerBuilder
+import reforest.rf.feature.RFStrategyFeatureSQRT
+import reforest.rf.parameter.{RFParameterBuilder, RFParameterType}
+import reforest.util.{CCUtil, CCUtilIO}
 
 /**
-  * An example to use the ReForeSt Rotation library to perform Random Rotations Forest
+  * An example to use the ReForeSt library to perform Random Forest
   */
 object ReForeStRotation {
+
   def main(args: Array[String]): Unit = {
 
     // Create the ReForeSt configuration.
-    val property = new RFProperty()
-    property.dataset = "data/sample-covtype.libsvm"
-    property.featureNumber = 54
+    val property = RFParameterBuilder.apply
+      .addParameter(RFParameterType.Dataset, "data/sample-covtype.libsvm")
+      .addParameter(RFParameterType.NumFeatures, 54)
+      .addParameter(RFParameterType.NumClasses, 2)
+      .addParameter(RFParameterType.NumTrees, 100)
+      .addParameter(RFParameterType.Depth, 10)
+      .addParameter(RFParameterType.BinNumber, 32)
+      .addParameter(RFParameterType.SparkMaster, "local[4]")
+      .addParameter(RFParameterType.SparkCoresMax, 4)
+      .addParameter(RFParameterType.SparkPartition, 4 * 4)
+      .addParameter(RFParameterType.SparkExecutorMemory, "4096m")
+      .addParameter(RFParameterType.SparkExecutorInstances, 1)
+      .addParameter(RFParameterType.Rotation, true)
+      .addParameter(RFParameterType.NumRotations, 4)
+      .build
 
-    property.numTrees = 100
-    property.maxDepth = 8
-    property.numClasses = 7
+    val sc = CCUtil.getSparkContext(property)
+    sc.setLogLevel("error")
 
-    property.numRotation = 10
+    // Create the Random Forest classifier.
+    val timeStart = System.currentTimeMillis()
+    val rfRunner = ReForeStTrainerBuilder.apply(property).build(sc)
 
-    // Create the Random Rotations Forest classifier.
-    val rfRunner = RFRunnerRotation.apply(property)
-
-    // Load and parse the data file and return the training data. It actually performs also the scaling of the data.
-    val trainingData = rfRunner.loadData(0.7)
-
-    // Train a Random Rotations Forest model.
-    val model = rfRunner.trainClassifier(trainingData)
+    // Train a Random Forest model.
+    val model = rfRunner.trainClassifier()
+    val timeEnd = System.currentTimeMillis()
 
     // Evaluate model on test instances and compute test error
-    val labelAndPreds = rfRunner.getTestData().map { point =>
+    val labelAndPreds = rfRunner.getDataLoader.getTestingData.map { point =>
       val prediction = model.predict(point.features)
       (point.label, prediction)
     }
 
-    val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / rfRunner.getTestData().count()
-    rfRunner.printTree()
-    rfRunner.sparkStop()
+    val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / rfRunner.getDataLoader.getTestingData.count()
 
-    println("Test Error = " + testErr)
+    println("TEST ACCURACY (feature " + model.getFeaturePerNode + ")(bin " + model.getBinNumber + ")(depth " + model.getDepth + ")(trees " + model.getNumTrees + ") = " + (1 - testErr) + " " + testErr)
+    println("Time: " + (timeEnd - timeStart))
+    CCUtilIO.logACCURACY(property, model, model.getDepth, (1 - testErr), (timeEnd - timeStart))
+    rfRunner.sparkStop()
   }
 }

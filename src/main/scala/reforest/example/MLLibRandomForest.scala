@@ -21,30 +21,38 @@ import org.apache.spark.mllib.tree.RandomForest
 import org.apache.spark.mllib.tree.configuration.{Algo, QuantileStrategy, Strategy}
 import org.apache.spark.mllib.tree.impurity.Entropy
 import org.apache.spark.mllib.util.MLUtils
-import reforest.rf.RFProperty
-import reforest.util.{CCProperties, CCUtil, CCUtilIO}
+import reforest.rf.feature.RFStrategyFeatureSQRT
+import reforest.rf.parameter._
+import reforest.util.CCUtil
 
 import scala.util.Random
 
 object MLLibRandomForest {
   def main(args: Array[String]): Unit = {
 
-    val property = new RFProperty()
-    property.appName = "RANDOM-FOREST-MLLIB"
-    property.dataset = "data/sample-infimnist.libsvm"
-    property.featureNumber = 794
+    val property = RFParameterBuilder.apply
+      .addParameter(RFParameterType.Dataset, "data/sample-covtype.libsvm")
+      .addParameter(RFParameterType.NumFeatures, 54)
+      .addParameter(RFParameterType.NumClasses, 10)
+      .addParameter(RFParameterType.NumTrees, 100)
+      .addParameter(RFParameterType.Depth, Array(10))
+      .addParameter(RFParameterType.BinNumber, Array(8))
+      .addParameter(RFParameterType.SparkMaster, "local[4]")
+      .addParameter(RFParameterType.SparkCoresMax, 4)
+      .addParameter(RFParameterType.SparkPartition, 4*4)
+      .addParameter(RFParameterType.SparkExecutorMemory, "4096m")
+      .addParameter(RFParameterType.SparkExecutorInstances, 1)
+      .build
 
-    property.numTrees = 100
-    property.maxDepth = 8
-    property.numClasses = 10
 
     val sc = CCUtil.getSparkContext(property)
     sc.setLogLevel("error")
 
-    val data = MLUtils.loadLibSVMFile(sc, property.dataset, property.featureNumber, property.sparkCoresMax * 2)
+    val timeStart = System.currentTimeMillis()
+    val data = MLUtils.loadLibSVMFile(sc, property.dataset, property.numFeatures, property.sparkCoresMax * 2)
 
-    val splits = data.randomSplit(Array(0.7, 0.3), 0)
-    val (trainingData, testData) = (splits(0), splits(1))
+    val splits = data.randomSplit(Array(0.6, 0.2, 0.2), 0)
+    val (trainingData, testData) = (splits(0), splits(2))
 
     // Train a RandomForest model.
     //    val categoricalFeaturesInfo = Array.tabulate(200)(i => (i, 5)).toMap
@@ -53,9 +61,10 @@ object MLLibRandomForest {
     val impurity = "entropy"
 
     val s = new
-        Strategy(Algo.Classification, Entropy, property.maxDepth, property.numClasses, property.binNumber, QuantileStrategy.Sort, categoricalFeaturesInfo, 1)
+        Strategy(Algo.Classification, Entropy, property.getMaxDepth, property.numClasses, property.getMaxBinNumber, QuantileStrategy.Sort, categoricalFeaturesInfo, 1)
 
-    val model = RandomForest.trainClassifier(trainingData, s, property.numTrees, featureSubsetStrategy, Random.nextInt())
+    val model = RandomForest.trainClassifier(trainingData, s, property.getMaxNumTrees, featureSubsetStrategy, Random.nextInt())
+    val timeEnd = System.currentTimeMillis()
 
     val labelAndPreds = testData.map { point =>
       val prediction = model.predict(point.features)
@@ -63,6 +72,7 @@ object MLLibRandomForest {
     }
 
     val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / testData.count()
+    println("Time: "+(timeEnd-timeStart))
     println("Test Error = " + testErr)
     if (property.outputTree) {
       println("Learned classification forest model:\n" + model.toDebugString)

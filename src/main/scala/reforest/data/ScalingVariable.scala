@@ -73,7 +73,7 @@ class ScalingBasic[T : ClassTag, U : ClassTag](@transient private val sc: SparkC
       count += 1
     }
 
-    new RawDataLabeled(data.label, new RawDataDense(values, densed.nan))
+    RawDataLabeled(data.label, new RawDataDense(values, densed.nan))
   }
 
   private def init(): scala.collection.Map[Int, (T, T)] = {
