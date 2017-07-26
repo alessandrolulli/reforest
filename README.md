@@ -69,4 +69,4 @@ The prebuilt-project can be found in "resources/package" in zip and tar.gz forma
 * <a href="http://www.lucaoneto.com">Luca Oneto</a>
 * <a href="http://www.dibris.unige.it/anguita-davide">Davide Anguita</a>
 
-ReForeSt has been developed at <a href="https://sites.google.com/site/smartlabdibrisunige/">Smartlab</a> - <a href="http://www.dibris.unige.it/">DIBRIS</a> - <a href="https://unige.it/">University of Genoa</a>.
+ReForeSt has been developed at <a href="www.smartlab.ws">Smartlab</a> - <a href="http://www.dibris.unige.it/">DIBRIS</a> - <a href="https://unige.it/">University of Genoa</a>.
