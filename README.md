@@ -9,7 +9,7 @@
 ReForeSt is a distributed, scalable implementation of the RF learning algorithm which targets fast and memory efficient processing. ReForeSt main contributions are manifold: (i) it provides a novel approach for the RF implementation in a distributed environment targeting an in-memory efficient processing, (ii) it is faster and more memory efficient with respect to the de facto standard MLlib, (iii) the level of parallelism is self-configuring.
  </p>
 
-## How to build
+## How to build 
 
 An already packaged ReForeSt in zip or tar.gz format can be found in the directory "resources/package".
 Otherwise it is possible to build ReForeSt using Maven:
