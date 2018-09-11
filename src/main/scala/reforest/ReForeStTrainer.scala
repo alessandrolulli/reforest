@@ -426,4 +426,7 @@ object ReForeStTrainerBuilder {
   def apply(parameter: RFParameter): ReForeStTrainerBuilder[Double, Byte] = new ReForeStTrainerBuilder(new TypeInfoDouble(), new TypeInfoByte(), parameter)
 
   def apply[U: ClassTag](typeInfoWorking: TypeInfo[U]): ReForeStTrainerBuilder[Double, U] = new ReForeStTrainerBuilder(new TypeInfoDouble(), typeInfoWorking)
+  
+  // ISSUE #1
+  def apply[T: ClassTag, U: ClassTag](typeInfo: TypeInfo[T], typeInfoWorking: TypeInfo[U], parameter: RFParameter): ReForeStTrainerBuilder[T, U] = new ReForeStTrainerBuilder(typeInfo, typeInfoWorking, parameter)
 }
