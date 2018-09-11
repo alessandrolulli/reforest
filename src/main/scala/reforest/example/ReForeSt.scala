@@ -50,7 +50,14 @@ object ReForeSt {
     // Create the Random Forest classifier.
     val timeStart = System.currentTimeMillis()
     val rfRunner = ReForeStTrainerBuilder.apply(property).build(sc)
-
+    
+    // ISSUE #1
+    // It is possible to personalize the type of data loaded and in which type data must be exloited by ReForeSt
+    // the following it is required to load data of type Double when the number of bin configured is <128
+    // val rfRunner = ReForeStTrainerBuilder.apply(new TypeInfoDouble(), new TypeInfoByte(), property).build(sc)
+    // instead of TypeInfoDouble or TypeInfoByte it is possoble to use one of the following:
+    // TypeInfoDouble, TypeInfoFloat, TypeInfoByte, TypeInfoShort, TypeInfoInt
+   
     // Train a Random Forest model.
     val model = rfRunner.trainClassifier()
     val timeEnd = System.currentTimeMillis()
