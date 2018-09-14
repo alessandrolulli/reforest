@@ -7,18 +7,12 @@ import reforest.test._
 
 class ForestManagerTest {
 
-  val parameter = new RFParameterBuilder()
-    .addParameter(RFParameterType.NumTrees, Array(50, 100))
-    .addParameter(RFParameterType.Depth, Array(5, 10))
-    .addParameter(RFParameterType.BinNumber, Array(16, 32))
-    .build
-
   val splitterManager = RFCreator.getSplitterManager(0, 100, 32)
 
   @Test
   def construct() = {
 
-    val forestManager = new ForestManager[Double, Int](parameter, splitterManager)
+    val forestManager = new ForestManager[Double, Int](RFCreator.parameterBuilder.build, splitterManager)
 
     Assert.assertEquals(2, forestManager.getForest.length)
 

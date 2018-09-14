@@ -1,13 +1,14 @@
 package reforest.rf.parameter
 
 import org.junit.{Assert, Test}
+import reforest.test.RFCreator
 
 class RFParameterBuilderTest {
 
   @Test
   def builderInit = {
-    val b1 = RFParameterBuilder.apply
-    val b2 = RFParameterBuilder.apply
+    val b1 = RFCreator.parameterBuilder
+    val b2 = RFCreator.parameterBuilder
 
     val parameter1 = b1.build
     val parameter2 = b2.build
@@ -17,7 +18,7 @@ class RFParameterBuilderTest {
 
   @Test
   def builderInitFromParameter = {
-    val b1 = RFParameterBuilder.apply
+    val b1 = RFCreator.parameterBuilder
     val parameter1 = b1.build
 
     val b2 = RFParameterBuilder.apply(parameter1)
@@ -29,6 +30,7 @@ class RFParameterBuilderTest {
   @Test
   def builderAddParameter = {
     val b1 = RFParameterBuilder.apply
+      .addParameter(RFParameterType.Dataset, "this is required")
       .addParameter(RFParameterType.Instrumented, true)
       .addParameter(RFParameterType.SparkCompressionCodec, "snappy")
       .addParameter(RFParameterType.MaxNodesConcurrent, 5)

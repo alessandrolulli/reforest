@@ -1,6 +1,7 @@
 package reforest.test
 
-import reforest.rf.{RFCategoryInfoEmpty}
+import reforest.rf.RFCategoryInfoEmpty
+import reforest.rf.parameter.{RFParameterBuilder, RFParameterType}
 import reforest.{TypeInfo, TypeInfoDouble, TypeInfoInt}
 import reforest.rf.split.{RFSplitter, RFSplitterManager, RFSplitterManagerSingle, RFSplitterSimpleRandom}
 
@@ -13,6 +14,12 @@ object RFCreator {
     val a = getSplitterRandom(min, max, new TypeInfoDouble(false, 0), new TypeInfoInt(false, 0), numberBin)
     a
   }
+
+  def parameterBuilder = new RFParameterBuilder()
+    .addParameter(RFParameterType.Dataset, "this is required")
+    .addParameter(RFParameterType.NumTrees, Array(50, 100))
+    .addParameter(RFParameterType.Depth, Array(5, 10))
+    .addParameter(RFParameterType.BinNumber, Array(16, 32))
 
   def getSplitterManager(min: Double,
                          max: Double,

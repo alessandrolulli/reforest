@@ -1,12 +1,13 @@
 package reforest.rf.parameter
 
 import org.junit.{Assert, Test}
+import reforest.test.RFCreator
 
 class RFParameterTest {
 
   @Test
   def builderInit = {
-    val b1 = RFParameterBuilder.apply
+    val b1 = RFCreator.parameterBuilder
       .addParameter(RFParameterType.NumTrees, 100)
     val parameter1 = b1.build
 
