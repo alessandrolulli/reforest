@@ -51,6 +51,8 @@ class ReForeStTrainer[T: ClassTag, U: ClassTag](@transient private val sc: Spark
   def trainClassifier(): RFModel[T, U] = {
     val timeStart = System.currentTimeMillis()
 
+
+
     if (strategy.getMacroIterationNumber > 1) {
       loader.trainingdatafreeze()
     }

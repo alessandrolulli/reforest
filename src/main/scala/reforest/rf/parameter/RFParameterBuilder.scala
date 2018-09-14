@@ -97,59 +97,68 @@ class RFParameterBuilder(private val parameterMapArrayInt: scala.collection.muta
   }
 
   def build: RFParameter = {
-    new RFParameter(
-      //int
-      parameterMapInt.getOrElse(RFParameterType.NumFeatures, RFParameterType.NumFeatures.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.NumClasses, RFParameterType.NumClasses.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.NumRotations, RFParameterType.NumRotations.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.RotationRandomSeed, RFParameterType.RotationRandomSeed.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.SparkExecutorInstances, RFParameterType.SparkExecutorInstances.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.SparkCoresMax, RFParameterType.SparkCoresMax.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.SparkPartition, RFParameterType.SparkPartition.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.MaxNodesConcurrent, RFParameterType.MaxNodesConcurrent.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.SLCDepth, RFParameterType.SLCDepth.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.SLCNodesPerCore, RFParameterType.SLCNodesPerCore.defaultValue),
-      parameterMapInt.getOrElse(RFParameterType.SLCCycleActivation, RFParameterType.SLCCycleActivation.defaultValue),
-      //array[int]
-      parameterMapArrayInt.getOrElse(RFParameterType.NumTrees, RFParameterType.NumTrees.defaultValue),
-      parameterMapArrayInt.getOrElse(RFParameterType.BinNumber, RFParameterType.BinNumber.defaultValue),
-      parameterMapArrayInt.getOrElse(RFParameterType.Depth, RFParameterType.Depth.defaultValue),
-      parameterMapArrayDouble.getOrElse(RFParameterType.FeatureMultiplierPerNode, RFParameterType.FeatureMultiplierPerNode.defaultValue),
-      getStrategyFeature,
-      strategySplit,
-      //boolean
-      parameterMapBoolean.getOrElse(RFParameterType.Instrumented, RFParameterType.Instrumented.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.LogStat, RFParameterType.LogStat.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.SkipAccuracy, RFParameterType.SkipAccuracy.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.PermitSparseWorkingData, RFParameterType.PermitSparseWorkingData.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.OutputTree, RFParameterType.OutputTree.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.SLCActive, RFParameterType.SLCActive.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.SLCActiveForce, RFParameterType.SLCActiveForce.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.ModelSelection, RFParameterType.ModelSelection.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.Rotation, RFParameterType.Rotation.defaultValue),
-      parameterMapBoolean.getOrElse(RFParameterType.TestAll, RFParameterType.TestAll.defaultValue),
-      //double
-      parameterMapDouble.getOrElse(RFParameterType.PoissonMean, RFParameterType.PoissonMean.defaultValue),
-      parameterMapDouble.getOrElse(RFParameterType.SLCSafeMemoryMultiplier, RFParameterType.SLCSafeMemoryMultiplier.defaultValue),
-      parameterMapDouble.getOrElse(RFParameterType.ModelSelectionEpsilon, RFParameterType.ModelSelectionEpsilon.defaultValue),
-      parameterMapDouble.getOrElse(RFParameterType.ModelSelectionEpsilonRemove, RFParameterType.ModelSelectionEpsilonRemove.defaultValue),
-      //string
-      parameterMapString.getOrElse(RFParameterType.AppName, RFParameterType.AppName.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkDriverMaxResultSize, RFParameterType.SparkDriverMaxResultSize.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkAkkaFrameSize, RFParameterType.SparkAkkaFrameSize.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkShuffleConsolidateFiles, RFParameterType.SparkShuffleConsolidateFiles.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkCompressionCodec, RFParameterType.SparkCompressionCodec.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkShuffleManager, RFParameterType.SparkShuffleManager.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkBlockManagerSlaveTimeoutMs, RFParameterType.SparkBlockManagerSlaveTimeoutMs.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkExecutorMemory, RFParameterType.SparkExecutorMemory.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkMaster, RFParameterType.SparkMaster.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.SparkExecutorExtraClassPath, RFParameterType.SparkExecutorExtraClassPath.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.JarPath, RFParameterType.JarPath.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.Dataset, RFParameterType.Dataset.defaultValue),
-      UUID,
-      parameterMapString.getOrElse(RFParameterType.Category, RFParameterType.Category.defaultValue),
-      parameterMapString.getOrElse(RFParameterType.FileType, RFParameterType.FileType.defaultValue)
-    )
+    try {
+      new RFParameter(
+        //int
+        parameterMapInt.getOrElse(RFParameterType.NumFeatures, RFParameterType.NumFeatures.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.NumClasses, RFParameterType.NumClasses.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.NumRotations, RFParameterType.NumRotations.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.RotationRandomSeed, RFParameterType.RotationRandomSeed.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.SparkExecutorInstances, RFParameterType.SparkExecutorInstances.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.SparkCoresMax, RFParameterType.SparkCoresMax.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.SparkPartition, RFParameterType.SparkPartition.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.MaxNodesConcurrent, RFParameterType.MaxNodesConcurrent.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.SLCDepth, RFParameterType.SLCDepth.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.SLCNodesPerCore, RFParameterType.SLCNodesPerCore.defaultValue),
+        parameterMapInt.getOrElse(RFParameterType.SLCCycleActivation, RFParameterType.SLCCycleActivation.defaultValue),
+        //array[int]
+        parameterMapArrayInt.getOrElse(RFParameterType.NumTrees, RFParameterType.NumTrees.defaultValue),
+        parameterMapArrayInt.getOrElse(RFParameterType.BinNumber, RFParameterType.BinNumber.defaultValue),
+        parameterMapArrayInt.getOrElse(RFParameterType.Depth, RFParameterType.Depth.defaultValue),
+        parameterMapArrayDouble.getOrElse(RFParameterType.FeatureMultiplierPerNode, RFParameterType.FeatureMultiplierPerNode.defaultValue),
+        getStrategyFeature,
+        strategySplit,
+        //boolean
+        parameterMapBoolean.getOrElse(RFParameterType.Instrumented, RFParameterType.Instrumented.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.LogStat, RFParameterType.LogStat.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.SkipAccuracy, RFParameterType.SkipAccuracy.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.PermitSparseWorkingData, RFParameterType.PermitSparseWorkingData.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.OutputTree, RFParameterType.OutputTree.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.SLCActive, RFParameterType.SLCActive.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.SLCActiveForce, RFParameterType.SLCActiveForce.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.ModelSelection, RFParameterType.ModelSelection.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.Rotation, RFParameterType.Rotation.defaultValue),
+        parameterMapBoolean.getOrElse(RFParameterType.TestAll, RFParameterType.TestAll.defaultValue),
+        //double
+        parameterMapDouble.getOrElse(RFParameterType.PoissonMean, RFParameterType.PoissonMean.defaultValue),
+        parameterMapDouble.getOrElse(RFParameterType.SLCSafeMemoryMultiplier, RFParameterType.SLCSafeMemoryMultiplier.defaultValue),
+        parameterMapDouble.getOrElse(RFParameterType.ModelSelectionEpsilon, RFParameterType.ModelSelectionEpsilon.defaultValue),
+        parameterMapDouble.getOrElse(RFParameterType.ModelSelectionEpsilonRemove, RFParameterType.ModelSelectionEpsilonRemove.defaultValue),
+        //string
+        parameterMapString.getOrElse(RFParameterType.AppName, RFParameterType.AppName.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkDriverMaxResultSize, RFParameterType.SparkDriverMaxResultSize.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkAkkaFrameSize, RFParameterType.SparkAkkaFrameSize.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkShuffleConsolidateFiles, RFParameterType.SparkShuffleConsolidateFiles.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkCompressionCodec, RFParameterType.SparkCompressionCodec.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkShuffleManager, RFParameterType.SparkShuffleManager.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkBlockManagerSlaveTimeoutMs, RFParameterType.SparkBlockManagerSlaveTimeoutMs.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkExecutorMemory, RFParameterType.SparkExecutorMemory.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkMaster, RFParameterType.SparkMaster.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.SparkExecutorExtraClassPath, RFParameterType.SparkExecutorExtraClassPath.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.JarPath, RFParameterType.JarPath.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.Dataset, RFParameterType.Dataset.defaultValue),
+        UUID,
+        parameterMapString.getOrElse(RFParameterType.Category, RFParameterType.Category.defaultValue),
+        parameterMapString.getOrElse(RFParameterType.FileType, RFParameterType.FileType.defaultValue)
+      )
+    }
+    catch {
+      case e : Exception => {
+        println(e.getMessage)
+        System.exit(1)
+        null
+      }
+    }
   }
 
   private[parameter] def genValues(min: Int, max: Int, increment: Int = -1) = {

@@ -104,7 +104,7 @@ object RFParameterType extends Enumeration {
 
   case object JarPath extends RFParameterTypeString("")
 
-  case object Dataset extends RFParameterTypeString("")
+  case object Dataset extends RFParameterTypeString("", true)
 
   case object Category extends RFParameterTypeString("")
 
@@ -124,7 +124,15 @@ class RFParameterTypeInt(val defaultValue: Int) extends RFParameterType {
 class RFParameterTypeBoolean(val defaultValue: Boolean) extends RFParameterType {
 }
 
-class RFParameterTypeString(val defaultValue: String) extends RFParameterType {
+class RFParameterTypeString(value: String, val required: Boolean = false) extends RFParameterType {
+  def defaultValue : String = {
+    if (required && value.isEmpty) {
+      // TODO parameter checking must be handled better
+      throw new IllegalArgumentException("Parameter "+this.getClass.getSimpleName.replace("$","")+" is required")
+    } else {
+      value
+    }
+  }
 }
 
 class RFParameterTypeDouble(val defaultValue: Double) extends RFParameterType {
