@@ -1,6 +1,6 @@
 package reforest
 
-import org.apache.spark.SparkContext
+import org.apache.spark.{SparkContext, SparkException}
 import org.apache.spark.broadcast.Broadcast
 import reforest.data.tree.Forest
 import reforest.rf._
@@ -49,41 +49,53 @@ class ReForeStTrainer[T: ClassTag, U: ClassTag](@transient private val sc: Spark
   }
 
   def trainClassifier(): RFModel[T, U] = {
-    val timeStart = System.currentTimeMillis()
+    try {
+      val timeStart = System.currentTimeMillis()
 
-
-
-    if (strategy.getMacroIterationNumber > 1) {
-      loader.trainingdatafreeze()
-    }
-
-    //(binNumber,featurePerNode)
-    val modelMap: scala.collection.mutable.Map[(Int, Int), RFModelAggregator[T, U]] = scala.collection.mutable.Map()
-
-    val numTreesPerIteration = parameter.value.getMaxNumTrees / strategy.getMacroIterationNumber
-    for (i <- 0 to strategy.getMacroIterationNumber - 1) {
-      val forestManager = run(numTreesPerIteration, i, if (i == 0 || strategy.getMacroIterationNumber > 1) false else true)
-      if (forestManager.getForest.length > 1) {
-        println("ERROR! There are more than one forest!")
+      if (strategy.getMacroIterationNumber > 1) {
+        loader.trainingdatafreeze()
       }
 
-      val toReturn: Array[RFModel[T, U]] = new Array[RFModel[T, U]](forestManager.getForest.length)
-      var forestId = 0
-      while (forestId < toReturn.length) {
-        val key = (forestManager.getForest(forestId).binNumber, forestManager.getForest(forestId).featurePerNode.getFeaturePerNodeNumber)
-        val previousModel = modelMap.getOrElse(key, new RFModelAggregator[T, U](parameter.value.numClasses))
-        previousModel.addModel(strategy.generateModel(sc, forestManager.getForest(forestId), typeInfoBC, i))
+      //(binNumber,featurePerNode)
+      val modelMap: scala.collection.mutable.Map[(Int, Int), RFModelAggregator[T, U]] = scala.collection.mutable.Map()
 
-        modelMap.put(key, previousModel)
+      val numTreesPerIteration = parameter.value.getMaxNumTrees / strategy.getMacroIterationNumber
+      for (i <- 0 to strategy.getMacroIterationNumber - 1) {
+        val forestManager = run(numTreesPerIteration, i, if (i == 0 || strategy.getMacroIterationNumber > 1) false else true)
+        if (forestManager.getForest.length > 1) {
+          println("ERROR! There are more than one forest!")
+        }
 
-        forestId += 1
+        val toReturn: Array[RFModel[T, U]] = new Array[RFModel[T, U]](forestManager.getForest.length)
+        var forestId = 0
+        while (forestId < toReturn.length) {
+          val key = (forestManager.getForest(forestId).binNumber, forestManager.getForest(forestId).featurePerNode.getFeaturePerNodeNumber)
+          val previousModel = modelMap.getOrElse(key, new RFModelAggregator[T, U](parameter.value.numClasses))
+          previousModel.addModel(strategy.generateModel(sc, forestManager.getForest(forestId), typeInfoBC, i))
+
+          modelMap.put(key, previousModel)
+
+          forestId += 1
+        }
+      }
+
+      val timeEnd = System.currentTimeMillis()
+      CCUtilIO.logTIME(parameter.value, (timeEnd - timeStart), 0)
+
+      modelMap.values.last
+    }
+    catch {
+      case e : SparkException => {
+        println(e.getMessage)
+        System.exit(1)
+        null
+      }
+      case e : Exception => {
+        e.printStackTrace()
+        System.exit(1)
+        null
       }
     }
-
-    val timeEnd = System.currentTimeMillis()
-    CCUtilIO.logTIME(parameter.value, (timeEnd - timeStart), 0)
-
-    modelMap.values.last
   }
 
   def switchToSLC(nodeNumber: Int, depth: Int, memoryUtil: MemoryUtil) = {
@@ -428,7 +440,7 @@ object ReForeStTrainerBuilder {
   def apply(parameter: RFParameter): ReForeStTrainerBuilder[Double, Byte] = new ReForeStTrainerBuilder(new TypeInfoDouble(), new TypeInfoByte(), parameter)
 
   def apply[U: ClassTag](typeInfoWorking: TypeInfo[U]): ReForeStTrainerBuilder[Double, U] = new ReForeStTrainerBuilder(new TypeInfoDouble(), typeInfoWorking)
-  
+
   // ISSUE #1
   def apply[T: ClassTag, U: ClassTag](typeInfo: TypeInfo[T], typeInfoWorking: TypeInfo[U], parameter: RFParameter): ReForeStTrainerBuilder[T, U] = new ReForeStTrainerBuilder(typeInfo, typeInfoWorking, parameter)
 }

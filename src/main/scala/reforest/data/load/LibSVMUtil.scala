@@ -70,16 +70,30 @@ class LibSVMUtil[T: ClassTag, U: ClassTag](typeInfo: Broadcast[TypeInfo[T]],
   private[load] def parseLibSVMRecord(line: String): (Double, Array[Int], Array[T]) = {
     val items = line.split(' ')
     val label = Math.max(items.head.toDouble, 0)
-    val (indices, values) = items.tail.filter(_.nonEmpty).map {
+    val (indices, values) = items.tail.filter(_.nonEmpty).flatMap {
       item =>
-        val indexAndValue = item.split(':')
-        val index = indexAndValue(0).toInt - 1 // Convert 1-based indices to 0-based.
-      val value = typeInfo.value.fromString(indexAndValue(1))
+        try {
+          val indexAndValue = item.split(':')
+          val index = indexAndValue(0).toInt - 1 // Convert 1-based indices to 0-based
+          val value = typeInfo.value.fromString(indexAndValue(1))
 
-        if (categoryInfo.value.isCategorical(index)) {
-          (index, typeInfo.value.fromInt(categoryInfo.value.rawRemapping(typeInfo.value.toInt(value))))
-        } else {
-          (index, value)
+          if (categoryInfo.value.isCategorical(index)) {
+            Some((index, typeInfo.value.fromInt(categoryInfo.value.rawRemapping(typeInfo.value.toInt(value)))))
+          } else {
+            Some((index, value))
+          }
+        }
+        catch {
+          case e : NumberFormatException => {
+            println("Malformed input. Details: \n"+e.getMessage)
+            System.exit(1)
+            None
+          }
+          case e : Exception => {
+            e.printStackTrace()
+            System.exit(1)
+            None
+          }
         }
     }.unzip
 
