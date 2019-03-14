@@ -63,10 +63,6 @@ println("Time: " + (timeEnd - timeStart))
 rfRunner.sparkStop()
 ```
 
-## Quick Start
-To quickly start using ReForeSt we provide a pre-built Maven project with all the settings and configuration to automatically import the project in IntelliJ.
-The prebuilt-project can be found in "resources/package" in zip and tar.gz format.
-
 ## Authors
 * <a href="http://for.unipi.it/alessandro_lulli/">Alessandro Lulli</a>
 * <a href="http://www.lucaoneto.com">Luca Oneto</a>
