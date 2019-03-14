@@ -9,11 +9,11 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
         <dependencySet>
-            <excludes>
+            <!-- <excludes>
                 <exclude>org.apache.spark:spark-core_2.11</exclude>
                 <exclude>org.apache.spark:spark-mllib_2.11</exclude>
                 <exclude>org.scala-lang:scala-library</exclude>
-            </excludes>
+            </excludes>-->
             <outputDirectory>/</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <useTransitiveFiltering>true</useTransitiveFiltering>
