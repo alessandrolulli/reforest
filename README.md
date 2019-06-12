@@ -15,6 +15,35 @@ ReForeSt is a distributed, scalable implementation of the RF learning algorithm 
  Additional details can be found at ReForeSt website: <a href="https://sites.google.com/view/reforest/home">https://sites.google.com/view/reforest/home</a>
  </p>
 
+## Performance
+
+Enreaching the comparison presented <a href="https://github.com/szilard/benchm-ml#random-forest">here</a> we report a comparison between many Random Forest Libraries, in the same setting of the link reported above, and ReForeSt
+
+Tool    | *n*  |   Time (sec)  | RAM (GB) | AUC
+-------------------------|------|---------------|----------|--------
+R       | 10K  |      50       |   10     | 68.2
+.       | 100K |     1200      |   35     | 71.2
+.       | 1M   |     crash     |          |
+Python  | 10K  |      2        |   2      | 68.4
+.       | 100K |     50        |   5      | 71.4
+.       | 1M   |     900       |   20     | 73.2
+.       | 10M  |     crash     |          |
+H2O     | 10K  |      15       |   2      | 69.8
+.       | 100K |      150      |   4      | 72.5
+.       | 1M   |      600      |    5     | 75.5
+.       | 10M  |     4000      |   25     | 77.8
+Spark   | 10K  |      50       |   10     | 69.1
+.       | 100K |      270      |   30     | 71.3
+.       | 1M   |  crash/2000   |          | 71.4
+xgboost | 10K  |     4         |    1     | 69.9
+.       | 100K |    20         |    1     | 73.2
+.       | 1M   |    170        |    2     | 75.3
+.       | 10M  |    3000       |    9     | 76.3
+ReForeSt| 10K  |      32       |   5      | 68.7
+.       | 100K |      123      |   40     | 72.1
+.       | 1M   |  534          |  80      | 73.2
+.       | 10M  |   2732        |   125    | 75.4
+
 ## How to build 
 
 An already packaged ReForeSt in zip or tar.gz format can be found in the directory "resources/package".
