@@ -64,8 +64,9 @@ rfRunner.sparkStop()
 ```
 
 ## Authors
-* <a href="http://for.unipi.it/alessandro_lulli/">Alessandro Lulli</a>
 * <a href="http://www.lucaoneto.com">Luca Oneto</a>
+* <a href="https://scholar.google.it/citations?user=ky3gHmYAAAAJ&hl=it">Francesca Cipollini</a>
+* <a href="http://for.unipi.it/alessandro_lulli/">Alessandro Lulli</a>
 * <a href="http://www.dibris.unige.it/anguita-davide">Davide Anguita</a>
 
 ReForeSt has been developed at <a href="http://www.smartlab.ws">Smartlab</a> - <a href="http://www.dibris.unige.it/">DIBRIS</a> - <a href="https://unige.it/">University of Genoa</a>.
