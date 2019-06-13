@@ -12,7 +12,7 @@ ReForeSt is a distributed, scalable implementation of the RF learning algorithm 
  ReForeSt and its documentation have been designed for developers and data scientists which are familiar with the <a href="https://spark.apache.org/">Spark Enviroment</a> and the <a href="https://spark.apache.org/mllib/">MLlib library</a>. Consequently please refer first to those documentation before starting with ReForeSt
  </p>
  <p>
- Additional details can be found at ReForeSt website: <a href="https://sites.google.com/view/reforest/home">https://sites.google.com/view/reforest/home</a>
+ Additional details can be found at ReForeSt website:  <a href="https://sites.google.com/view/reforest/home">https://sites.google.com/view/reforest/home</a>
  </p>
 
 ## Performance
