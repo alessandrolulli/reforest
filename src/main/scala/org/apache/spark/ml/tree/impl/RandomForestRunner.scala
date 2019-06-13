@@ -96,7 +96,7 @@ object RandomForestRunner extends Logging {
            numTrees: Int,
            featureSubsetStrategy: String,
            seed: Long,
-           instr: Option[Instrumentation[_]],
+           instr: Option[Instrumentation],
            parentUID: Option[String] = None): Array[DecisionTreeModel] = {
 
     val timer = new TimeTracker()
